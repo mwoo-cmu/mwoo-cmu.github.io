@@ -89,7 +89,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded affix "><a href="dedication.html">Dedication & Acknowledgements</a></li><li class="chapter-item expanded affix "><li class="part-title">Rust</li><li class="chapter-item expanded "><a href="variables.html"><strong aria-hidden="true">1.</strong> Variables</a></li><li class="chapter-item expanded "><a href="control_flow.html"><strong aria-hidden="true">2.</strong> Control Flow</a></li><li class="chapter-item expanded "><a href="enums.html"><strong aria-hidden="true">3.</strong> Options and Results</a></li><li class="chapter-item expanded "><a href="structs.html"><strong aria-hidden="true">4.</strong> Structs and Traits</a></li><li class="chapter-item expanded "><a href="borrowing.html"><strong aria-hidden="true">5.</strong> Borrowing</a></li><li class="chapter-item expanded "><a href="blocks.html"><strong aria-hidden="true">6.</strong> Blocks</a></li><li class="chapter-item expanded "><a href="common_issues.html"><strong aria-hidden="true">7.</strong> Common Issues</a></li></ol>
+                <ol class="chapter"><li class="chapter-item expanded affix "><a href="title.html">The Rustboro Trainer School</a></li><li class="chapter-item expanded affix "><a href="dedication.html">Dedication & Acknowledgements</a></li><li class="chapter-item expanded affix "><li class="part-title">Rust</li><li class="chapter-item expanded "><a href="variables.html"><strong aria-hidden="true">1.</strong> Variables</a></li><li class="chapter-item expanded "><a href="control_flow.html"><strong aria-hidden="true">2.</strong> Control Flow</a></li><li class="chapter-item expanded "><a href="functions.html"><strong aria-hidden="true">3.</strong> Functions</a></li><li class="chapter-item expanded "><a href="enums.html"><strong aria-hidden="true">4.</strong> Enumerations</a></li><li class="chapter-item expanded "><a href="option.html"><strong aria-hidden="true">5.</strong> Options and Results</a></li><li class="chapter-item expanded "><a href="blocks.html"><strong aria-hidden="true">6.</strong> Blocks</a></li><li class="chapter-item expanded "><a href="structs.html"><strong aria-hidden="true">7.</strong> Structs and Traits</a></li><li class="chapter-item expanded "><a href="borrowing.html"><strong aria-hidden="true">8.</strong> Borrowing</a></li><li class="chapter-item expanded "><a href="common_issues.html"><strong aria-hidden="true">9.</strong> Common Issues</a></li></ol>
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle">
                 <div class="sidebar-resize-indicator"></div>
@@ -174,7 +174,12 @@
 
                 <div id="content" class="content">
                     <main>
-                        <h1 id="dedication"><a class="header" href="#dedication">Dedication</a></h1>
+                        <h1 id="the-rustboro-trainer-school"><a class="header" href="#the-rustboro-trainer-school">The Rustboro Trainer School</a></h1>
+<p>Welcome to the Rustboro Trainer School! Hopefully this book can teach you more than just the five nonvolatile status conditions.</p>
+<h2 id="some-resources"><a class="header" href="#some-resources">Some Resources</a></h2>
+<p><a href="https://play.rust-lang.org/">Test Rust Online</a></p>
+<p><a href="https://www.rust-lang.org/tools/install">Install Rust</a></p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="dedication"><a class="header" href="#dedication">Dedication</a></h1>
 <p>To Aaron, and Gaga (should you choose to come to the dark side).</p>
 <h1 id="acknowledgements"><a class="header" href="#acknowledgements">Acknowledgements</a></h1>
 <p>I would like to acknowledge God for giving me these passions and the talents and abilities to do them.</p>
@@ -362,6 +367,32 @@ if variable == value_1 {
     // "default" case
 }
 <span class="boring">}</span></code></pre></pre>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="functions"><a class="header" href="#functions">Functions</a></h1>
+<p>In Rust, functions are defined with the <code>fn</code> keyword (similar to <code>def</code> in Python). Arguments and return type are specified in the Python format (<code>arg: type</code> and <code>-&gt; type</code>), though these are very rarely used in Python.</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>fn add(arg1: u32, arg2: u32) -&gt; u32 {
+  // function body goes here
+  // make sure to return a `u32`!
+  return arg1 + arg2;
+}
+
+// for a final return value (at the end of the function body) the `return`
+// keyword may be omitted
+fn also_add(arg1: u32, arg2: u32) -&gt; u32 {
+  // note the lack of `return` keyword AND the lack of trailing semicolon,
+  // indicating a return value
+  arg1 + arg2
+}
+<span class="boring">}</span></code></pre></pre>
+<p>Note that the return type (and the arrow) may be omitted for a function without a return value.</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>fn no_return(arg: u32) {
+  println!("{}", arg);
+  // doesn't return anything
+}
+<span class="boring">}</span></code></pre></pre>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="enums-and-error-handling"><a class="header" href="#enums-and-error-handling">Enums and Error Handling</a></h1>
 <h2 id="c-and-python-but-actually-im-just-talking-about-league-for-20-mins"><a class="header" href="#c-and-python-but-actually-im-just-talking-about-league-for-20-mins">C and Python but actually I'm just talking about league for 20 mins</a></h2>
 <p>Enumeration types, or enums for short, are typically used to define a set of related constants, typically for comparison. They are not very well-<em>defined</em> (ha ha) in C and Python, and typically take the form of labels assigned to arbitrary integer values (since they're the easiest to work with).</p>
@@ -511,10 +542,235 @@ match lane {
 <p>The most interesting part about Rust enums, however, is that you can easily tie unique data to the different options. This solves the first issue, since we immediately know what information we're getting, since it's directly attached to the enum member itself.</p>
 <pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
-</span><span class="boring">}</span></code></pre></pre>
+</span>// I'm a rust version of the C and Python snippets
+
+// for now, just know that this attribute macro allows us to print a Camp
+#[derive(Debug)]
+enum Camp {
+  Gromp,
+  Krugs,
+  Red,
+  Blue,
+  Wolves,
+  Raptors,
+  Grubs,
+  Dragon,
+  RiftHerald,
+  Baron,
+}
+
+// Lane enumeration, with associated info!
+enum Lane {
+  // enum members can have named attributes, like so:
+  Top { minions_farmed: u16 },
+  // an ordered list of camps our jungler has visited
+  Jg { pathing: Vec&lt;Camp&gt; },
+  Mid { minions_farmed: u16 },
+  // enum members may also have unnamed attributes, in which case the user
+  // needs to easily be able to assume what it is. In this case, ADCs don't do
+  // anything except farming minions, so we know it must be that
+  Bot(u16),
+  Sup { ward_score: u16 },
+}
+
+let adc: Lane = Lane::Bot(87);
+let mid: Lane = Lane::Mid { minions_farmed: 38 };
+
+// we could define cases for all of the other lanes too, if we wanted
+match adc {
+  Lane::Bot(minions) =&gt; {
+    println!("Our bot laner has {} farm. How does the enemy team already have 8 kills?", minions);
+  }
+  _ =&gt; {}
+}
+
+match mid {
+  Lane::Mid { minions_farmed } =&gt; {
+    println!("Oh, his enemy laner is 8/0 and he only has {} farm", minions_farmed);
+  },  // &lt;-- this comma is optional
+  _ =&gt; {}
+}
+<span class="boring">}</span></code></pre></pre>
+<h3 id="if-let-and-let-else-statements"><a class="header" href="#if-let-and-let-else-statements">If Let and Let-Else Statements</a></h3>
+<p>In the last example, we used match cases with only one case and one default case. For this, we can equivalently use an <code>if let</code> statement.</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>// I am exactly the same as the two `match` statements above!
+if let Lane::Bot(minions) = adc {
+  println!("Our bot laner has {} farm. How does the enemy team already have 8 kills?", minions);
+}
+
+if let Lane::Mid { minions_farmed } = mid {
+  println!("Oh, his enemy laner is 8/0 and he only has {} farm", minions_farmed);
+} // notably, we can have an `else`, or even an `else if` here.
+// though, if we're doing multiple `if let`s, we should use a match instead.
+<span class="boring">}</span></code></pre></pre>
+<p>Somewhat less useful is a <code>while let</code> statement, which is the <code>while</code> equivalent of the <code>if let</code> statement.</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>// I've literally never used while let before so uh
+while let Lane::Bot(minions) = adc {
+  println!("Our bot laner has farmed {} minions", minions);
+}
+<span class="boring">}</span></code></pre></pre>
+<p>Suppose we want to require a variable to be one specific enum variant, and we need to exit the function or even (gracefully) crash the program if it is any other value. We can use a <code>let-else</code> statement like so:</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>let jann: Lane = Lane::Top { minions_farmed: 0 };
+
+let Lane::Top { minions_farmed } = jann else {
+  // the `panic!` macro will immediately exit the program with the given
+  // status message
+  panic!("Oh no jann's not playing top? It's lost just dodge. Do NOT make me witness that guy's akali or sylas again PLEASE");
+};
+<span class="boring">}</span></code></pre></pre>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="options-and-results"><a class="header" href="#options-and-results">Options and Results</a></h1>
+<p>Rust doesn't have traditional <code>null</code> pointers and error handling (aside from the <code>panic!</code> macro), and relies on two built-in enumerations to manage these.</p>
+<h2 id="null-using-option"><a class="header" href="#null-using-option">null Using Option<T></a></h2>
+<p><code>Option&lt;T&gt;</code> is a generic enumeration defined as follows:</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>// T is a generic argument passed into the type (similar to its use in  Java or C++)
+enum Option&lt;T&gt; {
+  None, // null equivalent
+  Some(T), // non-null equivalent
+}
+<span class="boring">}</span></code></pre></pre>
+<p>When you initialise an <code>Option</code> value, you need to tell the compiler what type <code>T</code> represents. For example, if you want a variable that could be either a <code>String</code> or <code>None</code>, you would create a variable like this:</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>// because `Option` is a built-in enum, you don't need to qualify the attributes 
+// like Option::Some or Option::None.
+let maybe_string: Option&lt;String&gt; = Some(String::from("Is a string"));
+
+// check whether maybe_string is a string or not
+if let Some(s) = maybe_string {
+  println!("It's a string: {}", s);
+} else {
+  // {:?} means to print debug info, for things with the `#[derive(Debug)]`
+  // attribute. Option has the #[derive(Debug)] attribute, among many others
+  println!("It's not a string: {:?}", maybe_string);
+}
+<span class="boring">}</span></code></pre></pre>
+<h2 id="errors-and-not-errors"><a class="header" href="#errors-and-not-errors">Errors and Not-Errors</a></h2>
+<p>In many other languages, a function may throw an exception to the exception handler, which manages the error and decides whether or not to exit the program. In Rust, however, errors are managed with the built-in <code>Result</code> enum, or with <code>panic!</code>ing. Using <code>Result</code> is typically preferable, especially for recoverable errors.</p>
+<p><code>Result&lt;T, E&gt;</code> is also generic, and defined as follows, with two generic types (one for valid, and one for error):</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>enum Result&lt;T, E&gt; {
+  // a non-erroneous return value, with user-provided type T
+  Ok(T),
+  // an erroneous return value, with user-provided error type E
+  Err(E),
+}
+<span class="boring">}</span></code></pre></pre>
+<h2 id="unwrapping-like-its-christmas"><a class="header" href="#unwrapping-like-its-christmas">Unwrapping Like It's Christmas</a></h2>
+<p>Both <code>Result</code> and <code>Option</code> provide an <code>unwrap</code> method (among many others), which performs something similar to this:</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>// These are the equivalents, the method is defined on Option and Result, and 
+// can just be used with the . operator as: `opt.unwrap()` or `res.unwrap()`
+
+// basically, return the inner type T of the Option
+fn unwrap&lt;T&gt;(opt: Option&lt;T&gt;) -&gt; T {
+  match opt {
+    // equivalent to dereferencing a valid pointer
+    Some(t) =&gt; t,
+    // equivalent to dereferencing a null pointer
+    None =&gt; panic!("Called unwrap on `None` value"),
+  }
+}
+
+// return the valid inner type of the Result
+fn unwrap&lt;T, E&gt;(res: Result&lt;T, E&gt;) -&gt; T {
+  match res {
+    // equivalent to working with the valid return value of a function
+    Ok(t) =&gt; t,
+    // immediately crash the program when an error is thrown
+    Err(e) =&gt; panic!("Called unwrap on `Err` value {:?}", e),
+  }
+}
+<span class="boring">}</span></code></pre></pre>
+<h2 id="the-enemy-mids-all-chat-after-he-solo-kills-the-your-mid"><a class="header" href="#the-enemy-mids-all-chat-after-he-solo-kills-the-your-mid">The Enemy Mid's All Chat After He Solo Kills The Your Mid</a></h2>
+<p>When a function returns a <code>Result</code>, and is called within another function that returns a <code>Result</code> with the same error type, you can use the fabled <code>?</code> operator.</p>
+<p>The <code>?</code> operator performs the equivalent of the following code:</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>// The equivalent of `result?`
+match result {
+  Ok(t) =&gt; t,
+  Err(e) =&gt; return Err(e),
+}  
+<span class="boring">}</span></code></pre></pre>
+<p>The actual usage of the <code>?</code> operator looks like this:</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>fn err_func(val: u32) -&gt; Result&lt;u32, String&gt; {
+  if val == 0 {
+    return Err("String Error".to_owned());
+  }
+  Ok(val)
+}
+
+fn caller(val: u32) -&gt; Result&lt;f32, String&gt; {
+  // note the `?` will set `int` to val, if it's Ok, or will return 
+  // Err("String Error") from this caller function as a whole if it's Err.
+  let int: u32 = err_func(val)?;
+  Ok(int as f32)
+}
+
+fn another(val: u32) -&gt; Result&lt;u32, i8&gt; {
+  // This will not compile, since `String` is different from `i8`, and thus 
+  // cannot be directly returned
+  let int: u32 = err_func(val)?;
+  Ok(int)
+}
+<span class="boring">}</span></code></pre></pre>
+<h2 id="use-the-anyhow-crate-for-better-results"><a class="header" href="#use-the-anyhow-crate-for-better-results">Use the <code>anyhow</code> Crate for Better Results</a></h2>
+<p>We haven't talked too much about libraries (called crates) and Rust's package manager, but they are relatively easy to use, and feel similar to Python's pip. The Rust community has provided a special crate for easy error handling called <a href="https://crates.io/crates/anyhow">anyhow</a>.</p>
+<p>Anyhow can be added to a project by running <code>cargo add anyhow</code> in the command line within the project, and provides a new <code>Result</code> type and the <code>anyhow!</code> macro, along with many other useful error handling tools.</p>
+<p>In the previous section, we saw how mismatched error types prevents the <code>?</code> operator from functioning properly. The <code>anyhow::Result&lt;T&gt;</code> enum allows for handling multiple different error types in a single <code>Result</code>, allowing us to bypass this issue. When creating a new error with <code>anyhow::Result</code>, we use the <code>anyhow::anyhow!</code> macro.</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>// this import overwrites the built-in Rust `Result`, so now all `Results` in
+// this snippet refer to anyhow::Result.
+use anyhow::{Result, anyhow};
+
+// Note that this probably doesn't actually work with these specific error
+// types, but this is a simple example that gets the idea across.
+
+fn err_func(val: u32) -&gt; Result&lt;u32&gt; {
+  if val == 0 {
+    return Err(anyhow!("Value is 0"));
+  }
+  Ok(val)
+}
+
+fn caller(val: u32) -&gt; Result&lt;f32&gt; {
+  // note the `?` will set `int` to val, if it's Ok, or will return 
+  // Err("String Error") from this caller function as a whole if it's Err.
+  let int: u32 = err_func(val)?;
+  // multiple `?`s because enemy mid got ganked and got a double
+  let f: f32 = alt_err(int)?;
+}
+
+fn alt_err(val: u32) -&gt; Result&lt;f32&gt; {
+  let f: f32 = val as f32;
+  if f &lt; 0 {
+    return Err(anyhow!("value overflow"));
+  }
+  Ok(f)
+}
+
+fn another(val: u32) -&gt; Result&lt;u32&gt; {
+  // anyhow allows us to not worry about what error types we're working with
+  let int: u32 = err_func(val)?;
+  Ok(int)
+}
+<span class="boring">}</span></code></pre></pre>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="blocks"><a class="header" href="#blocks">Blocks</a></h1>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="structs-and-traits"><a class="header" href="#structs-and-traits">Structs and Traits</a></h1>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="borrowing"><a class="header" href="#borrowing">Borrowing</a></h1>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="blocks"><a class="header" href="#blocks">Blocks</a></h1>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="common-issues"><a class="header" href="#common-issues">Common Issues</a></h1>
 
                     </main>

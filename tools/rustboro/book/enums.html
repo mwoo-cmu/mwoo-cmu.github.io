@@ -3,7 +3,7 @@
     <head>
         <!-- Book generated using mdBook -->
         <meta charset="UTF-8">
-        <title>Options and Results - Rustboro Trainer School (Rust Notes)</title>
+        <title>Enumerations - Rustboro Trainer School (Rust Notes)</title>
 
 
         <!-- Custom HTML head -->
@@ -88,7 +88,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded affix "><a href="dedication.html">Dedication & Acknowledgements</a></li><li class="chapter-item expanded affix "><li class="part-title">Rust</li><li class="chapter-item expanded "><a href="variables.html"><strong aria-hidden="true">1.</strong> Variables</a></li><li class="chapter-item expanded "><a href="control_flow.html"><strong aria-hidden="true">2.</strong> Control Flow</a></li><li class="chapter-item expanded "><a href="enums.html" class="active"><strong aria-hidden="true">3.</strong> Options and Results</a></li><li class="chapter-item expanded "><a href="structs.html"><strong aria-hidden="true">4.</strong> Structs and Traits</a></li><li class="chapter-item expanded "><a href="borrowing.html"><strong aria-hidden="true">5.</strong> Borrowing</a></li><li class="chapter-item expanded "><a href="blocks.html"><strong aria-hidden="true">6.</strong> Blocks</a></li><li class="chapter-item expanded "><a href="common_issues.html"><strong aria-hidden="true">7.</strong> Common Issues</a></li></ol>
+                <ol class="chapter"><li class="chapter-item expanded affix "><a href="title.html">The Rustboro Trainer School</a></li><li class="chapter-item expanded affix "><a href="dedication.html">Dedication & Acknowledgements</a></li><li class="chapter-item expanded affix "><li class="part-title">Rust</li><li class="chapter-item expanded "><a href="variables.html"><strong aria-hidden="true">1.</strong> Variables</a></li><li class="chapter-item expanded "><a href="control_flow.html"><strong aria-hidden="true">2.</strong> Control Flow</a></li><li class="chapter-item expanded "><a href="functions.html"><strong aria-hidden="true">3.</strong> Functions</a></li><li class="chapter-item expanded "><a href="enums.html" class="active"><strong aria-hidden="true">4.</strong> Enumerations</a></li><li class="chapter-item expanded "><a href="option.html"><strong aria-hidden="true">5.</strong> Options and Results</a></li><li class="chapter-item expanded "><a href="blocks.html"><strong aria-hidden="true">6.</strong> Blocks</a></li><li class="chapter-item expanded "><a href="structs.html"><strong aria-hidden="true">7.</strong> Structs and Traits</a></li><li class="chapter-item expanded "><a href="borrowing.html"><strong aria-hidden="true">8.</strong> Borrowing</a></li><li class="chapter-item expanded "><a href="common_issues.html"><strong aria-hidden="true">9.</strong> Common Issues</a></li></ol>
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle">
                 <div class="sidebar-resize-indicator"></div>
@@ -322,17 +322,98 @@ match lane {
 <p>The most interesting part about Rust enums, however, is that you can easily tie unique data to the different options. This solves the first issue, since we immediately know what information we're getting, since it's directly attached to the enum member itself.</p>
 <pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
-</span><span class="boring">}</span></code></pre></pre>
+</span>// I'm a rust version of the C and Python snippets
+
+// for now, just know that this attribute macro allows us to print a Camp
+#[derive(Debug)]
+enum Camp {
+  Gromp,
+  Krugs,
+  Red,
+  Blue,
+  Wolves,
+  Raptors,
+  Grubs,
+  Dragon,
+  RiftHerald,
+  Baron,
+}
+
+// Lane enumeration, with associated info!
+enum Lane {
+  // enum members can have named attributes, like so:
+  Top { minions_farmed: u16 },
+  // an ordered list of camps our jungler has visited
+  Jg { pathing: Vec&lt;Camp&gt; },
+  Mid { minions_farmed: u16 },
+  // enum members may also have unnamed attributes, in which case the user
+  // needs to easily be able to assume what it is. In this case, ADCs don't do
+  // anything except farming minions, so we know it must be that
+  Bot(u16),
+  Sup { ward_score: u16 },
+}
+
+let adc: Lane = Lane::Bot(87);
+let mid: Lane = Lane::Mid { minions_farmed: 38 };
+
+// we could define cases for all of the other lanes too, if we wanted
+match adc {
+  Lane::Bot(minions) =&gt; {
+    println!("Our bot laner has {} farm. How does the enemy team already have 8 kills?", minions);
+  }
+  _ =&gt; {}
+}
+
+match mid {
+  Lane::Mid { minions_farmed } =&gt; {
+    println!("Oh, his enemy laner is 8/0 and he only has {} farm", minions_farmed);
+  },  // &lt;-- this comma is optional
+  _ =&gt; {}
+}
+<span class="boring">}</span></code></pre></pre>
+<h3 id="if-let-and-let-else-statements"><a class="header" href="#if-let-and-let-else-statements">If Let and Let-Else Statements</a></h3>
+<p>In the last example, we used match cases with only one case and one default case. For this, we can equivalently use an <code>if let</code> statement.</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>// I am exactly the same as the two `match` statements above!
+if let Lane::Bot(minions) = adc {
+  println!("Our bot laner has {} farm. How does the enemy team already have 8 kills?", minions);
+}
+
+if let Lane::Mid { minions_farmed } = mid {
+  println!("Oh, his enemy laner is 8/0 and he only has {} farm", minions_farmed);
+} // notably, we can have an `else`, or even an `else if` here.
+// though, if we're doing multiple `if let`s, we should use a match instead.
+<span class="boring">}</span></code></pre></pre>
+<p>Somewhat less useful is a <code>while let</code> statement, which is the <code>while</code> equivalent of the <code>if let</code> statement.</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>// I've literally never used while let before so uh
+while let Lane::Bot(minions) = adc {
+  println!("Our bot laner has farmed {} minions", minions);
+}
+<span class="boring">}</span></code></pre></pre>
+<p>Suppose we want to require a variable to be one specific enum variant, and we need to exit the function or even (gracefully) crash the program if it is any other value. We can use a <code>let-else</code> statement like so:</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>let jann: Lane = Lane::Top { minions_farmed: 0 };
+
+let Lane::Top { minions_farmed } = jann else {
+  // the `panic!` macro will immediately exit the program with the given
+  // status message
+  panic!("Oh no jann's not playing top? It's lost just dodge. Do NOT make me witness that guy's akali or sylas again PLEASE");
+};
+<span class="boring">}</span></code></pre></pre>
 
                     </main>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">
                         <!-- Mobile navigation buttons -->
-                            <a rel="prev" href="control_flow.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                            <a rel="prev" href="functions.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                                 <i class="fa fa-angle-left"></i>
                             </a>
 
-                            <a rel="next prefetch" href="structs.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                            <a rel="next prefetch" href="option.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                                 <i class="fa fa-angle-right"></i>
                             </a>
 
@@ -342,11 +423,11 @@ match lane {
             </div>
 
             <nav class="nav-wide-wrapper" aria-label="Page navigation">
-                    <a rel="prev" href="control_flow.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                    <a rel="prev" href="functions.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                         <i class="fa fa-angle-left"></i>
                     </a>
 
-                    <a rel="next prefetch" href="structs.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                    <a rel="next prefetch" href="option.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                         <i class="fa fa-angle-right"></i>
                     </a>
             </nav>

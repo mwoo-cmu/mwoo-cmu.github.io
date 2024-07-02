@@ -3,7 +3,7 @@
     <head>
         <!-- Book generated using mdBook -->
         <meta charset="UTF-8">
-        <title>Control Flow - Rustboro Trainer School (Rust Notes)</title>
+        <title>Options and Results - Rustboro Trainer School (Rust Notes)</title>
 
 
         <!-- Custom HTML head -->
@@ -88,7 +88,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded affix "><a href="title.html">The Rustboro Trainer School</a></li><li class="chapter-item expanded affix "><a href="dedication.html">Dedication & Acknowledgements</a></li><li class="chapter-item expanded affix "><li class="part-title">Rust</li><li class="chapter-item expanded "><a href="variables.html"><strong aria-hidden="true">1.</strong> Variables</a></li><li class="chapter-item expanded "><a href="control_flow.html" class="active"><strong aria-hidden="true">2.</strong> Control Flow</a></li><li class="chapter-item expanded "><a href="functions.html"><strong aria-hidden="true">3.</strong> Functions</a></li><li class="chapter-item expanded "><a href="enums.html"><strong aria-hidden="true">4.</strong> Enumerations</a></li><li class="chapter-item expanded "><a href="option.html"><strong aria-hidden="true">5.</strong> Options and Results</a></li><li class="chapter-item expanded "><a href="blocks.html"><strong aria-hidden="true">6.</strong> Blocks</a></li><li class="chapter-item expanded "><a href="structs.html"><strong aria-hidden="true">7.</strong> Structs and Traits</a></li><li class="chapter-item expanded "><a href="borrowing.html"><strong aria-hidden="true">8.</strong> Borrowing</a></li><li class="chapter-item expanded "><a href="common_issues.html"><strong aria-hidden="true">9.</strong> Common Issues</a></li></ol>
+                <ol class="chapter"><li class="chapter-item expanded affix "><a href="title.html">The Rustboro Trainer School</a></li><li class="chapter-item expanded affix "><a href="dedication.html">Dedication & Acknowledgements</a></li><li class="chapter-item expanded affix "><li class="part-title">Rust</li><li class="chapter-item expanded "><a href="variables.html"><strong aria-hidden="true">1.</strong> Variables</a></li><li class="chapter-item expanded "><a href="control_flow.html"><strong aria-hidden="true">2.</strong> Control Flow</a></li><li class="chapter-item expanded "><a href="functions.html"><strong aria-hidden="true">3.</strong> Functions</a></li><li class="chapter-item expanded "><a href="enums.html"><strong aria-hidden="true">4.</strong> Enumerations</a></li><li class="chapter-item expanded "><a href="option.html" class="active"><strong aria-hidden="true">5.</strong> Options and Results</a></li><li class="chapter-item expanded "><a href="blocks.html"><strong aria-hidden="true">6.</strong> Blocks</a></li><li class="chapter-item expanded "><a href="structs.html"><strong aria-hidden="true">7.</strong> Structs and Traits</a></li><li class="chapter-item expanded "><a href="borrowing.html"><strong aria-hidden="true">8.</strong> Borrowing</a></li><li class="chapter-item expanded "><a href="common_issues.html"><strong aria-hidden="true">9.</strong> Common Issues</a></li></ol>
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle">
                 <div class="sidebar-resize-indicator"></div>
@@ -173,87 +173,148 @@
 
                 <div id="content" class="content">
                     <main>
-                        <h1 id="control-flow-cheatsheet"><a class="header" href="#control-flow-cheatsheet">Control Flow Cheatsheet</a></h1>
-<h2 id="if-statements"><a class="header" href="#if-statements">If Statements</a></h2>
-<p>If statements do not require parentheses around the condition, like <code>if</code>s in Python, but they use brackets around the contained block, like in C or Java.</p>
+                        <h1 id="options-and-results"><a class="header" href="#options-and-results">Options and Results</a></h1>
+<p>Rust doesn't have traditional <code>null</code> pointers and error handling (aside from the <code>panic!</code> macro), and relies on two built-in enumerations to manage these.</p>
+<h2 id="null-using-option"><a class="header" href="#null-using-option">null Using Option<T></a></h2>
+<p><code>Option&lt;T&gt;</code> is a generic enumeration defined as follows:</p>
 <pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
-</span>if condition {
-    // Do something
-} else if another_condition {
-    // Do something else
+</span>// T is a generic argument passed into the type (similar to its use in  Java or C++)
+enum Option&lt;T&gt; {
+  None, // null equivalent
+  Some(T), // non-null equivalent
+}
+<span class="boring">}</span></code></pre></pre>
+<p>When you initialise an <code>Option</code> value, you need to tell the compiler what type <code>T</code> represents. For example, if you want a variable that could be either a <code>String</code> or <code>None</code>, you would create a variable like this:</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>// because `Option` is a built-in enum, you don't need to qualify the attributes 
+// like Option::Some or Option::None.
+let maybe_string: Option&lt;String&gt; = Some(String::from("Is a string"));
+
+// check whether maybe_string is a string or not
+if let Some(s) = maybe_string {
+  println!("It's a string: {}", s);
 } else {
-    // Default
+  // {:?} means to print debug info, for things with the `#[derive(Debug)]`
+  // attribute. Option has the #[derive(Debug)] attribute, among many others
+  println!("It's not a string: {:?}", maybe_string);
 }
 <span class="boring">}</span></code></pre></pre>
-<h2 id="while-loops"><a class="header" href="#while-loops">While Loops</a></h2>
-<p>While loops follow a similar format to the if statements, but Rust also provides a shorthand for <code>while true</code> loops with the <code>loop</code> keyword</p>
+<h2 id="errors-and-not-errors"><a class="header" href="#errors-and-not-errors">Errors and Not-Errors</a></h2>
+<p>In many other languages, a function may throw an exception to the exception handler, which manages the error and decides whether or not to exit the program. In Rust, however, errors are managed with the built-in <code>Result</code> enum, or with <code>panic!</code>ing. Using <code>Result</code> is typically preferable, especially for recoverable errors.</p>
+<p><code>Result&lt;T, E&gt;</code> is also generic, and defined as follows, with two generic types (one for valid, and one for error):</p>
 <pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
-</span>while condition {
-    // do something
+</span>enum Result&lt;T, E&gt; {
+  // a non-erroneous return value, with user-provided type T
+  Ok(T),
+  // an erroneous return value, with user-provided error type E
+  Err(E),
+}
+<span class="boring">}</span></code></pre></pre>
+<h2 id="unwrapping-like-its-christmas"><a class="header" href="#unwrapping-like-its-christmas">Unwrapping Like It's Christmas</a></h2>
+<p>Both <code>Result</code> and <code>Option</code> provide an <code>unwrap</code> method (among many others), which performs something similar to this:</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>// These are the equivalents, the method is defined on Option and Result, and 
+// can just be used with the . operator as: `opt.unwrap()` or `res.unwrap()`
+
+// basically, return the inner type T of the Option
+fn unwrap&lt;T&gt;(opt: Option&lt;T&gt;) -&gt; T {
+  match opt {
+    // equivalent to dereferencing a valid pointer
+    Some(t) =&gt; t,
+    // equivalent to dereferencing a null pointer
+    None =&gt; panic!("Called unwrap on `None` value"),
+  }
 }
 
-loop {
-    if !condition {
-        break;
-    }
-    // do something
+// return the valid inner type of the Result
+fn unwrap&lt;T, E&gt;(res: Result&lt;T, E&gt;) -&gt; T {
+  match res {
+    // equivalent to working with the valid return value of a function
+    Ok(t) =&gt; t,
+    // immediately crash the program when an error is thrown
+    Err(e) =&gt; panic!("Called unwrap on `Err` value {:?}", e),
+  }
 }
 <span class="boring">}</span></code></pre></pre>
-<h3 id="labelling-loops"><a class="header" href="#labelling-loops">Labelling Loops</a></h3>
-<p>When using multiple nested <code>loop</code>s (including <code>while</code> loops and <code>for</code> loops), you may want to <code>break</code> out of specific loops by labelling them. Note that the label starts with a single quote, but does not end with one.</p>
+<h2 id="the-enemy-mids-all-chat-after-he-solo-kills-the-your-mid"><a class="header" href="#the-enemy-mids-all-chat-after-he-solo-kills-the-your-mid">The Enemy Mid's All Chat After He Solo Kills The Your Mid</a></h2>
+<p>When a function returns a <code>Result</code>, and is called within another function that returns a <code>Result</code> with the same error type, you can use the fabled <code>?</code> operator.</p>
+<p>The <code>?</code> operator performs the equivalent of the following code:</p>
 <pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
-</span>'outer: loop {
-    'inner: while true {
-        if condition {
-            break 'outer;
-        } else if other_condition {
-            break 'inner;
-        }
-    }
-}
+</span>// The equivalent of `result?`
+match result {
+  Ok(t) =&gt; t,
+  Err(e) =&gt; return Err(e),
+}  
 <span class="boring">}</span></code></pre></pre>
-<h2 id="for-loops"><a class="header" href="#for-loops">For Loops</a></h2>
-<p>For loops are very similar to Python, and similarly always iterate over a provided iterable. The Rust equivalent to <code>range(start, stop)</code> is <code>start..stop</code>.</p>
+<p>The actual usage of the <code>?</code> operator looks like this:</p>
 <pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
-</span>for i in 0..10 {
-    // will print the values 0 through 9, inclusive
-    println!("{}", i);
+</span>fn err_func(val: u32) -&gt; Result&lt;u32, String&gt; {
+  if val == 0 {
+    return Err("String Error".to_owned());
+  }
+  Ok(val)
 }
 
-// An array, which is iterable
-let array: [u8; 3] = [0, 5, 3];
-// call iter on the array to "borrow" its values and iterate over them
-for element in array.iter() {
-    println!("{}", element);
-}
-<span class="boring">}</span></code></pre></pre>
-<h2 id="switch-cases"><a class="header" href="#switch-cases">Switch Cases</a></h2>
-<p>The Rust equivalent of <code>switch</code> cases are <code>match</code> blocks. Switch cases can act as a faster short-hand for a long if-elif-else chain.</p>
-<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
-</span><span class="boring">fn main() {
-</span>match variable {
-    value_1 =&gt; {
-        // do something
-    },
-    value_2 =&gt; {
-        // do something else
-    },
-    _ =&gt; {
-        // "default" case
-    }
+fn caller(val: u32) -&gt; Result&lt;f32, String&gt; {
+  // note the `?` will set `int` to val, if it's Ok, or will return 
+  // Err("String Error") from this caller function as a whole if it's Err.
+  let int: u32 = err_func(val)?;
+  Ok(int as f32)
 }
 
-// Equivalent to
-if variable == value_1 {
-    // do something
-} else if variable == value_2 {
-    // do something else
-} else {
-    // "default" case
+fn another(val: u32) -&gt; Result&lt;u32, i8&gt; {
+  // This will not compile, since `String` is different from `i8`, and thus 
+  // cannot be directly returned
+  let int: u32 = err_func(val)?;
+  Ok(int)
+}
+<span class="boring">}</span></code></pre></pre>
+<h2 id="use-the-anyhow-crate-for-better-results"><a class="header" href="#use-the-anyhow-crate-for-better-results">Use the <code>anyhow</code> Crate for Better Results</a></h2>
+<p>We haven't talked too much about libraries (called crates) and Rust's package manager, but they are relatively easy to use, and feel similar to Python's pip. The Rust community has provided a special crate for easy error handling called <a href="https://crates.io/crates/anyhow">anyhow</a>.</p>
+<p>Anyhow can be added to a project by running <code>cargo add anyhow</code> in the command line within the project, and provides a new <code>Result</code> type and the <code>anyhow!</code> macro, along with many other useful error handling tools.</p>
+<p>In the previous section, we saw how mismatched error types prevents the <code>?</code> operator from functioning properly. The <code>anyhow::Result&lt;T&gt;</code> enum allows for handling multiple different error types in a single <code>Result</code>, allowing us to bypass this issue. When creating a new error with <code>anyhow::Result</code>, we use the <code>anyhow::anyhow!</code> macro.</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>// this import overwrites the built-in Rust `Result`, so now all `Results` in
+// this snippet refer to anyhow::Result.
+use anyhow::{Result, anyhow};
+
+// Note that this probably doesn't actually work with these specific error
+// types, but this is a simple example that gets the idea across.
+
+fn err_func(val: u32) -&gt; Result&lt;u32&gt; {
+  if val == 0 {
+    return Err(anyhow!("Value is 0"));
+  }
+  Ok(val)
+}
+
+fn caller(val: u32) -&gt; Result&lt;f32&gt; {
+  // note the `?` will set `int` to val, if it's Ok, or will return 
+  // Err("String Error") from this caller function as a whole if it's Err.
+  let int: u32 = err_func(val)?;
+  // multiple `?`s because enemy mid got ganked and got a double
+  let f: f32 = alt_err(int)?;
+}
+
+fn alt_err(val: u32) -&gt; Result&lt;f32&gt; {
+  let f: f32 = val as f32;
+  if f &lt; 0 {
+    return Err(anyhow!("value overflow"));
+  }
+  Ok(f)
+}
+
+fn another(val: u32) -&gt; Result&lt;u32&gt; {
+  // anyhow allows us to not worry about what error types we're working with
+  let int: u32 = err_func(val)?;
+  Ok(int)
 }
 <span class="boring">}</span></code></pre></pre>
 
@@ -261,11 +322,11 @@ if variable == value_1 {
 
                     <nav class="nav-wrapper" aria-label="Page navigation">
                         <!-- Mobile navigation buttons -->
-                            <a rel="prev" href="variables.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                            <a rel="prev" href="enums.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                                 <i class="fa fa-angle-left"></i>
                             </a>
 
-                            <a rel="next prefetch" href="functions.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                            <a rel="next prefetch" href="blocks.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                                 <i class="fa fa-angle-right"></i>
                             </a>
 
@@ -275,11 +336,11 @@ if variable == value_1 {
             </div>
 
             <nav class="nav-wide-wrapper" aria-label="Page navigation">
-                    <a rel="prev" href="variables.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                    <a rel="prev" href="enums.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                         <i class="fa fa-angle-left"></i>
                     </a>
 
-                    <a rel="next prefetch" href="functions.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                    <a rel="next prefetch" href="blocks.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                         <i class="fa fa-angle-right"></i>
                     </a>
             </nav>

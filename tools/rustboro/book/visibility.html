@@ -3,7 +3,7 @@
     <head>
         <!-- Book generated using mdBook -->
         <meta charset="UTF-8">
-        <title>Blocks and Scope - Rustboro Trainer School (Rust Notes)</title>
+        <title>Visibility - Rustboro Trainer School (Rust Notes)</title>
 
 
         <!-- Custom HTML head -->
@@ -88,7 +88,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded affix "><a href="title.html">The Rustboro Trainer School</a></li><li class="chapter-item expanded affix "><a href="dedication.html">Dedication & Acknowledgements</a></li><li class="chapter-item expanded affix "><li class="part-title">A Very Long Introduction to Rust</li><li class="chapter-item expanded "><a href="variables.html"><strong aria-hidden="true">1.</strong> Variables</a></li><li class="chapter-item expanded "><a href="control_flow.html"><strong aria-hidden="true">2.</strong> Control Flow</a></li><li class="chapter-item expanded "><a href="functions.html"><strong aria-hidden="true">3.</strong> Functions</a></li><li class="chapter-item expanded "><a href="enums.html"><strong aria-hidden="true">4.</strong> Enumerations</a></li><li class="chapter-item expanded "><a href="option.html"><strong aria-hidden="true">5.</strong> Options and Results</a></li><li class="chapter-item expanded "><a href="blocks.html" class="active"><strong aria-hidden="true">6.</strong> Blocks and Scope</a></li><li class="chapter-item expanded "><a href="structs.html"><strong aria-hidden="true">7.</strong> Structs and Tuples</a></li><li class="chapter-item expanded "><a href="traits.html"><strong aria-hidden="true">8.</strong> Traits and Polymorphism</a></li><li class="chapter-item expanded "><a href="macros.html"><strong aria-hidden="true">9.</strong> Using Macros!</a></li><li class="chapter-item expanded "><a href="macrodef.html"><strong aria-hidden="true">10.</strong> Creating Macros!</a></li><li class="chapter-item expanded "><a href="visibility.html"><strong aria-hidden="true">11.</strong> Visibility</a></li><li class="chapter-item expanded "><a href="borrowing.html"><strong aria-hidden="true">12.</strong> Borrowing</a></li><li class="chapter-item expanded "><a href="lifetimes.html"><strong aria-hidden="true">13.</strong> Lifetimes</a></li><li class="chapter-item expanded "><a href="common_issues.html"><strong aria-hidden="true">14.</strong> Common Issues</a></li></ol>
+                <ol class="chapter"><li class="chapter-item expanded affix "><a href="title.html">The Rustboro Trainer School</a></li><li class="chapter-item expanded affix "><a href="dedication.html">Dedication & Acknowledgements</a></li><li class="chapter-item expanded affix "><li class="part-title">A Very Long Introduction to Rust</li><li class="chapter-item expanded "><a href="variables.html"><strong aria-hidden="true">1.</strong> Variables</a></li><li class="chapter-item expanded "><a href="control_flow.html"><strong aria-hidden="true">2.</strong> Control Flow</a></li><li class="chapter-item expanded "><a href="functions.html"><strong aria-hidden="true">3.</strong> Functions</a></li><li class="chapter-item expanded "><a href="enums.html"><strong aria-hidden="true">4.</strong> Enumerations</a></li><li class="chapter-item expanded "><a href="option.html"><strong aria-hidden="true">5.</strong> Options and Results</a></li><li class="chapter-item expanded "><a href="blocks.html"><strong aria-hidden="true">6.</strong> Blocks and Scope</a></li><li class="chapter-item expanded "><a href="structs.html"><strong aria-hidden="true">7.</strong> Structs and Tuples</a></li><li class="chapter-item expanded "><a href="traits.html"><strong aria-hidden="true">8.</strong> Traits and Polymorphism</a></li><li class="chapter-item expanded "><a href="macros.html"><strong aria-hidden="true">9.</strong> Using Macros!</a></li><li class="chapter-item expanded "><a href="macrodef.html"><strong aria-hidden="true">10.</strong> Creating Macros!</a></li><li class="chapter-item expanded "><a href="visibility.html" class="active"><strong aria-hidden="true">11.</strong> Visibility</a></li><li class="chapter-item expanded "><a href="borrowing.html"><strong aria-hidden="true">12.</strong> Borrowing</a></li><li class="chapter-item expanded "><a href="lifetimes.html"><strong aria-hidden="true">13.</strong> Lifetimes</a></li><li class="chapter-item expanded "><a href="common_issues.html"><strong aria-hidden="true">14.</strong> Common Issues</a></li></ol>
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle">
                 <div class="sidebar-resize-indicator"></div>
@@ -173,162 +173,17 @@
 
                 <div id="content" class="content">
                     <main>
-                        <h1 id="scopes"><a class="header" href="#scopes">Scopes</a></h1>
-<p>Rust does not have a traditional garbage collector, but still automatically manages memory for you. In order to do this, it needs to maintain a scope for each variable, during which the variable exists, and after which the variable can no longer be accessed.</p>
-<p>A scope in Rust is delineated by the set of curly braces where it is defined. For example, a local variable defined within a function is in scope for the entirety of that function, but cannot be accessed outside of that function. Similarly, variables defined within a loop can't be accessed outside of that loop. Overwiting a variable also causes the old version to be out of scope.</p>
-<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
-</span><span class="boring">fn main() {
-</span>fn func(arg: f32) {
-  // function arguments are in scope for the function that takes them in
-
-  // define my_var in the scope of func
-  let mut my_var: u32 = 10;
-
-  while my_var &gt; 0 {
-    // inner is in scope only for each iteration of the loop
-    let mut inner: i16 = -1;
-    // we can still access my_var, since its scope is the entire function
-    my_var -= 1;
-    // we can also access inner here
-    inner += 1;
-  }
-  // we can't access inner here, since we're outside the loop, so this is a 
-  // compiler error!
-  println!("{}", inner);
-  
-  // we can access my_var here
-  println!("{}", my_var);
-}
-
-// after the ending curly brace, we can't access my_var anymore
-println!("{}", my_var);
-// Compiler error!
-<span class="boring">}</span></code></pre></pre>
-<p>We can also arbitrarily create a scope for a variable to ensure that it goes out of scope after a certain point using curly braces.</p>
-<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
-</span><span class="boring">fn main() {
-</span>// here is some code
-let mut a: isize = 1;
-let mut b: usize = 2;
-
-// here we create a scope for c with arbitrary curly braces, no loop or function needed
-{
-  let mut c: isize = 714;
-  c += 633;
-}
-// after this ending brace, c is no longer in scope
-
-// however, we can access both a and b, since they were defined in this scope
-println!("{}, {}", a, b);
-
-// here, we can't actually access c, so this is a compiler error!
-a += c;
-<span class="boring">}</span></code></pre></pre>
-<h2 id="advanced-let-statements"><a class="header" href="#advanced-let-statements">Advanced Let Statements</a></h2>
-<p>We're going to refer to these arbitrary curly braces as a block. Each block can actually have a return value, and be assigned in a let statement.</p>
-<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
-</span><span class="boring">fn main() {
-</span>let outer: i32 = -1;
-
-let block_var: i32 = {
-  // this is a block with its own scope!
-  let inner: i32 = 715;
-
-  // as with other blocks, we can access variables from the parent block
-  if outer &gt; 0 {
-    // here we return the value of inner from this block
-    return inner;
-  }
-
-  // note that we are returning this value here (indicated by lack of trailing semicolon on the final statement in a block)
-  inner - outer
-}; // note the necessary semicolon after the block in the assignment
-
-// here block_var takes the value returned from the block
-
-// we can access block_var and outer, but not inner
-println!("{}, {}", outer, block_var);
-
-// compiler error!
-println!("{}", inner);
-<span class="boring">}</span></code></pre></pre>
-<h3 id="ternary-operator-let-if-not-to-be-confused-with-if-let"><a class="header" href="#ternary-operator-let-if-not-to-be-confused-with-if-let">Ternary Operator: let if (not to be confused with if let)</a></h3>
-<p>We can also use a similar setup with simplified syntax to use the ternary operator:</p>
-<pre><code class="language-c">// for reference, here is the ternary operator in C, and its equivalent
-int val = cond ? val_true : val_false;
-
-// equivalent to
-int val;
-if (cond) {
-  val = val_true;
-} else {
-  val = val_false;
-}
-</code></pre>
-<pre><code class="language-python"># and here is the ternary operator in python
-val = val_true if cond else val_false
-
-# equivalent to
-val = None
-if cond:
-  val = val_true
-else:
-  val = val_false
-</code></pre>
-<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
-</span><span class="boring">fn main() {
-</span>// and here is what it looks like in Rust
-let val = if cond { val_true } else { val_false };
-// notice that each of the blocks is simply returning the value!
-
-// equivalent
-let val;
-if cond {
-  val = val_true;
-} else {
-  val = val_false;
-}
-<span class="boring">}</span></code></pre></pre>
-<p>This works with other control flow too, such as match cases:</p>
-<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
-</span><span class="boring">fn main() {
-</span>// think back to the league example from the enums chapter...
-
-// Lane enumeration, with associated info!
-enum Lane {
-  // enum members can have named attributes, like so:
-  Top { minions_farmed: u16 },
-  // an ordered list of camps our jungler has visited
-  Jg { pathing: Vec&lt;Camp&gt; },
-  Mid { minions_farmed: u16 },
-  // enum members may also have unnamed attributes, in which case the user
-  // needs to easily be able to assume what it is. In this case, ADCs don't do
-  // anything except farming minions, so we know it must be that
-  Bot(u16),
-  Sup { ward_score: u16 },
-}
-
-// assume this lane gets assigned elsewhere...
-let lane: Lane = /* Some assignment */;
-
-let lane_number: Option&lt;u16&gt; = match lane {
-  Lane::Top { minions_farmed } =&gt; Some(minions_farmed),
-  Lane::Jg { pathing } =&gt; None,
-  Lane::Mid { minions_farmed } =&gt; Some(minions_farmed),
-  Lane::Bot(minions) =&gt; Some(minions),
-  Lane::Sup { ward_score } =&gt; Some(ward_score),
-};
-<span class="boring">}</span></code></pre></pre>
+                        <h1 id="visibility"><a class="header" href="#visibility">Visibility</a></h1>
 
                     </main>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">
                         <!-- Mobile navigation buttons -->
-                            <a rel="prev" href="option.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                            <a rel="prev" href="macrodef.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                                 <i class="fa fa-angle-left"></i>
                             </a>
 
-                            <a rel="next prefetch" href="structs.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                            <a rel="next prefetch" href="borrowing.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                                 <i class="fa fa-angle-right"></i>
                             </a>
 
@@ -338,11 +193,11 @@ let lane_number: Option&lt;u16&gt; = match lane {
             </div>
 
             <nav class="nav-wide-wrapper" aria-label="Page navigation">
-                    <a rel="prev" href="option.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                    <a rel="prev" href="macrodef.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                         <i class="fa fa-angle-left"></i>
                     </a>
 
-                    <a rel="next prefetch" href="structs.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                    <a rel="next prefetch" href="borrowing.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                         <i class="fa fa-angle-right"></i>
                     </a>
             </nav>

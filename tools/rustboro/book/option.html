@@ -88,7 +88,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded affix "><a href="title.html">The Rustboro Trainer School</a></li><li class="chapter-item expanded affix "><a href="dedication.html">Dedication & Acknowledgements</a></li><li class="chapter-item expanded affix "><li class="part-title">Rust</li><li class="chapter-item expanded "><a href="variables.html"><strong aria-hidden="true">1.</strong> Variables</a></li><li class="chapter-item expanded "><a href="control_flow.html"><strong aria-hidden="true">2.</strong> Control Flow</a></li><li class="chapter-item expanded "><a href="functions.html"><strong aria-hidden="true">3.</strong> Functions</a></li><li class="chapter-item expanded "><a href="enums.html"><strong aria-hidden="true">4.</strong> Enumerations</a></li><li class="chapter-item expanded "><a href="option.html" class="active"><strong aria-hidden="true">5.</strong> Options and Results</a></li><li class="chapter-item expanded "><a href="blocks.html"><strong aria-hidden="true">6.</strong> Blocks</a></li><li class="chapter-item expanded "><a href="structs.html"><strong aria-hidden="true">7.</strong> Structs and Traits</a></li><li class="chapter-item expanded "><a href="borrowing.html"><strong aria-hidden="true">8.</strong> Borrowing</a></li><li class="chapter-item expanded "><a href="common_issues.html"><strong aria-hidden="true">9.</strong> Common Issues</a></li></ol>
+                <ol class="chapter"><li class="chapter-item expanded affix "><a href="title.html">The Rustboro Trainer School</a></li><li class="chapter-item expanded affix "><a href="dedication.html">Dedication & Acknowledgements</a></li><li class="chapter-item expanded affix "><li class="part-title">A Very Long Introduction to Rust</li><li class="chapter-item expanded "><a href="variables.html"><strong aria-hidden="true">1.</strong> Variables</a></li><li class="chapter-item expanded "><a href="control_flow.html"><strong aria-hidden="true">2.</strong> Control Flow</a></li><li class="chapter-item expanded "><a href="functions.html"><strong aria-hidden="true">3.</strong> Functions</a></li><li class="chapter-item expanded "><a href="enums.html"><strong aria-hidden="true">4.</strong> Enumerations</a></li><li class="chapter-item expanded "><a href="option.html" class="active"><strong aria-hidden="true">5.</strong> Options and Results</a></li><li class="chapter-item expanded "><a href="blocks.html"><strong aria-hidden="true">6.</strong> Blocks and Scope</a></li><li class="chapter-item expanded "><a href="structs.html"><strong aria-hidden="true">7.</strong> Structs and Tuples</a></li><li class="chapter-item expanded "><a href="traits.html"><strong aria-hidden="true">8.</strong> Traits and Polymorphism</a></li><li class="chapter-item expanded "><a href="macros.html"><strong aria-hidden="true">9.</strong> Using Macros!</a></li><li class="chapter-item expanded "><a href="macrodef.html"><strong aria-hidden="true">10.</strong> Creating Macros!</a></li><li class="chapter-item expanded "><a href="visibility.html"><strong aria-hidden="true">11.</strong> Visibility</a></li><li class="chapter-item expanded "><a href="borrowing.html"><strong aria-hidden="true">12.</strong> Borrowing</a></li><li class="chapter-item expanded "><a href="lifetimes.html"><strong aria-hidden="true">13.</strong> Lifetimes</a></li><li class="chapter-item expanded "><a href="common_issues.html"><strong aria-hidden="true">14.</strong> Common Issues</a></li></ol>
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle">
                 <div class="sidebar-resize-indicator"></div>
@@ -201,6 +201,8 @@ if let Some(s) = maybe_string {
   println!("It's not a string: {:?}", maybe_string);
 }
 <span class="boring">}</span></code></pre></pre>
+<h3 id="documentation"><a class="header" href="#documentation">Documentation</a></h3>
+<p><a href="https://doc.rust-lang.org/std/option/enum.Option.html">Option</a></p>
 <h2 id="errors-and-not-errors"><a class="header" href="#errors-and-not-errors">Errors and Not-Errors</a></h2>
 <p>In many other languages, a function may throw an exception to the exception handler, which manages the error and decides whether or not to exit the program. In Rust, however, errors are managed with the built-in <code>Result</code> enum, or with <code>panic!</code>ing. Using <code>Result</code> is typically preferable, especially for recoverable errors.</p>
 <p><code>Result&lt;T, E&gt;</code> is also generic, and defined as follows, with two generic types (one for valid, and one for error):</p>
@@ -240,6 +242,8 @@ fn unwrap&lt;T, E&gt;(res: Result&lt;T, E&gt;) -&gt; T {
   }
 }
 <span class="boring">}</span></code></pre></pre>
+<h3 id="documentation-1"><a class="header" href="#documentation-1">Documentation</a></h3>
+<p><a href="https://doc.rust-lang.org/std/result/enum.Result.html">Result</a></p>
 <h2 id="the-enemy-mids-all-chat-after-he-solo-kills-the-your-mid"><a class="header" href="#the-enemy-mids-all-chat-after-he-solo-kills-the-your-mid">The Enemy Mid's All Chat After He Solo Kills The Your Mid</a></h2>
 <p>When a function returns a <code>Result</code>, and is called within another function that returns a <code>Result</code> with the same error type, you can use the fabled <code>?</code> operator.</p>
 <p>The <code>?</code> operator performs the equivalent of the following code:</p>
@@ -305,7 +309,7 @@ fn caller(val: u32) -&gt; Result&lt;f32&gt; {
 
 fn alt_err(val: u32) -&gt; Result&lt;f32&gt; {
   let f: f32 = val as f32;
-  if f &lt; 0 {
+  if f &lt; 0.0 {
     return Err(anyhow!("value overflow"));
   }
   Ok(f)
@@ -317,6 +321,9 @@ fn another(val: u32) -&gt; Result&lt;u32&gt; {
   Ok(int)
 }
 <span class="boring">}</span></code></pre></pre>
+<h3 id="documentation-2"><a class="header" href="#documentation-2">Documentation</a></h3>
+<p><a href="https://docs.rs/anyhow/latest/anyhow/type.Result.html">anyhow::Result</a>,
+<a href="https://docs.rs/anyhow/latest/anyhow/macro.anyhow.html">anyhow::anyhow!</a></p>
 
                     </main>
 

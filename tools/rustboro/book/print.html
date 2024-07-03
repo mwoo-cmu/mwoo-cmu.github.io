@@ -89,7 +89,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded affix "><a href="title.html">The Rustboro Trainer School</a></li><li class="chapter-item expanded affix "><a href="dedication.html">Dedication & Acknowledgements</a></li><li class="chapter-item expanded affix "><li class="part-title">Rust</li><li class="chapter-item expanded "><a href="variables.html"><strong aria-hidden="true">1.</strong> Variables</a></li><li class="chapter-item expanded "><a href="control_flow.html"><strong aria-hidden="true">2.</strong> Control Flow</a></li><li class="chapter-item expanded "><a href="functions.html"><strong aria-hidden="true">3.</strong> Functions</a></li><li class="chapter-item expanded "><a href="enums.html"><strong aria-hidden="true">4.</strong> Enumerations</a></li><li class="chapter-item expanded "><a href="option.html"><strong aria-hidden="true">5.</strong> Options and Results</a></li><li class="chapter-item expanded "><a href="blocks.html"><strong aria-hidden="true">6.</strong> Blocks</a></li><li class="chapter-item expanded "><a href="structs.html"><strong aria-hidden="true">7.</strong> Structs and Traits</a></li><li class="chapter-item expanded "><a href="borrowing.html"><strong aria-hidden="true">8.</strong> Borrowing</a></li><li class="chapter-item expanded "><a href="common_issues.html"><strong aria-hidden="true">9.</strong> Common Issues</a></li></ol>
+                <ol class="chapter"><li class="chapter-item expanded affix "><a href="title.html">The Rustboro Trainer School</a></li><li class="chapter-item expanded affix "><a href="dedication.html">Dedication & Acknowledgements</a></li><li class="chapter-item expanded affix "><li class="part-title">A Very Long Introduction to Rust</li><li class="chapter-item expanded "><a href="variables.html"><strong aria-hidden="true">1.</strong> Variables</a></li><li class="chapter-item expanded "><a href="control_flow.html"><strong aria-hidden="true">2.</strong> Control Flow</a></li><li class="chapter-item expanded "><a href="functions.html"><strong aria-hidden="true">3.</strong> Functions</a></li><li class="chapter-item expanded "><a href="enums.html"><strong aria-hidden="true">4.</strong> Enumerations</a></li><li class="chapter-item expanded "><a href="option.html"><strong aria-hidden="true">5.</strong> Options and Results</a></li><li class="chapter-item expanded "><a href="blocks.html"><strong aria-hidden="true">6.</strong> Blocks and Scope</a></li><li class="chapter-item expanded "><a href="structs.html"><strong aria-hidden="true">7.</strong> Structs and Tuples</a></li><li class="chapter-item expanded "><a href="traits.html"><strong aria-hidden="true">8.</strong> Traits and Polymorphism</a></li><li class="chapter-item expanded "><a href="macros.html"><strong aria-hidden="true">9.</strong> Using Macros!</a></li><li class="chapter-item expanded "><a href="macrodef.html"><strong aria-hidden="true">10.</strong> Creating Macros!</a></li><li class="chapter-item expanded "><a href="visibility.html"><strong aria-hidden="true">11.</strong> Visibility</a></li><li class="chapter-item expanded "><a href="borrowing.html"><strong aria-hidden="true">12.</strong> Borrowing</a></li><li class="chapter-item expanded "><a href="lifetimes.html"><strong aria-hidden="true">13.</strong> Lifetimes</a></li><li class="chapter-item expanded "><a href="common_issues.html"><strong aria-hidden="true">14.</strong> Common Issues</a></li></ol>
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle">
                 <div class="sidebar-resize-indicator"></div>
@@ -255,7 +255,7 @@ my_new_vec.push(true);
 <p><a href="https://doc.rust-lang.org/std/primitive.array.html">array</a>,
 <a href="https://doc.rust-lang.org/std/vec/struct.Vec.html">Vec</a></p>
 <h3 id="string-str"><a class="header" href="#string-str">String &amp;str</a></h3>
-<p>Rust has two (yes, two) String types, which can be somewhat difficult to wrap your head around as a new Rust programmer. We will discuss <code>&amp;str</code> in further detail in the <a href="">Borrowing</a> chapter, but for now, <code>&amp;str</code> provides a static, immutable reference to a string, such as what you would get by immediately definining a string in other languages:</p>
+<p>Rust has two (yes, two) String types, which can be somewhat difficult to wrap your head around as a new Rust programmer. We will discuss <code>&amp;str</code> in further detail in the <a href="https://mwoo-cmu.github.io/tools/rustboro/book/borrowing.html">Borrowing</a> chapter, but for now, <code>&amp;str</code> provides a static, immutable reference to a string, such as what you would get by immediately definining a string in other languages:</p>
 <pre><code class="language-python"># This is in Python
 print("This would be a &amp;str")
 </code></pre>
@@ -393,7 +393,8 @@ fn also_add(arg1: u32, arg2: u32) -&gt; u32 {
   // doesn't return anything
 }
 <span class="boring">}</span></code></pre></pre>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="enums-and-error-handling"><a class="header" href="#enums-and-error-handling">Enums and Error Handling</a></h1>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="enums"><a class="header" href="#enums">Enums</a></h1>
+<p>Since you may not have a ton of experience with enums, I'll explain them in C and Python first. This will also highlight some of the difficulties with enums in those languages, which Rust enums solve.</p>
 <h2 id="c-and-python-but-actually-im-just-talking-about-league-for-20-mins"><a class="header" href="#c-and-python-but-actually-im-just-talking-about-league-for-20-mins">C and Python but actually I'm just talking about league for 20 mins</a></h2>
 <p>Enumeration types, or enums for short, are typically used to define a set of related constants, typically for comparison. They are not very well-<em>defined</em> (ha ha) in C and Python, and typically take the form of labels assigned to arbitrary integer values (since they're the easiest to work with).</p>
 <p>Since enums are somewhat abstract, let's use a concrete example. Suppose we're leagueing some legends and want to specify what lane someone is in. We have 5 total options, and we would write something like this in C and Python.</p>
@@ -624,6 +625,73 @@ let Lane::Top { minions_farmed } = jann else {
   panic!("Oh no jann's not playing top? It's lost just dodge. Do NOT make me witness that guy's akali or sylas again PLEASE");
 };
 <span class="boring">}</span></code></pre></pre>
+<h2 id="comparing-enums-with-if"><a class="header" href="#comparing-enums-with-if">Comparing Enums With If</a></h2>
+<p>We will discuss the <code>#[derive]</code> macro in further detail in the <a href="https://mwoo-cmu.github.io/tools/rustboro/book/macros.html">Using Macros!</a> chapter, but for now, we will just talk about <code>#[derive(PartialEq)]</code>.</p>
+<p>Right now, we cannot use the <code>==</code> or <code>!=</code> operators on any of our enums. In order to check them, we must use either a <code>match</code> case or an <code>if let</code> statement.</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>let justins_current_camp: Camp = Camp::Gromp;
+// This is okay
+if let Camp::Gromp = justins_current_camp {
+  println!("Justin has gromp prio");
+} else {
+  println!("Justin has lost gromp prio");
+}
+
+// This is a compiler error!
+if justins_current_camp == Camp::Gromp {
+  println!("Justin's still at gromp don't worry");
+}
+<span class="boring">}</span></code></pre></pre>
+<p>If we want to be able to use <code>==</code> and <code>!=</code>, we need to derive <code>PartialEq</code>.</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>// Debug lets us print, PartialEq lets us use ==. We can put both in the derive
+// macro as arguments
+#[derive(Debug, PartialEq)]
+enum Camp {
+  Gromp,
+  Krugs,
+  Red,
+  Blue,
+  Wolves,
+  Raptors,
+  Grubs,
+  Dragon,
+  RiftHerald,
+  Baron,
+}
+
+// Now this is okay
+if justins_current_camp == Camp::Gromp {
+  println!("Justin is still at gromp");
+}
+<span class="boring">}</span></code></pre></pre>
+<p>This also works with struct enums, and checks their members against each other as well:</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>#[derive(PartialEq)]
+enum Lane {
+  Top { minions_farmed: u16 },
+  Jg { pathing: Vec&lt;Camp&gt; },
+  Mid { minions_farmed: u16 },
+  Bot(u16),
+  Sup { ward_score: u16 },
+}
+
+let good_farm: Lane = Lane::Bot(100);
+let adc: Lane = Lane::Bot(89);
+if adc != good_farm {
+  println!("Our ADC has missed farm");
+}
+
+let good_wards: Lane = Lane::Sup { ward_score: 25 };
+let sup: Lane = Lane::Sup { ward_score: 25 };
+if sup == good_wards {
+  println!("Our support has warded wardily");
+}
+<span class="boring">}</span></code></pre></pre>
+<p>Note that if we want to use other comparison operators, such as <code>&gt;</code>, <code>&gt;=</code>, <code>&lt;</code>, <code>&lt;=</code>, etc., we need to derive <code>Eq</code>, as well as <code>PartialEq</code>.</p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="options-and-results"><a class="header" href="#options-and-results">Options and Results</a></h1>
 <p>Rust doesn't have traditional <code>null</code> pointers and error handling (aside from the <code>panic!</code> macro), and relies on two built-in enumerations to manage these.</p>
 <h2 id="null-using-option"><a class="header" href="#null-using-option">null Using Option<T></a></h2>
@@ -652,6 +720,8 @@ if let Some(s) = maybe_string {
   println!("It's not a string: {:?}", maybe_string);
 }
 <span class="boring">}</span></code></pre></pre>
+<h3 id="documentation-3"><a class="header" href="#documentation-3">Documentation</a></h3>
+<p><a href="https://doc.rust-lang.org/std/option/enum.Option.html">Option</a></p>
 <h2 id="errors-and-not-errors"><a class="header" href="#errors-and-not-errors">Errors and Not-Errors</a></h2>
 <p>In many other languages, a function may throw an exception to the exception handler, which manages the error and decides whether or not to exit the program. In Rust, however, errors are managed with the built-in <code>Result</code> enum, or with <code>panic!</code>ing. Using <code>Result</code> is typically preferable, especially for recoverable errors.</p>
 <p><code>Result&lt;T, E&gt;</code> is also generic, and defined as follows, with two generic types (one for valid, and one for error):</p>
@@ -691,6 +761,8 @@ fn unwrap&lt;T, E&gt;(res: Result&lt;T, E&gt;) -&gt; T {
   }
 }
 <span class="boring">}</span></code></pre></pre>
+<h3 id="documentation-4"><a class="header" href="#documentation-4">Documentation</a></h3>
+<p><a href="https://doc.rust-lang.org/std/result/enum.Result.html">Result</a></p>
 <h2 id="the-enemy-mids-all-chat-after-he-solo-kills-the-your-mid"><a class="header" href="#the-enemy-mids-all-chat-after-he-solo-kills-the-your-mid">The Enemy Mid's All Chat After He Solo Kills The Your Mid</a></h2>
 <p>When a function returns a <code>Result</code>, and is called within another function that returns a <code>Result</code> with the same error type, you can use the fabled <code>?</code> operator.</p>
 <p>The <code>?</code> operator performs the equivalent of the following code:</p>
@@ -756,7 +828,7 @@ fn caller(val: u32) -&gt; Result&lt;f32&gt; {
 
 fn alt_err(val: u32) -&gt; Result&lt;f32&gt; {
   let f: f32 = val as f32;
-  if f &lt; 0 {
+  if f &lt; 0.0 {
     return Err(anyhow!("value overflow"));
   }
   Ok(f)
@@ -768,9 +840,348 @@ fn another(val: u32) -&gt; Result&lt;u32&gt; {
   Ok(int)
 }
 <span class="boring">}</span></code></pre></pre>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="blocks"><a class="header" href="#blocks">Blocks</a></h1>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="structs-and-traits"><a class="header" href="#structs-and-traits">Structs and Traits</a></h1>
+<h3 id="documentation-5"><a class="header" href="#documentation-5">Documentation</a></h3>
+<p><a href="https://docs.rs/anyhow/latest/anyhow/type.Result.html">anyhow::Result</a>,
+<a href="https://docs.rs/anyhow/latest/anyhow/macro.anyhow.html">anyhow::anyhow!</a></p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="scopes"><a class="header" href="#scopes">Scopes</a></h1>
+<p>Rust does not have a traditional garbage collector, but still automatically manages memory for you. In order to do this, it needs to maintain a scope for each variable, during which the variable exists, and after which the variable can no longer be accessed.</p>
+<p>A scope in Rust is delineated by the set of curly braces where it is defined. For example, a local variable defined within a function is in scope for the entirety of that function, but cannot be accessed outside of that function. Similarly, variables defined within a loop can't be accessed outside of that loop. Overwiting a variable also causes the old version to be out of scope.</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>fn func(arg: f32) {
+  // function arguments are in scope for the function that takes them in
+
+  // define my_var in the scope of func
+  let mut my_var: u32 = 10;
+
+  while my_var &gt; 0 {
+    // inner is in scope only for each iteration of the loop
+    let mut inner: i16 = -1;
+    // we can still access my_var, since its scope is the entire function
+    my_var -= 1;
+    // we can also access inner here
+    inner += 1;
+  }
+  // we can't access inner here, since we're outside the loop, so this is a 
+  // compiler error!
+  println!("{}", inner);
+  
+  // we can access my_var here
+  println!("{}", my_var);
+}
+
+// after the ending curly brace, we can't access my_var anymore
+println!("{}", my_var);
+// Compiler error!
+<span class="boring">}</span></code></pre></pre>
+<p>We can also arbitrarily create a scope for a variable to ensure that it goes out of scope after a certain point using curly braces.</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>// here is some code
+let mut a: isize = 1;
+let mut b: usize = 2;
+
+// here we create a scope for c with arbitrary curly braces, no loop or function needed
+{
+  let mut c: isize = 714;
+  c += 633;
+}
+// after this ending brace, c is no longer in scope
+
+// however, we can access both a and b, since they were defined in this scope
+println!("{}, {}", a, b);
+
+// here, we can't actually access c, so this is a compiler error!
+a += c;
+<span class="boring">}</span></code></pre></pre>
+<h2 id="advanced-let-statements"><a class="header" href="#advanced-let-statements">Advanced Let Statements</a></h2>
+<p>We're going to refer to these arbitrary curly braces as a block. Each block can actually have a return value, and be assigned in a let statement.</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>let outer: i32 = -1;
+
+let block_var: i32 = {
+  // this is a block with its own scope!
+  let inner: i32 = 715;
+
+  // as with other blocks, we can access variables from the parent block
+  if outer &gt; 0 {
+    // here we return the value of inner from this block
+    return inner;
+  }
+
+  // note that we are returning this value here (indicated by lack of trailing semicolon on the final statement in a block)
+  inner - outer
+}; // note the necessary semicolon after the block in the assignment
+
+// here block_var takes the value returned from the block
+
+// we can access block_var and outer, but not inner
+println!("{}, {}", outer, block_var);
+
+// compiler error!
+println!("{}", inner);
+<span class="boring">}</span></code></pre></pre>
+<h3 id="ternary-operator-let-if-not-to-be-confused-with-if-let"><a class="header" href="#ternary-operator-let-if-not-to-be-confused-with-if-let">Ternary Operator: let if (not to be confused with if let)</a></h3>
+<p>We can also use a similar setup with simplified syntax to use the ternary operator:</p>
+<pre><code class="language-c">// for reference, here is the ternary operator in C, and its equivalent
+int val = cond ? val_true : val_false;
+
+// equivalent to
+int val;
+if (cond) {
+  val = val_true;
+} else {
+  val = val_false;
+}
+</code></pre>
+<pre><code class="language-python"># and here is the ternary operator in python
+val = val_true if cond else val_false
+
+# equivalent to
+val = None
+if cond:
+  val = val_true
+else:
+  val = val_false
+</code></pre>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>// and here is what it looks like in Rust
+let val = if cond { val_true } else { val_false };
+// notice that each of the blocks is simply returning the value!
+
+// equivalent
+let val;
+if cond {
+  val = val_true;
+} else {
+  val = val_false;
+}
+<span class="boring">}</span></code></pre></pre>
+<p>This works with other control flow too, such as match cases:</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>// think back to the league example from the enums chapter...
+
+// Lane enumeration, with associated info!
+enum Lane {
+  // enum members can have named attributes, like so:
+  Top { minions_farmed: u16 },
+  // an ordered list of camps our jungler has visited
+  Jg { pathing: Vec&lt;Camp&gt; },
+  Mid { minions_farmed: u16 },
+  // enum members may also have unnamed attributes, in which case the user
+  // needs to easily be able to assume what it is. In this case, ADCs don't do
+  // anything except farming minions, so we know it must be that
+  Bot(u16),
+  Sup { ward_score: u16 },
+}
+
+// assume this lane gets assigned elsewhere...
+let lane: Lane = /* Some assignment */;
+
+let lane_number: Option&lt;u16&gt; = match lane {
+  Lane::Top { minions_farmed } =&gt; Some(minions_farmed),
+  Lane::Jg { pathing } =&gt; None,
+  Lane::Mid { minions_farmed } =&gt; Some(minions_farmed),
+  Lane::Bot(minions) =&gt; Some(minions),
+  Lane::Sup { ward_score } =&gt; Some(ward_score),
+};
+<span class="boring">}</span></code></pre></pre>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="structures"><a class="header" href="#structures">Structures</a></h1>
+<p>Structures, or structs, allow us to collect related data into a single type. In Rust, structs are more like objects or classes in other languages, as they can have methods tied to them.</p>
+<p>However, Rust does not have traditional inheritance, which we will discuss further in the <a href="https://mwoo-cmu.github.io/tools/rustboro/book/traits.html">Traits and Polymorphism</a> chapter.</p>
+<p>Structs in Rust are defined using the <code>struct</code> keyword, and are traditionally named with TitleCase. In this chapter and the traits chapter, we will use an <strong>extremely simplified</strong> Pokémon example. I cannot stress enough how oversimplified this example is; not that this example is terribly simple, but that the Pokémon internal systems are actually very complex.</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>// this struct contains the base stats for a Pokemon
+struct BaseStats {
+  // we will discuss visibility in a later chapter. For now, we'll set 
+  // everything as publicly visible
+  pub hp: u16,
+  pub atk: u16, // note the trailing comma
+  pub def: u16,
+  pub spa: u16,
+  pub spd: u16,
+  pub spe: u16,
+}
+
+// this enum represents the non-volatile status condition of a Pokemon
+enum NVStatus {
+  None,
+  Asleep { turns: u8, max_turns: u8 },
+  // Pokemon Legends: Arceus
+  Drowzy,
+  Poisoned,
+  // if a Pokemon has survived with Bad Poison for more than 255 turns, I'll
+  // eat a shoe. Note that this value would reset on switch
+  BadlyPoisoned { turns: u8 },
+  Frozen,
+  // Pokemon Legends: Arceus
+  Frostbite,
+  Burned,
+  Paralyzed,
+}
+
+// here's a basic struct, which we will build on throughout this example.
+struct Pokemon {
+  // structs can be freely nested
+  pub base_stats: BaseStats,
+  // structs can have enums as members
+  pub status: NVStatus,
+  // structs can have primitive types too, of course
+  pub level: u8,
+  pub name: String,
+}
+
+// here's how we initialise a Pokemon
+let noibat: Pokemon = Pokemon {
+  base_stats: BaseStats {
+    hp: 40,
+    atk: 30,
+    def: 35,
+    spa: 45,
+    spd: 40,
+    spe: 55,
+  },
+  status: NVStatus::None,
+  level: 1,
+  name: String::from("Noibat"),
+};
+
+// we can then access the fields of the struct with the dot operator
+println!("Noibat is level {}", noibat.level);
+<span class="boring">}</span></code></pre></pre>
+<p>Notably, the initialisation syntax for a struct can be somewhat difficult to read, so it is often helpful to define a <code>new</code> class method. We define methods for a struct with the <code>impl</code> keyword.</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>// here we specify that we are adding functions to the BaseStats struct
+impl BaseStats {
+  // we define a method called `new` for BaseStats, which takes in each of the stats
+
+  // the title case `Self` type refers to the type that the `impl` statement
+  // is applied to. In this case, Self is equivalent to BaseStats.
+  fn new(hp: u16, atk: u16, def: u16, spa: u16, spd: u16, spe: u16) -&gt; Self {
+  
+    // note that this value is initialised and immediately returned. Notice the 
+    // lack of trailing semicolon.
+    Self {
+      // here we assign the `hp` field of the BaseStats struct to the hp 
+      // parameter variable
+      hp: hp,
+      // this can be written in shorthand if the struct field and the variable 
+      // name are the same
+      atk,
+      def,
+      spa,
+      spd,
+      spe,
+    }
+  }
+}
+
+// Here we'll define a `new` constructor for the Pokemon struct too
+impl Pokemon {
+  // we don't have to take in parameters for all of the fields, either. 
+  // In this case, we know that the level should start at 1 and the status 
+  // should start as None.
+  fn new(base_stats: BaseStats, name: String) -&gt; Self {
+    Self {
+      // value taken from parameter
+      base_stats,
+      // values initialised to defaults
+      status: NVStatus::None,
+      level: 1,
+      name,
+    }
+  }
+}
+<span class="boring">}</span></code></pre></pre>
+<p>Since the <code>new</code> functions we've just defined are class methods (they don't apply to a specific instance of the struct), we call it using the <code>Type::method</code> syntax.</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>// now, we can define a Pokemon much more easily. Note that we call `new` on 
+// `Pokemon` and `BaseStats`, rather than on `deino`.
+// we don't have to specify the level or status either
+let deino: Pokemon = Pokemon::new(BaseStats::new(52, 65, 50, 45, 50, 38), String::from("Deino"));
+
+// we can still use the dot operator to access fields, even in nested structs
+println!("Deino's base attack stat is {}", deino.base_stats.atk);
+<span class="boring">}</span></code></pre></pre>
+<p>Now, let's add some more methods to our <code>Pokemon</code> class. Instance methods are called using the <code>instance.method</code> syntax.</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>impl Pokemon {
+  /* definition of `new` method from above */
+
+  // We'll start with a simple method, such as printing level
+  fn print_level(&amp;self) {
+    // the lowercase `self` keyword refers to the particular instance of the
+    // struct that this method is called on. For now, we'll always include the 
+    // `&amp;` symbol, which we will discuss further in a later chapter.
+    println!("{} is level {}", self.name, self.level);
+  }
+
+  // We'll also define a method that modifies the struct
+  fn level_up(&amp;mut self) {
+    // note that the `self` keyword is specified as `mut`. This allows us to
+    // actually modify `self` in this function.
+
+    // if we had not defined `self` as `mut`, this would be a compiler error
+    self.level += 1;
+    
+    println!("{} levelled up to {}!", self.name, self.level);
+  }
+}
+
+let zweilous: Pokemon = Pokemon::new(BaseStats::new(72, 85, 70, 65, 70, 58), String::from("Zweilous"));
+// Here we print zweilous' level. Note that we call `print_level` on `zweilous`
+// rather than on `Pokemon`
+zweilous.print_level();
+
+// `zweilous` is not defined as mutable, so this is a compiler error!
+zweilous.level_up();
+
+let mut hydreigon: Pokemon = Pokemon::new(BaseStats::new(92, 105, 90, 125, 90, 98), String::from("Hydreigon"));
+
+// This is okay, because `hydreigon` is defined as mutable :)
+hydreigon.level_up();
+<span class="boring">}</span></code></pre></pre>
+<h1 id="tuples"><a class="header" href="#tuples">Tuples</a></h1>
+<p>Tuples are interesting structures used to compose sets of data with differing types. A tuple is defined as follows:</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>  // the tuple type is (u32, f32, i32)
+  let mut tup: (u32, f32, i32) = (0, 1.0, -2);
+
+  // tuples are accessed using the dot operator followed by the index number
+  println!("The float is {}", tup.1);
+
+  tup.0 += 3;
+<span class="boring">}</span></code></pre></pre>
+<p>Tuples in Rust differ from other languages in that they cannot be traversed with an iterator, and the more you think about it, the less useful they seem to become. Under the hood, a tuple looks like this:</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>// This is the representation of (Vec&lt;u8&gt;, usize, f32, String)
+struct Unnamed {
+  0: Vec&lt;u8&gt;,
+  1: usize,
+  2: f32,
+  3: String,
+}
+<span class="boring">}</span></code></pre></pre>
+<p>Tuples can generally be treated as structs, but may be easier to produce on the fly for certain niche use cases.</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="traits-and-polymorphism"><a class="header" href="#traits-and-polymorphism">Traits and Polymorphism</a></h1>
+<p>We're going to keep building on the Pokémon example from the <a href="https://mwoo-cmu.github.io/tools/rustboro/book/structs.html">Structs</a> chapter, so it may be helpful to read that one first.</p>
+<p>As we've seen in the previous chapter, we can tie methods to particular structures, but there isn't traditional inheritance (we can't extend one struct with another).</p>
+<p>Polymorphism in Rust is a little different, and is done using <code>trait</code>s. A <code>trait</code> refers to a set of methods, which should be defined on a number of different structs.</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="using-macros"><a class="header" href="#using-macros">Using Macros!</a></h1>
+<h2 id="i-will-derive"><a class="header" href="#i-will-derive">I Will Derive!</a></h2>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="creating-macros"><a class="header" href="#creating-macros">Creating Macros!</a></h1>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="visibility"><a class="header" href="#visibility">Visibility</a></h1>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="borrowing"><a class="header" href="#borrowing">Borrowing</a></h1>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="lifetimes"><a class="header" href="#lifetimes">Lifetimes</a></h1>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="common-issues"><a class="header" href="#common-issues">Common Issues</a></h1>
 
                     </main>

@@ -88,7 +88,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded affix "><a href="title.html">The Rustboro Trainer School</a></li><li class="chapter-item expanded affix "><a href="dedication.html">Dedication & Acknowledgements</a></li><li class="chapter-item expanded affix "><li class="part-title">Rust</li><li class="chapter-item expanded "><a href="variables.html"><strong aria-hidden="true">1.</strong> Variables</a></li><li class="chapter-item expanded "><a href="control_flow.html"><strong aria-hidden="true">2.</strong> Control Flow</a></li><li class="chapter-item expanded "><a href="functions.html"><strong aria-hidden="true">3.</strong> Functions</a></li><li class="chapter-item expanded "><a href="enums.html" class="active"><strong aria-hidden="true">4.</strong> Enumerations</a></li><li class="chapter-item expanded "><a href="option.html"><strong aria-hidden="true">5.</strong> Options and Results</a></li><li class="chapter-item expanded "><a href="blocks.html"><strong aria-hidden="true">6.</strong> Blocks</a></li><li class="chapter-item expanded "><a href="structs.html"><strong aria-hidden="true">7.</strong> Structs and Traits</a></li><li class="chapter-item expanded "><a href="borrowing.html"><strong aria-hidden="true">8.</strong> Borrowing</a></li><li class="chapter-item expanded "><a href="common_issues.html"><strong aria-hidden="true">9.</strong> Common Issues</a></li></ol>
+                <ol class="chapter"><li class="chapter-item expanded affix "><a href="title.html">The Rustboro Trainer School</a></li><li class="chapter-item expanded affix "><a href="dedication.html">Dedication & Acknowledgements</a></li><li class="chapter-item expanded affix "><li class="part-title">A Very Long Introduction to Rust</li><li class="chapter-item expanded "><a href="variables.html"><strong aria-hidden="true">1.</strong> Variables</a></li><li class="chapter-item expanded "><a href="control_flow.html"><strong aria-hidden="true">2.</strong> Control Flow</a></li><li class="chapter-item expanded "><a href="functions.html"><strong aria-hidden="true">3.</strong> Functions</a></li><li class="chapter-item expanded "><a href="enums.html" class="active"><strong aria-hidden="true">4.</strong> Enumerations</a></li><li class="chapter-item expanded "><a href="option.html"><strong aria-hidden="true">5.</strong> Options and Results</a></li><li class="chapter-item expanded "><a href="blocks.html"><strong aria-hidden="true">6.</strong> Blocks and Scope</a></li><li class="chapter-item expanded "><a href="structs.html"><strong aria-hidden="true">7.</strong> Structs and Tuples</a></li><li class="chapter-item expanded "><a href="traits.html"><strong aria-hidden="true">8.</strong> Traits and Polymorphism</a></li><li class="chapter-item expanded "><a href="macros.html"><strong aria-hidden="true">9.</strong> Using Macros!</a></li><li class="chapter-item expanded "><a href="macrodef.html"><strong aria-hidden="true">10.</strong> Creating Macros!</a></li><li class="chapter-item expanded "><a href="visibility.html"><strong aria-hidden="true">11.</strong> Visibility</a></li><li class="chapter-item expanded "><a href="borrowing.html"><strong aria-hidden="true">12.</strong> Borrowing</a></li><li class="chapter-item expanded "><a href="lifetimes.html"><strong aria-hidden="true">13.</strong> Lifetimes</a></li><li class="chapter-item expanded "><a href="common_issues.html"><strong aria-hidden="true">14.</strong> Common Issues</a></li></ol>
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle">
                 <div class="sidebar-resize-indicator"></div>
@@ -173,7 +173,8 @@
 
                 <div id="content" class="content">
                     <main>
-                        <h1 id="enums-and-error-handling"><a class="header" href="#enums-and-error-handling">Enums and Error Handling</a></h1>
+                        <h1 id="enums"><a class="header" href="#enums">Enums</a></h1>
+<p>Since you may not have a ton of experience with enums, I'll explain them in C and Python first. This will also highlight some of the difficulties with enums in those languages, which Rust enums solve.</p>
 <h2 id="c-and-python-but-actually-im-just-talking-about-league-for-20-mins"><a class="header" href="#c-and-python-but-actually-im-just-talking-about-league-for-20-mins">C and Python but actually I'm just talking about league for 20 mins</a></h2>
 <p>Enumeration types, or enums for short, are typically used to define a set of related constants, typically for comparison. They are not very well-<em>defined</em> (ha ha) in C and Python, and typically take the form of labels assigned to arbitrary integer values (since they're the easiest to work with).</p>
 <p>Since enums are somewhat abstract, let's use a concrete example. Suppose we're leagueing some legends and want to specify what lane someone is in. We have 5 total options, and we would write something like this in C and Python.</p>
@@ -404,6 +405,73 @@ let Lane::Top { minions_farmed } = jann else {
   panic!("Oh no jann's not playing top? It's lost just dodge. Do NOT make me witness that guy's akali or sylas again PLEASE");
 };
 <span class="boring">}</span></code></pre></pre>
+<h2 id="comparing-enums-with-if"><a class="header" href="#comparing-enums-with-if">Comparing Enums With If</a></h2>
+<p>We will discuss the <code>#[derive]</code> macro in further detail in the <a href="https://mwoo-cmu.github.io/tools/rustboro/book/macros.html">Using Macros!</a> chapter, but for now, we will just talk about <code>#[derive(PartialEq)]</code>.</p>
+<p>Right now, we cannot use the <code>==</code> or <code>!=</code> operators on any of our enums. In order to check them, we must use either a <code>match</code> case or an <code>if let</code> statement.</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>let justins_current_camp: Camp = Camp::Gromp;
+// This is okay
+if let Camp::Gromp = justins_current_camp {
+  println!("Justin has gromp prio");
+} else {
+  println!("Justin has lost gromp prio");
+}
+
+// This is a compiler error!
+if justins_current_camp == Camp::Gromp {
+  println!("Justin's still at gromp don't worry");
+}
+<span class="boring">}</span></code></pre></pre>
+<p>If we want to be able to use <code>==</code> and <code>!=</code>, we need to derive <code>PartialEq</code>.</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>// Debug lets us print, PartialEq lets us use ==. We can put both in the derive
+// macro as arguments
+#[derive(Debug, PartialEq)]
+enum Camp {
+  Gromp,
+  Krugs,
+  Red,
+  Blue,
+  Wolves,
+  Raptors,
+  Grubs,
+  Dragon,
+  RiftHerald,
+  Baron,
+}
+
+// Now this is okay
+if justins_current_camp == Camp::Gromp {
+  println!("Justin is still at gromp");
+}
+<span class="boring">}</span></code></pre></pre>
+<p>This also works with struct enums, and checks their members against each other as well:</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>#[derive(PartialEq)]
+enum Lane {
+  Top { minions_farmed: u16 },
+  Jg { pathing: Vec&lt;Camp&gt; },
+  Mid { minions_farmed: u16 },
+  Bot(u16),
+  Sup { ward_score: u16 },
+}
+
+let good_farm: Lane = Lane::Bot(100);
+let adc: Lane = Lane::Bot(89);
+if adc != good_farm {
+  println!("Our ADC has missed farm");
+}
+
+let good_wards: Lane = Lane::Sup { ward_score: 25 };
+let sup: Lane = Lane::Sup { ward_score: 25 };
+if sup == good_wards {
+  println!("Our support has warded wardily");
+}
+<span class="boring">}</span></code></pre></pre>
+<p>Note that if we want to use other comparison operators, such as <code>&gt;</code>, <code>&gt;=</code>, <code>&lt;</code>, <code>&lt;=</code>, etc., we need to derive <code>Eq</code>, as well as <code>PartialEq</code>.</p>
 
                     </main>
 

@@ -3,7 +3,7 @@
     <head>
         <!-- Book generated using mdBook -->
         <meta charset="UTF-8">
-        <title>Structs and Traits - Rustboro Trainer School (Rust Notes)</title>
+        <title>Structs and Tuples - Rustboro Trainer School (Rust Notes)</title>
 
 
         <!-- Custom HTML head -->
@@ -88,7 +88,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded affix "><a href="title.html">The Rustboro Trainer School</a></li><li class="chapter-item expanded affix "><a href="dedication.html">Dedication & Acknowledgements</a></li><li class="chapter-item expanded affix "><li class="part-title">Rust</li><li class="chapter-item expanded "><a href="variables.html"><strong aria-hidden="true">1.</strong> Variables</a></li><li class="chapter-item expanded "><a href="control_flow.html"><strong aria-hidden="true">2.</strong> Control Flow</a></li><li class="chapter-item expanded "><a href="functions.html"><strong aria-hidden="true">3.</strong> Functions</a></li><li class="chapter-item expanded "><a href="enums.html"><strong aria-hidden="true">4.</strong> Enumerations</a></li><li class="chapter-item expanded "><a href="option.html"><strong aria-hidden="true">5.</strong> Options and Results</a></li><li class="chapter-item expanded "><a href="blocks.html"><strong aria-hidden="true">6.</strong> Blocks</a></li><li class="chapter-item expanded "><a href="structs.html" class="active"><strong aria-hidden="true">7.</strong> Structs and Traits</a></li><li class="chapter-item expanded "><a href="borrowing.html"><strong aria-hidden="true">8.</strong> Borrowing</a></li><li class="chapter-item expanded "><a href="common_issues.html"><strong aria-hidden="true">9.</strong> Common Issues</a></li></ol>
+                <ol class="chapter"><li class="chapter-item expanded affix "><a href="title.html">The Rustboro Trainer School</a></li><li class="chapter-item expanded affix "><a href="dedication.html">Dedication & Acknowledgements</a></li><li class="chapter-item expanded affix "><li class="part-title">A Very Long Introduction to Rust</li><li class="chapter-item expanded "><a href="variables.html"><strong aria-hidden="true">1.</strong> Variables</a></li><li class="chapter-item expanded "><a href="control_flow.html"><strong aria-hidden="true">2.</strong> Control Flow</a></li><li class="chapter-item expanded "><a href="functions.html"><strong aria-hidden="true">3.</strong> Functions</a></li><li class="chapter-item expanded "><a href="enums.html"><strong aria-hidden="true">4.</strong> Enumerations</a></li><li class="chapter-item expanded "><a href="option.html"><strong aria-hidden="true">5.</strong> Options and Results</a></li><li class="chapter-item expanded "><a href="blocks.html"><strong aria-hidden="true">6.</strong> Blocks and Scope</a></li><li class="chapter-item expanded "><a href="structs.html" class="active"><strong aria-hidden="true">7.</strong> Structs and Tuples</a></li><li class="chapter-item expanded "><a href="traits.html"><strong aria-hidden="true">8.</strong> Traits and Polymorphism</a></li><li class="chapter-item expanded "><a href="macros.html"><strong aria-hidden="true">9.</strong> Using Macros!</a></li><li class="chapter-item expanded "><a href="macrodef.html"><strong aria-hidden="true">10.</strong> Creating Macros!</a></li><li class="chapter-item expanded "><a href="visibility.html"><strong aria-hidden="true">11.</strong> Visibility</a></li><li class="chapter-item expanded "><a href="borrowing.html"><strong aria-hidden="true">12.</strong> Borrowing</a></li><li class="chapter-item expanded "><a href="lifetimes.html"><strong aria-hidden="true">13.</strong> Lifetimes</a></li><li class="chapter-item expanded "><a href="common_issues.html"><strong aria-hidden="true">14.</strong> Common Issues</a></li></ol>
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle">
                 <div class="sidebar-resize-indicator"></div>
@@ -173,7 +173,189 @@
 
                 <div id="content" class="content">
                     <main>
-                        <h1 id="structs-and-traits"><a class="header" href="#structs-and-traits">Structs and Traits</a></h1>
+                        <h1 id="structures"><a class="header" href="#structures">Structures</a></h1>
+<p>Structures, or structs, allow us to collect related data into a single type. In Rust, structs are more like objects or classes in other languages, as they can have methods tied to them.</p>
+<p>However, Rust does not have traditional inheritance, which we will discuss further in the <a href="https://mwoo-cmu.github.io/tools/rustboro/book/traits.html">Traits and Polymorphism</a> chapter.</p>
+<p>Structs in Rust are defined using the <code>struct</code> keyword, and are traditionally named with TitleCase. In this chapter and the traits chapter, we will use an <strong>extremely simplified</strong> Pokémon example. I cannot stress enough how oversimplified this example is; not that this example is terribly simple, but that the Pokémon internal systems are actually very complex.</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>// this struct contains the base stats for a Pokemon
+struct BaseStats {
+  // we will discuss visibility in a later chapter. For now, we'll set 
+  // everything as publicly visible
+  pub hp: u16,
+  pub atk: u16, // note the trailing comma
+  pub def: u16,
+  pub spa: u16,
+  pub spd: u16,
+  pub spe: u16,
+}
+
+// this enum represents the non-volatile status condition of a Pokemon
+enum NVStatus {
+  None,
+  Asleep { turns: u8, max_turns: u8 },
+  // Pokemon Legends: Arceus
+  Drowzy,
+  Poisoned,
+  // if a Pokemon has survived with Bad Poison for more than 255 turns, I'll
+  // eat a shoe. Note that this value would reset on switch
+  BadlyPoisoned { turns: u8 },
+  Frozen,
+  // Pokemon Legends: Arceus
+  Frostbite,
+  Burned,
+  Paralyzed,
+}
+
+// here's a basic struct, which we will build on throughout this example.
+struct Pokemon {
+  // structs can be freely nested
+  pub base_stats: BaseStats,
+  // structs can have enums as members
+  pub status: NVStatus,
+  // structs can have primitive types too, of course
+  pub level: u8,
+  pub name: String,
+}
+
+// here's how we initialise a Pokemon
+let noibat: Pokemon = Pokemon {
+  base_stats: BaseStats {
+    hp: 40,
+    atk: 30,
+    def: 35,
+    spa: 45,
+    spd: 40,
+    spe: 55,
+  },
+  status: NVStatus::None,
+  level: 1,
+  name: String::from("Noibat"),
+};
+
+// we can then access the fields of the struct with the dot operator
+println!("Noibat is level {}", noibat.level);
+<span class="boring">}</span></code></pre></pre>
+<p>Notably, the initialisation syntax for a struct can be somewhat difficult to read, so it is often helpful to define a <code>new</code> class method. We define methods for a struct with the <code>impl</code> keyword.</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>// here we specify that we are adding functions to the BaseStats struct
+impl BaseStats {
+  // we define a method called `new` for BaseStats, which takes in each of the stats
+
+  // the title case `Self` type refers to the type that the `impl` statement
+  // is applied to. In this case, Self is equivalent to BaseStats.
+  fn new(hp: u16, atk: u16, def: u16, spa: u16, spd: u16, spe: u16) -&gt; Self {
+  
+    // note that this value is initialised and immediately returned. Notice the 
+    // lack of trailing semicolon.
+    Self {
+      // here we assign the `hp` field of the BaseStats struct to the hp 
+      // parameter variable
+      hp: hp,
+      // this can be written in shorthand if the struct field and the variable 
+      // name are the same
+      atk,
+      def,
+      spa,
+      spd,
+      spe,
+    }
+  }
+}
+
+// Here we'll define a `new` constructor for the Pokemon struct too
+impl Pokemon {
+  // we don't have to take in parameters for all of the fields, either. 
+  // In this case, we know that the level should start at 1 and the status 
+  // should start as None.
+  fn new(base_stats: BaseStats, name: String) -&gt; Self {
+    Self {
+      // value taken from parameter
+      base_stats,
+      // values initialised to defaults
+      status: NVStatus::None,
+      level: 1,
+      name,
+    }
+  }
+}
+<span class="boring">}</span></code></pre></pre>
+<p>Since the <code>new</code> functions we've just defined are class methods (they don't apply to a specific instance of the struct), we call it using the <code>Type::method</code> syntax.</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>// now, we can define a Pokemon much more easily. Note that we call `new` on 
+// `Pokemon` and `BaseStats`, rather than on `deino`.
+// we don't have to specify the level or status either
+let deino: Pokemon = Pokemon::new(BaseStats::new(52, 65, 50, 45, 50, 38), String::from("Deino"));
+
+// we can still use the dot operator to access fields, even in nested structs
+println!("Deino's base attack stat is {}", deino.base_stats.atk);
+<span class="boring">}</span></code></pre></pre>
+<p>Now, let's add some more methods to our <code>Pokemon</code> class. Instance methods are called using the <code>instance.method</code> syntax.</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>impl Pokemon {
+  /* definition of `new` method from above */
+
+  // We'll start with a simple method, such as printing level
+  fn print_level(&amp;self) {
+    // the lowercase `self` keyword refers to the particular instance of the
+    // struct that this method is called on. For now, we'll always include the 
+    // `&amp;` symbol, which we will discuss further in a later chapter.
+    println!("{} is level {}", self.name, self.level);
+  }
+
+  // We'll also define a method that modifies the struct
+  fn level_up(&amp;mut self) {
+    // note that the `self` keyword is specified as `mut`. This allows us to
+    // actually modify `self` in this function.
+
+    // if we had not defined `self` as `mut`, this would be a compiler error
+    self.level += 1;
+    
+    println!("{} levelled up to {}!", self.name, self.level);
+  }
+}
+
+let zweilous: Pokemon = Pokemon::new(BaseStats::new(72, 85, 70, 65, 70, 58), String::from("Zweilous"));
+// Here we print zweilous' level. Note that we call `print_level` on `zweilous`
+// rather than on `Pokemon`
+zweilous.print_level();
+
+// `zweilous` is not defined as mutable, so this is a compiler error!
+zweilous.level_up();
+
+let mut hydreigon: Pokemon = Pokemon::new(BaseStats::new(92, 105, 90, 125, 90, 98), String::from("Hydreigon"));
+
+// This is okay, because `hydreigon` is defined as mutable :)
+hydreigon.level_up();
+<span class="boring">}</span></code></pre></pre>
+<h1 id="tuples"><a class="header" href="#tuples">Tuples</a></h1>
+<p>Tuples are interesting structures used to compose sets of data with differing types. A tuple is defined as follows:</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>  // the tuple type is (u32, f32, i32)
+  let mut tup: (u32, f32, i32) = (0, 1.0, -2);
+
+  // tuples are accessed using the dot operator followed by the index number
+  println!("The float is {}", tup.1);
+
+  tup.0 += 3;
+<span class="boring">}</span></code></pre></pre>
+<p>Tuples in Rust differ from other languages in that they cannot be traversed with an iterator, and the more you think about it, the less useful they seem to become. Under the hood, a tuple looks like this:</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>// This is the representation of (Vec&lt;u8&gt;, usize, f32, String)
+struct Unnamed {
+  0: Vec&lt;u8&gt;,
+  1: usize,
+  2: f32,
+  3: String,
+}
+<span class="boring">}</span></code></pre></pre>
+<p>Tuples can generally be treated as structs, but may be easier to produce on the fly for certain niche use cases.</p>
 
                     </main>
 
@@ -183,7 +365,7 @@
                                 <i class="fa fa-angle-left"></i>
                             </a>
 
-                            <a rel="next prefetch" href="borrowing.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                            <a rel="next prefetch" href="traits.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                                 <i class="fa fa-angle-right"></i>
                             </a>
 
@@ -197,7 +379,7 @@
                         <i class="fa fa-angle-left"></i>
                     </a>
 
-                    <a rel="next prefetch" href="borrowing.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                    <a rel="next prefetch" href="traits.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                         <i class="fa fa-angle-right"></i>
                     </a>
             </nav>

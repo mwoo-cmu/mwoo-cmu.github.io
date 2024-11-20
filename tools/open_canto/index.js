@@ -1,7 +1,7 @@
-import * as wasm from "./pkg/open_canto.js"
+import {CongkitFilter, CongkitVersion, Dict} from "./pkg/open_canto.js"
 
-var filters = new wasm.CongkitFilter();
+var filters = new CongkitFilter();
 filters.chinese = true;
 filters.big5 = true;
 filters.hkscs = true;
-var dict = wasm.Dict.new(wasm.CongkitVersion.V3, filters);
+var dict = Dict.new(CongkitVersion.V3, filters);

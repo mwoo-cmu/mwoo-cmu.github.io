@@ -1,7 +1,7 @@
 import init, {CongkitFilter, CongkitVersion, Dict} from "./pkg/open_canto.js"
 
 function run() {
-  var filters = new CongkitFilter();
+  var filters = CongkitFilter().new();
   filters.chinese = true;
   filters.big5 = true;
   filters.hkscs = true;

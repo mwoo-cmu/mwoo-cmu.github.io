@@ -1,4 +1,4 @@
-import * as wasm from "./pkg/open_canto"
+import * as wasm from "./pkg/open_canto.js"
 
 var filters = new wasm.CongkitFilter();
 filters.chinese = true;

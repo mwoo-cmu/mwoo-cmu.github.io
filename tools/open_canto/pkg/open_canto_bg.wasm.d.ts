@@ -1,0 +1,37 @@
+/* tslint:disable */
+/* eslint-disable */
+export const memory: WebAssembly.Memory;
+export function __wbg_options_free(a: number, b: number): void;
+export function __wbg_get_options_version(a: number): number;
+export function __wbg_set_options_version(a: number, b: number): void;
+export function __wbg_get_options_filters(a: number): number;
+export function __wbg_set_options_filters(a: number, b: number): void;
+export function __wbg_dict_free(a: number, b: number): void;
+export function dict_new(a: number, b: number): number;
+export function dict_switch_ck_ver(a: number, b: number): void;
+export function dict_rebuild_ck(a: number, b: number, c: number): void;
+export function dict_query_js(a: number, b: number, c: number, d: number, e: number, f: number, g: number, h: number, i: number, j: number, k: number): number;
+export function __wbg_congkitfilter_free(a: number, b: number): void;
+export function __wbg_get_congkitfilter_chinese(a: number): number;
+export function __wbg_set_congkitfilter_chinese(a: number, b: number): void;
+export function __wbg_get_congkitfilter_big5(a: number): number;
+export function __wbg_set_congkitfilter_big5(a: number, b: number): void;
+export function __wbg_get_congkitfilter_hkscs(a: number): number;
+export function __wbg_set_congkitfilter_hkscs(a: number, b: number): void;
+export function __wbg_get_congkitfilter_taiwanese(a: number): number;
+export function __wbg_set_congkitfilter_taiwanese(a: number, b: number): void;
+export function __wbg_get_congkitfilter_kanji(a: number): number;
+export function __wbg_set_congkitfilter_kanji(a: number, b: number): void;
+export function __wbg_get_congkitfilter_hiragana(a: number): number;
+export function __wbg_set_congkitfilter_hiragana(a: number, b: number): void;
+export function __wbg_get_congkitfilter_katakana(a: number): number;
+export function __wbg_set_congkitfilter_katakana(a: number, b: number): void;
+export function __wbg_get_congkitfilter_punctuation(a: number): number;
+export function __wbg_set_congkitfilter_punctuation(a: number, b: number): void;
+export function __wbg_get_congkitfilter_misc(a: number): number;
+export function __wbg_set_congkitfilter_misc(a: number, b: number): void;
+export function __wbindgen_malloc(a: number, b: number): number;
+export function __wbindgen_realloc(a: number, b: number, c: number, d: number): number;
+export const __wbindgen_export_2: WebAssembly.Table;
+export function _dyn_core__ops__function__FnMut__A____Output___R_as_wasm_bindgen__closure__WasmClosure___describe__invoke__h4c689266959f936b(a: number, b: number, c: number): void;
+export function __wbindgen_exn_store(a: number): void;

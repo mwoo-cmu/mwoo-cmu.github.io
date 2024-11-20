@@ -1,0 +1,17 @@
+{
+  "name": "open_canto",
+  "type": "module",
+  "version": "0.1.0",
+  "files": [
+    "open_canto_bg.wasm",
+    "open_canto.js",
+    "open_canto_bg.js",
+    "open_canto.d.ts"
+  ],
+  "main": "open_canto.js",
+  "types": "open_canto.d.ts",
+  "sideEffects": [
+    "./open_canto.js",
+    "./snippets/*"
+  ]
+}

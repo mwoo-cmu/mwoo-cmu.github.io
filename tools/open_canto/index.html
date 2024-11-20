@@ -1,0 +1,93 @@
+<!DOCTYPE html><html><head></head>
+  <body>
+  <script src="./bootstrap.js"></script>
+    <div style="width:100%;height:100%;position:absolute;background:#fff;left:0;top:0">
+      <div style="width:984px;height:0;left:50%;top:96px;position:absolute;transform:rotate(90deg);transform-origin:0 0;border:2px #1e1e1e solid"></div>
+      <div style="width:100%;height:96px;left:0;top:0;position:absolute">
+        <div style="width:100%;height:96px;left:0;top:0;background:#5385ae;position:absolute">
+          <div style="float:right;padding-top:19;padding-right:20">
+            <span style="color:#fff;font-size:40px;font-family:Noto Serif HK;font-weight:400;word-wrap:break-word">啟粵</span>
+            <span style="color:#fff;font-size:40px;font-family:Inter;font-weight:400;word-wrap:break-word">OpenCanto</span>
+          </div>
+          <ul id="topButtons" style="margin:0;list-style-type:none;padding-left:20;position:absolute;padding-top:19">
+            <div style="float:left;align-items:center;gap:10%;display:inline-flex;font-family:Noto Sans HK;font-weight:400;color:#fff;font-size:40px;justify-content:flex-start;word-break:keep-all">
+              <li onclick="">搵字</li>
+              <li onclick="">睇書</li>
+              <li onclick="">關於我哋</li>
+            </div>
+          </ul>
+          <ul id="topButtons" style="margin:0;list-style-type:none;padding-left:20;padding-top:19;left:50%;position:absolute">
+            <div style="float:left;align-items:center;gap:10%;display:inline-flex;font-family:Noto Sans HK;font-weight:400;color:#fff;font-size:40px;justify-content:flex-start;word-break:keep-all">
+              <li onclick="">便條</li>
+              <li onclick="">Options</li>
+            </div>
+          </ul>
+        </div>
+      </div>
+      <div style="width: 50%;height: auto;left:0;top:116px;position:relative;gap: 5%;display: grid;">
+        <div style="width: 96%;height:auto;left: 2%;top:0;position:relative;padding: 0;display: inline-flex;">
+          <div style="
+    gap: 3%;
+    display: grid;
+    padding-top: 1%;
+    padding-right: 1%;
+    min-width: fit-content;
+">
+            <label for="engInput" style="left:0;top: 0;height: auto;position: relative;color:#000;font-size:24px;font-family:Noto Sans HK;font-weight:400;word-wrap:break-word">English</label>
+            <label for="cantoInput" style="left:0;top: 0;height: auto;position: relative;color:#000;font-size:24px;font-family:Noto Sans HK;font-weight:400;word-wrap: break-word;">廣東話/Cantonese</label>
+            <label for="jypInput" style="left:0;top: 0;height: auto;position: relative;color:#000;font-size:24px;font-family:Noto Sans HK;font-weight:400;word-wrap:break-word">Jyutping</label>
+            <label for="ckInput" style="left:0;top: 0;height: auto;position: relative;color:#000;font-size:24px;font-family:Noto Sans HK;font-weight:400;word-wrap:break-word">Cong Kit</label>
+          </div>
+          <div style="
+    width: -webkit-fill-available;
+    gap: 3%;
+    display: grid;
+    padding-top:1%;
+">
+            <input type="text" id="engInput" name="engInput">
+            <input type="text" id="cantoInput" name="cantoInput">
+            <input type="text" id="jypInput" name="jypInput">
+            <input type="text" id="ckInput" name="ckInput">
+          </div>
+        </div>
+        <div style="position:relative;display:inline-flex;width:100%;gap: 5%;height: fit-content;">
+          <div style="min-width: fit-content;height: fit-content;left:0;top:0;position:relative;display: inline-flex;gap: 5%;">
+            <input type="checkbox" id="whkCheck" name="whkCheck">
+            <label for="whkCheck" style="left: 0;top:0;position: relative;color:#000;font-size:24px;font-family:Noto Sans HK;font-weight:400;word-wrap:break-word;min-width: fit-content;height: fit-content;">Words.HK</label>
+          </div>
+          <div style="min-width: fit-content;height: fit-content;left:0;top:0;position:relative;display: inline-flex;gap: 5%;">
+            <input type="checkbox" id="ccyCheck" name="ccyCheck">
+            <label for="ccyCheck" style="left: 0;top:0;position: relative;color:#000;font-size:24px;font-family:Noto Sans HK;font-weight:400;word-wrap:break-word;min-width: fit-content;height: fit-content;">CC-Canto</label>
+          </div>
+          <div style="min-width: fit-content;height: fit-content;left:0;top:0;position:relative;display: inline-flex;gap: 5%;">
+            <input type="checkbox" id="ccCheck" name="ccCheck">
+            <label for="ccCheck" style="left: 0;top:0;position: relative;color:#000;font-size:24px;font-family:Noto Sans HK;font-weight:400;word-wrap:break-word;min-width: fit-content;height: fit-content;">CC-CEDict</label>
+          </div>
+          <button type="button" style="
+    float: right;
+    right: 0;
+    position: relative;
+    font-size: 20;
+" onclick="">Search</button>
+        </div>
+        <div style="width:100%;height:0;left:100%;top:0px;position:relative;transform:rotate(180deg);transform-origin:0 0;border:2px #1e1e1e solid"></div>
+        <table style="width: 95%;left:2%;position:relative;border: 2px solid">
+            <thead>
+                <tr>
+                    <th scope="col">Chinese</th>
+                    <th scope="col">English</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr onclick="alert('hello')">
+                    <td>中文</td>
+                    <td>Chinese</td>
+                </tr>
+            </tbody>
+        </table>
+      </div>
+      
+      <div style="left:50%;top:116px;position:absolute;color:#000;font-size:40px;font-family:Noto Sans HK;font-weight:400;word-wrap:break-word;padding-left:20">啟</div>
+    </div>
+  
+</body></html>

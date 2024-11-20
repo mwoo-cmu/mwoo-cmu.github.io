@@ -6,6 +6,18 @@ export enum CongkitVersion {
 }
 export class CongkitFilter {
   free(): void;
+  /**
+   * @returns {CongkitFilter}
+   */
+  static all(): CongkitFilter;
+  /**
+   * @returns {CongkitFilter}
+   */
+  static all_chinese(): CongkitFilter;
+  /**
+   * @returns {CongkitFilter}
+   */
+  static japanese(): CongkitFilter;
   big5: boolean;
   chinese: boolean;
   hiragana: boolean;
@@ -82,6 +94,9 @@ export interface InitOutput {
   readonly __wbg_set_congkitfilter_punctuation: (a: number, b: number) => void;
   readonly __wbg_get_congkitfilter_misc: (a: number) => number;
   readonly __wbg_set_congkitfilter_misc: (a: number, b: number) => void;
+  readonly congkitfilter_all: () => number;
+  readonly congkitfilter_all_chinese: () => number;
+  readonly congkitfilter_japanese: () => number;
   readonly __wbindgen_malloc: (a: number, b: number) => number;
   readonly __wbindgen_realloc: (a: number, b: number, c: number, d: number) => number;
   readonly __wbindgen_export_2: WebAssembly.Table;

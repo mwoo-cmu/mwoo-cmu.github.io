@@ -378,6 +378,27 @@ export class CongkitFilter {
     set misc(arg0) {
         wasm.__wbg_set_congkitfilter_misc(this.__wbg_ptr, arg0);
     }
+    /**
+     * @returns {CongkitFilter}
+     */
+    static all() {
+        const ret = wasm.congkitfilter_all();
+        return CongkitFilter.__wrap(ret);
+    }
+    /**
+     * @returns {CongkitFilter}
+     */
+    static all_chinese() {
+        const ret = wasm.congkitfilter_all_chinese();
+        return CongkitFilter.__wrap(ret);
+    }
+    /**
+     * @returns {CongkitFilter}
+     */
+    static japanese() {
+        const ret = wasm.congkitfilter_japanese();
+        return CongkitFilter.__wrap(ret);
+    }
 }
 
 const DictFinalization = (typeof FinalizationRegistry === 'undefined')
@@ -773,7 +794,7 @@ function __wbg_get_imports() {
         const ret = wasm.memory;
         return addHeapObject(ret);
     };
-    imports.wbg.__wbindgen_closure_wrapper750 = function(arg0, arg1, arg2) {
+    imports.wbg.__wbindgen_closure_wrapper754 = function(arg0, arg1, arg2) {
         const ret = makeMutClosure(arg0, arg1, 239, __wbg_adapter_30);
         return addHeapObject(ret);
     };

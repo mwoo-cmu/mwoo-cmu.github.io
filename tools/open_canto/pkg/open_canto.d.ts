@@ -33,9 +33,11 @@ export class Dict {
   /**
    * @param {CongkitVersion} version
    * @param {CongkitFilter} filter
+   * @param {string} congkit_data
+   * @param {Uint8Array} dict_data
    * @returns {Dict}
    */
-  static new(version: CongkitVersion, filter: CongkitFilter): Dict;
+  static new(version: CongkitVersion, filter: CongkitFilter, congkit_data: string, dict_data: Uint8Array): Dict;
   /**
    * @param {CongkitVersion} version
    */
@@ -66,7 +68,7 @@ export type InitInput = RequestInfo | URL | Response | BufferSource | WebAssembl
 export interface InitOutput {
   readonly memory: WebAssembly.Memory;
   readonly __wbg_dict_free: (a: number, b: number) => void;
-  readonly dict_new: (a: number, b: number) => number;
+  readonly dict_new: (a: number, b: number, c: number, d: number, e: number, f: number, g: number) => number;
   readonly dict_switch_ck_ver: (a: number, b: number) => void;
   readonly dict_rebuild_ck: (a: number, b: number, c: number) => void;
   readonly dict_query_js: (a: number, b: number, c: number, d: number, e: number, f: number, g: number, h: number, i: number, j: number, k: number) => number;

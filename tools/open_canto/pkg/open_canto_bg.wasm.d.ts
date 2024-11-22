@@ -1,16 +1,16 @@
 /* tslint:disable */
 /* eslint-disable */
 export const memory: WebAssembly.Memory;
-export function __wbg_options_free(a: number, b: number): void;
-export function __wbg_get_options_version(a: number): number;
-export function __wbg_set_options_version(a: number, b: number): void;
-export function __wbg_get_options_filters(a: number): number;
-export function __wbg_set_options_filters(a: number, b: number): void;
 export function __wbg_dict_free(a: number, b: number): void;
 export function dict_new(a: number, b: number, c: number, d: number, e: number): number;
 export function dict_switch_ck_ver(a: number, b: number): void;
 export function dict_rebuild_ck(a: number, b: number, c: number): void;
 export function dict_query_js(a: number, b: number, c: number, d: number, e: number, f: number, g: number, h: number, i: number, j: number, k: number): number;
+export function __wbg_options_free(a: number, b: number): void;
+export function __wbg_get_options_version(a: number): number;
+export function __wbg_set_options_version(a: number, b: number): void;
+export function __wbg_get_options_filters(a: number): number;
+export function __wbg_set_options_filters(a: number, b: number): void;
 export function __wbg_congkitfilter_free(a: number, b: number): void;
 export function __wbg_get_congkitfilter_chinese(a: number): number;
 export function __wbg_set_congkitfilter_chinese(a: number, b: number): void;
@@ -36,5 +36,5 @@ export function congkitfilter_japanese(): number;
 export function __wbindgen_malloc(a: number, b: number): number;
 export function __wbindgen_realloc(a: number, b: number, c: number, d: number): number;
 export const __wbindgen_export_2: WebAssembly.Table;
-export function _dyn_core__ops__function__FnMut__A____Output___R_as_wasm_bindgen__closure__WasmClosure___describe__invoke__h4c689266959f936b(a: number, b: number, c: number): void;
+export function _dyn_core__ops__function__FnMut__A____Output___R_as_wasm_bindgen__closure__WasmClosure___describe__invoke__h51a194e9927ed2d4(a: number, b: number, c: number): void;
 export function __wbindgen_exn_store(a: number): void;

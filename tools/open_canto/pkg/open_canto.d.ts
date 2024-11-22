@@ -66,16 +66,16 @@ export type InitInput = RequestInfo | URL | Response | BufferSource | WebAssembl
 
 export interface InitOutput {
   readonly memory: WebAssembly.Memory;
-  readonly __wbg_options_free: (a: number, b: number) => void;
-  readonly __wbg_get_options_version: (a: number) => number;
-  readonly __wbg_set_options_version: (a: number, b: number) => void;
-  readonly __wbg_get_options_filters: (a: number) => number;
-  readonly __wbg_set_options_filters: (a: number, b: number) => void;
   readonly __wbg_dict_free: (a: number, b: number) => void;
   readonly dict_new: (a: number, b: number, c: number, d: number, e: number) => number;
   readonly dict_switch_ck_ver: (a: number, b: number) => void;
   readonly dict_rebuild_ck: (a: number, b: number, c: number) => void;
   readonly dict_query_js: (a: number, b: number, c: number, d: number, e: number, f: number, g: number, h: number, i: number, j: number, k: number) => number;
+  readonly __wbg_options_free: (a: number, b: number) => void;
+  readonly __wbg_get_options_version: (a: number) => number;
+  readonly __wbg_set_options_version: (a: number, b: number) => void;
+  readonly __wbg_get_options_filters: (a: number) => number;
+  readonly __wbg_set_options_filters: (a: number, b: number) => void;
   readonly __wbg_congkitfilter_free: (a: number, b: number) => void;
   readonly __wbg_get_congkitfilter_chinese: (a: number) => number;
   readonly __wbg_set_congkitfilter_chinese: (a: number, b: number) => void;
@@ -101,7 +101,7 @@ export interface InitOutput {
   readonly __wbindgen_malloc: (a: number, b: number) => number;
   readonly __wbindgen_realloc: (a: number, b: number, c: number, d: number) => number;
   readonly __wbindgen_export_2: WebAssembly.Table;
-  readonly _dyn_core__ops__function__FnMut__A____Output___R_as_wasm_bindgen__closure__WasmClosure___describe__invoke__h4c689266959f936b: (a: number, b: number, c: number) => void;
+  readonly _dyn_core__ops__function__FnMut__A____Output___R_as_wasm_bindgen__closure__WasmClosure___describe__invoke__h51a194e9927ed2d4: (a: number, b: number, c: number) => void;
   readonly __wbindgen_exn_store: (a: number) => void;
 }
 

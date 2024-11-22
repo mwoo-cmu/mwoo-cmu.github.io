@@ -33,9 +33,10 @@ export class Dict {
   /**
    * @param {CongkitVersion} version
    * @param {CongkitFilter} filter
+   * @param {Uint8Array} dict_data
    * @returns {Dict}
    */
-  static new(version: CongkitVersion, filter: CongkitFilter): Dict;
+  static new(version: CongkitVersion, filter: CongkitFilter, dict_data: Uint8Array): Dict;
   /**
    * @param {CongkitVersion} version
    */
@@ -71,7 +72,7 @@ export interface InitOutput {
   readonly __wbg_get_options_filters: (a: number) => number;
   readonly __wbg_set_options_filters: (a: number, b: number) => void;
   readonly __wbg_dict_free: (a: number, b: number) => void;
-  readonly dict_new: (a: number, b: number) => number;
+  readonly dict_new: (a: number, b: number, c: number, d: number, e: number) => number;
   readonly dict_switch_ck_ver: (a: number, b: number) => void;
   readonly dict_rebuild_ck: (a: number, b: number, c: number) => void;
   readonly dict_query_js: (a: number, b: number, c: number, d: number, e: number, f: number, g: number, h: number, i: number, j: number, k: number) => number;

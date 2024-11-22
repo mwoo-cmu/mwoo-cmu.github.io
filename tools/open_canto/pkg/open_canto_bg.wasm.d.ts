@@ -2,7 +2,7 @@
 /* eslint-disable */
 export const memory: WebAssembly.Memory;
 export function __wbg_dict_free(a: number, b: number): void;
-export function dict_new(a: number, b: number, c: number, d: number, e: number): number;
+export function dict_new(a: number, b: number): number;
 export function dict_switch_ck_ver(a: number, b: number): void;
 export function dict_rebuild_ck(a: number, b: number, c: number): void;
 export function dict_query_js(a: number, b: number, c: number, d: number, e: number, f: number, g: number, h: number, i: number, j: number, k: number): number;

@@ -29,7 +29,7 @@ function request_ckdb() {
 }
 
 function run() {
-
+  request_ckdb();
 }
 
 init().then(run)

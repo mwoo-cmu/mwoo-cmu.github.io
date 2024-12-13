@@ -1,0 +1,151 @@
+.article {
+  border-collapse: collapse;
+  display: flex;
+  width: 70%;
+  left: 15%;
+  position: absolute;
+  text-align: left;
+  padding-bottom: 20%;
+}
+
+.article td,
+.article th {
+  border-left: 1px solid black;
+}
+
+.article tr td:first-child,
+.article tr th:first-child {
+  border-left: 0;
+}
+
+.article td {
+  font-family: Noto Sans HK;
+  font-weight: 400;
+  /* word-wrap: break-word; */
+  color: black;
+  font-size: 24px;
+  /* width: 50%; */
+  align-content: baseline;
+}
+
+.article td h2 {
+  font-family: Noto Sans HK;
+  font-weight: 700;
+  /* word-wrap: break-word; */
+  color: black;
+  font-size: 30px;
+  /* width: 50%; */
+  align-content: baseline;
+}
+
+.article th {
+  font-family: Noto Sans HK;
+  font-weight: 400;
+  /* word-wrap: break-word; */
+  color: black;
+  font-size: 40px;
+  width: 50%;
+  align-content: baseline;
+}
+
+.fig-table {
+  border-collapse: collapse;
+  display: flex;
+  width: 100%;
+  text-align: center;
+}
+
+.fig-table th {
+  padding-top: 15;
+  font-family: Noto Sans HK;
+  font-weight: 700;
+  /* word-wrap: break-word; */
+  color: black;
+  font-size: 24px;
+  align-content: center;
+  border: 1px solid black;
+}
+
+.fig-table td {
+  padding-top: 15;
+  font-family: Noto Sans HK;
+  font-weight: 400;
+  /* word-wrap: break-word; */
+  color: black;
+  font-size: 24px;
+  align-content: center;
+  border: 1px solid black;
+}
+
+.fig-table tr td:first-child,
+.fig-table tr th:first-child {
+  border-left: 1px solid black;
+}
+
+@font-face {
+  font-family: VF;
+  src: url(images/jyutping/jpp.otf);
+}
+
+header {
+  font-size: 48px;
+  font-family: Noto Sans HK;
+  font-weight: 400;
+  /* word-wrap: break-word; */
+  left: 15%;
+  width: 70%;
+  position: relative;
+}
+
+header a {
+  color: black;
+  text-decoration: none;
+}
+
+.outline a {
+  font-size: 24px;
+  font-family: Noto Sans HK;
+  font-weight: 400;
+  color: black;
+  text-decoration: none;
+  word-break: break-all;
+}
+
+ruby {
+  font-family: Noto Sans HK;
+  /* line-height: 1.5; */
+  /* padding-top: 15; */
+  ruby-position: over;
+}
+
+ruby rt {
+  font-family: VF;
+  font-size: medium;
+  letter-spacing: normal;
+}
+
+.congkit {
+  ruby-position: under;
+}
+
+.congkit rt {
+  font-size: x-small;
+}
+
+.jyutping {
+  font-family: VF;
+  letter-spacing: normal;
+}
+
+.chinese {
+  line-height: 1.8;
+  word-break: break-all;
+  letter-spacing: 8;
+  /* word-wrap: break-word; */
+}
+
+.english {
+  font-family: Noto Sans HK;
+  letter-spacing: normal;
+  word-break: normal;
+}

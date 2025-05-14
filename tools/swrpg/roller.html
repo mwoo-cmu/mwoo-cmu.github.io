@@ -1,0 +1,513 @@
+<html lang="en-US">
+  <head>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
+    <meta content="utf-8" http-equiv="encoding">
+    <title>Dice Roller - SWRPG</title>
+    <style>
+        table {
+            border: 1px solid black; 
+            padding: 8; 
+        }
+
+        .outer {
+            padding: 0;
+        }
+
+        .centred {
+            text-align: center;
+        }
+
+        @font-face {
+            font-family: swrpg;
+            src: url(./EotE_Symbol-Regular_v1.otf);
+        }
+    </style>
+  </head>
+  <body>
+    <!-- <script type="text/javascript" src="/include/util.js"></script> -->
+    <script>
+        const SUCC_FAIL = 0;
+        const ADV_THREAT = 1;
+        const TRIUMPH_DESPAIR = 2;
+        class Symbols {
+            SUCCESS = '<span style="font-family: swrpg;">s</span>';
+            FAILURE = '<span style="font-family: swrpg;">f</span>';
+            ADVANTAGE = '<span style="font-family: swrpg;">a</span>';
+            THREAT = '<span style="font-family: swrpg;">t</span>';
+            TRIUMPH = '<span style="font-family: swrpg;">x</span>';
+            DESPAIR = '<span style="font-family: swrpg;">y</span>';
+        }
+        const SYMBOLS = new Symbols();
+        class Dice {
+            BOOST = [
+                [0, 0, 0], 
+                [0, 0, 0], 
+                [1, 0, 0], 
+                [1, 1, 0], 
+                [0, 2, 0], 
+                [0, 1, 0], 
+            ];
+            SETBACK = [
+                [0, 0, 0], 
+                [0, 0, 0], 
+                [-1, 0, 0], 
+                [-1, 0, 0], 
+                [0, -1, 0], 
+                [0, -1, 0], 
+            ];
+            ABILITY = [
+                [0, 0, 0], 
+                [1, 0, 0], 
+                [1, 0, 0], 
+                [2, 0, 0], 
+                [0, 1, 0], 
+                [0, 1, 0], 
+                [1, 1, 0], 
+                [0, 2, 0], 
+            ];
+            DIFFICULTY = [
+                [0, 0, 0], 
+                [-1, 0, 0], 
+                [-2, 0, 0], 
+                [0, -1, 0], 
+                [0, -1, 0], 
+                [0, -1, 0], 
+                [0, -2, 0], 
+                [-1, -1, 0], 
+            ];
+            PROFICIENCY = [
+                [0, 0, 0], 
+                [1, 0, 0], 
+                [1, 0, 0], 
+                [2, 0, 0], 
+                [2, 0, 0], 
+                [0, 1, 0], 
+                [1, 1, 0], 
+                [1, 1, 0], 
+                [1, 1, 0], 
+                [0, 2, 0], 
+                [0, 2, 0], 
+                [0, 0, 1], 
+            ];
+            CHALLENGE = [
+                [0, 0, 0], 
+                [-1, 0, 0], 
+                [-1, 0, 0], 
+                [-2, 0, 0], 
+                [-2, 0, 0], 
+                [0, -1, 0], 
+                [0, -1, 0], 
+                [-1, -1, 0], 
+                [-1, -1, 0], 
+                [0, -2, 0], 
+                [0, -2, 0], 
+                [0, 0, -1], 
+            ];
+            FORCE_DIE = [
+                [0, 1],
+                [0, 1],
+                [0, 1],
+                [0, 1],
+                [0, 1],
+                [0, 1],
+                [0, 2],
+                [1, 0],
+                [1, 0],
+                [2, 0],
+                [2, 0],
+                [2, 0],
+            ];
+        }
+        const DICE = new Dice();
+
+        function rollN(totals, die, count) {
+            for (var i = 0; i < count; i++) {
+                var rolled = die[Math.floor(Math.random() * die.length)]
+                totals[SUCC_FAIL] += rolled[SUCC_FAIL];
+                totals[ADV_THREAT] += rolled[ADV_THREAT];
+                totals[TRIUMPH_DESPAIR] += rolled[TRIUMPH_DESPAIR];
+            }
+            return totals;
+        }
+
+        function rollForce(count) {
+            var light = 0;
+            var dark = 0;
+            for (var i = 0; i < count; i++) {
+                var rolled = DICE.FORCE_DIE[Math.floor(Math.random() * 12)];
+                light += rolled[0];
+                dark += rolled[1];
+            }
+            return [light, dark]
+        }
+        
+        function formatRolled(value, positive, negative) {
+            if (value > 0)
+                return `${value} ${positive}`;
+            else if (value < 0)
+                return `${-value} ${negative}`;
+            return `0 ${positive}/${negative}` 
+        }
+
+        function rollPool() {
+            var totals = [0, 0, 0];
+            totals = rollN(totals, DICE.PROFICIENCY, document.getElementById("proficiency").value);
+            totals = rollN(totals, DICE.CHALLENGE, document.getElementById("challenge").value);
+            totals = rollN(totals, DICE.ABILITY, document.getElementById("ability").value);
+            totals = rollN(totals, DICE.DIFFICULTY, document.getElementById("difficulty").value);
+            totals = rollN(totals, DICE.BOOST, document.getElementById("boost").value);
+            totals = rollN(totals, DICE.SETBACK, document.getElementById("setback").value);
+            
+            var lightDark = rollForce(document.getElementById("force").value);
+
+            document.getElementById("succFail").innerHTML = formatRolled(totals[SUCC_FAIL], `${SYMBOLS.SUCCESS} Successes`, `${SYMBOLS.FAILURE} Failures`);
+            document.getElementById("advThreat").innerHTML = formatRolled(totals[ADV_THREAT], `${SYMBOLS.ADVANTAGE} Advantage`, `${SYMBOLS.THREAT} Threat`);
+            document.getElementById("triumphDespair").innerHTML = formatRolled(totals[TRIUMPH_DESPAIR], `${SYMBOLS.TRIUMPH} Triumph`, `${SYMBOLS.DESPAIR} Despair`);
+            document.getElementById("light").innerText = lightDark[0];
+            document.getElementById("dark").innerText = lightDark[1];
+        }
+
+        class FateChart {
+            certain = [
+                [10, 50, 90],
+                [13, 65, 93],
+                [15, 75, 95],
+                [17, 85, 97],
+                [18, 90, 98],
+                [19, 95, 99],
+                [20, 99, 100],
+                [20, 99, 100],
+                [20, 99, 100],
+            ];
+            nearCertain = [
+                [7, 35, 87],
+                [10, 50, 90],
+                [13, 65, 93],
+                [15, 75, 95],
+                [17, 85, 97],
+                [18, 90, 98],
+                [19, 95, 99],
+                [20, 99, 100],
+                [20, 99, 100],
+            ];
+            veryLikely = [
+                [5, 25, 85],
+                [7, 35, 87],
+                [10, 50, 90],
+                [13, 65, 93],
+                [15, 75, 95],
+                [17, 85, 97],
+                [18, 90, 98],
+                [19, 95, 99],
+                [20, 99, 100],
+            ];
+            likely = [
+                [3, 15, 83],
+                [5, 25, 85],
+                [7, 35, 87],
+                [10, 50, 90],
+                [13, 65, 93],
+                [15, 75, 95],
+                [17, 85, 97],
+                [18, 90, 98],
+                [19, 95, 99],
+            ];
+            half = [
+                [2, 10, 82],
+                [3, 15, 83],
+                [5, 25, 85],
+                [7, 35, 87],
+                [10, 50, 90],
+                [13, 65, 93],
+                [15, 75, 95],
+                [17, 85, 97],
+                [18, 90, 98],
+            ];
+            unlikely = [
+                [1, 5, 81],
+                [2, 10, 82],
+                [3, 15, 83],
+                [5, 25, 85],
+                [7, 35, 87],
+                [10, 50, 90],
+                [13, 65, 93],
+                [15, 75, 95],
+                [17, 85, 97],
+            ];
+            veryUnlikely = [
+                [0, 1, 80],
+                [1, 5, 81],
+                [2, 10, 82],
+                [3, 15, 83],
+                [5, 25, 85],
+                [7, 35, 87],
+                [10, 50, 90],
+                [13, 65, 93],
+                [15, 75, 95],
+            ];
+            nearImpossible = [
+                [0, 1, 80],
+                [0, 1, 80],
+                [1, 5, 81],
+                [2, 10, 82],
+                [3, 15, 83],
+                [5, 25, 85],
+                [7, 35, 87],
+                [10, 50, 90],
+                [13, 65, 93],
+            ];
+            impossible = [
+                [0, 1, 80],
+                [0, 1, 80],
+                [0, 1, 80],
+                [1, 5, 81],
+                [2, 10, 82],
+                [3, 15, 83],
+                [5, 25, 85],
+                [7, 35, 87],
+                [10, 50, 90],
+            ];
+        }
+        const FATE_CHART = new FateChart();
+
+        function rollFateQuestion() {
+            var chaosFactor = document.getElementById("chaosFactor").value;
+            var likelihood = FATE_CHART[document.getElementById("odds").value][chaosFactor];
+            var rng = Math.floor(Math.random() * 100);
+            if (rng < likelihood[0]) {
+                // exc yes
+                document.getElementById("fateAnswer").innerText = `Exceptional Yes (${rng})`;
+            } else if (rng < likelihood[1]) {
+                // yes
+                document.getElementById("fateAnswer").innerText = `Yes (${rng})`;
+            } else if (rng < likelihood[2]) {
+                // no
+                document.getElementById("fateAnswer").innerText = `No (${rng})`;
+            } else {
+                // exc no
+                document.getElementById("fateAnswer").innerText = `Exceptional No (${rng})`;
+            }
+            var tens = Math.floor(rng / 10);
+            var ones = rng % 10;
+            if (tens == ones && ones <= chaosFactor) {
+                // Random Event!
+                document.getElementById("randomEvent").innerText = "A Random Event occurs!";
+            } else {
+                document.getElementById("randomEvent").innerText = "";
+            }
+        }
+
+        function rollEventFocus() {
+            var rng = Math.floor(Math.random() * 100);
+            var focus;
+            if (rng < 5)
+                focus = "Remote Event";
+            else if (rng < 10)
+                focus = "Ambiguous Event";
+            else if (rng < 20)
+                focus = "New NPC";
+            else if (rng < 40)
+                focus = "NPC Action";
+            else if (rng < 45)
+                focus = "NPC Negative";
+            else if (rng < 50)
+                focus = "NPC Positive";
+            else if (rng < 55)
+                focus = "Move Toward a Thread";
+            else if (rng < 65)
+                focus = "Move Away From a Thread";
+            else if (rng < 70)
+                focus = "Close a Thread";
+            else if (rng < 80)
+                focus = "PC Negative";
+            else if (rng < 85)
+                focus = "PC Positive";
+            else
+                focus = "Current Context";
+            document.getElementById("mythicMisc").innerText = "Event Focus: " + focus;
+        }
+
+        function rolld100() {
+            document.getElementById("mythicMisc").innerText = `d100: ${Math.floor(Math.random() * 100) + 1}`;
+        }
+    </script>
+    <table class="outer">
+        <tr>
+            <td>
+                <table>
+                    <tr>
+                        <td colspan="2">
+                            <h2>SWRPG Dice Pool</h2>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <span style="font-family: swrpg; color: gold;">c</span>
+                            <label for="proficiency">Proficiency Dice: </label>
+                        </td>
+                        <td>
+                            <input type="number" id="proficiency" placeholder="" size="" value="0">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <span style="font-family: swrpg; color: firebrick;">c</span>
+                            <label for="challenge">Challenge Dice: </label>
+                        </td>
+                        <td>
+                            <input type="number" id="challenge" placeholder="" size="" value="0">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <span style="font-family: swrpg; color: springgreen;">d</span>
+                            <label for="ability">Ability Dice: </label>
+                        </td>
+                        <td>
+                            <input type="number" id="ability" placeholder="" size="" value="0">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <span style="font-family: swrpg; color: rebeccapurple;">d</span>
+                            <label for="difficulty">Difficulty Dice: </label>
+                        </td>
+                        <td>
+                            <input type="number" id="difficulty" placeholder="" size="" value="0">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <span style="font-family: swrpg; color: skyblue;">b</span>
+                            <label for="boost">Boost Dice: </label>
+                        </td>
+                        <td>
+                            <input type="number" id="boost" placeholder="" size="" value="0">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <span style="font-family: swrpg; color: black;">b</span>
+                            <label for="setback">Setback Dice: </label>
+                        </td>
+                        <td>
+                            <input type="number" id="setback" placeholder="" size="" value="0">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <span style="font-family: swrpg; color: black;">C</span>
+                            <label for="force">Force Dice: </label>
+                        </td>
+                        <td>
+                            <input type="number" id="force" placeholder="" size="" value="0">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="2" class="centred">
+                            <button type="button" onclick="rollPool()">Roll</button>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+            <td>
+                <div style="border: 1px solid black; padding: 8; width: fit-content;">
+                    <h2>Results</h2>
+                    <label id="succFail">0 Successes/Failures</label>
+                    <br>
+                    <label id="advThreat">0 Advantage/Threat</label>
+                    <br>
+                    <label id="triumphDespair">0 Triumph/Despair</label>
+                    <br>
+                    <label id="light">0</label><label> <span style="font-family: swrpg; color: black;">Z</span> Light Side Destiny Points</label>
+                    <br>
+                    <label id="dark">0</label><label> <span style="font-family: swrpg; color: black;">z</span> Dark Side Destiny Points</label>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                <hr>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <table>
+                    <tr>
+                        <td colspan="2">
+                            <h2>Mythic Fate Question (Yes/No)</h2>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label for="chaosFactor">Chaos Factor: </label>
+                        </td>
+                        <td>
+                            <input type="number" id="chaosFactor" value="5" min="1" max="9">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label for="odds">Likelihood: </label>
+                        </td>
+                        <td>
+                            <select name="odds" id="odds">
+                                <option value="certain">Certain</option>
+                                <option value="nearCertain">Nearly Certain</option>
+                                <option value="veryLikely">Very Likely</option>
+                                <option value="likely">Likely</option>
+                                <option value="half" selected="selected">50/50</option>
+                                <option value="unlikely">Unlikely</option>
+                                <option value="veryUnlikely">Very Unlikely</option>
+                                <option value="nearImpossible">Nearly Impossible</option>
+                                <option value="impossible">Impossible</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="2" class="centred">
+                            <button type="button" onclick="rollFateQuestion()">Roll</button>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+            <td>
+                <div style="border: 1px solid black; padding: 8; width: fit-content;">
+                    <h2>Results</h2>
+                    <label>Answer: </label><label id="fateAnswer"></label>
+                    <br>
+                    <label id="randomEvent"></label>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                <hr>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <div style="border: 1px solid black; padding: 8; width: fit-content;">
+                    <h2>Mythic Misc</h2>
+                    <button type="button" onclick="rollEventFocus()">Roll Event Focus</button>
+                    <br>
+                    <button type="button" onclick="rolld100()">Roll d100</button>
+                </div>
+            </td>
+            <td>
+                <div style="border: 1px solid black; padding: 8; width: fit-content;">
+                    <h2>Results</h2>
+                    <label id="mythicMisc"></label>
+                </div>
+            </td>
+        </tr>
+    </table>
+    <script>
+        document.getElementById("succFail").innerHTML = formatRolled(0, `${SYMBOLS.SUCCESS} Successes`, `${SYMBOLS.FAILURE} Failures`);
+        document.getElementById("advThreat").innerHTML = formatRolled(0, `${SYMBOLS.ADVANTAGE} Advantage`, `${SYMBOLS.THREAT} Threat`);
+        document.getElementById("triumphDespair").innerHTML = formatRolled(0, `${SYMBOLS.TRIUMPH} Triumph`, `${SYMBOLS.DESPAIR} Despair`);
+    </script>
+  </body>
+</html>

@@ -274,7 +274,7 @@
 
         function rollFateQuestion() {
             var chaosFactor = document.getElementById("chaosFactor").value;
-            var likelihood = FATE_CHART[document.getElementById("odds").value][chaosFactor];
+            var likelihood = FATE_CHART[document.getElementById("odds").value][chaosFactor - 1];
             var rng = Math.floor(Math.random() * 100);
             if (rng < likelihood[0]) {
                 // exc yes
@@ -510,4 +510,5 @@
         document.getElementById("triumphDespair").innerHTML = formatRolled(0, `${SYMBOLS.TRIUMPH} Triumph`, `${SYMBOLS.DESPAIR} Despair`);
     </script>
   </body>
+
 </html>

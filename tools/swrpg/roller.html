@@ -23,6 +23,36 @@
             font-family: swrpg;
             src: url(./EotE_Symbol-Regular_v1.otf);
         }
+
+        /* Style the button that is used to open and close the collapsible content */
+        .collapsible {
+            cursor: pointer;
+            padding: 18px;
+            width: 100%;
+            border: none;
+            text-align: left;
+            outline: none;
+            font-size: 15px;
+        }
+
+        /* Style the collapsible content. Note: hidden by default */
+        .collapseContent {
+            padding: 0 18px;
+            display: none;
+            overflow: hidden;
+        }
+
+        .collapsible:after {
+            content: '\02795'; /* Unicode character for "plus" sign (+) */
+            font-size: 13px;
+            color: white;
+            float: right;
+            margin-left: 5px;
+        }
+
+        .active:after {
+            content: "\2796"; /* Unicode character for "minus" sign (-) */
+        }
     </style>
   </head>
   <body>
@@ -167,6 +197,21 @@
             document.getElementById("triumphDespair").innerHTML = formatRolled(totals[TRIUMPH_DESPAIR], `${SYMBOLS.TRIUMPH} Triumph`, `${SYMBOLS.DESPAIR} Despair`);
             document.getElementById("light").innerText = lightDark[0];
             document.getElementById("dark").innerText = lightDark[1];
+        }
+
+        function clearPool() {
+            document.getElementById("succFail").innerHTML = formatRolled(0, `${SYMBOLS.SUCCESS} Successes`, `${SYMBOLS.FAILURE} Failures`);
+            document.getElementById("advThreat").innerHTML = formatRolled(0, `${SYMBOLS.ADVANTAGE} Advantage`, `${SYMBOLS.THREAT} Threat`);
+            document.getElementById("triumphDespair").innerHTML = formatRolled(0, `${SYMBOLS.TRIUMPH} Triumph`, `${SYMBOLS.DESPAIR} Despair`);
+            document.getElementById("light").innerText = 0;
+            document.getElementById("dark").innerText = 0;
+
+            document.getElementById("proficiency").value = 0;
+            document.getElementById("challenge").value = 0;
+            document.getElementById("ability").value = 0;
+            document.getElementById("difficulty").value = 0;
+            document.getElementById("boost").value = 0;
+            document.getElementById("setback").value = 0;
         }
 
         class FateChart {
@@ -332,6 +377,127 @@
         function rolld100() {
             document.getElementById("mythicMisc").innerText = `d100: ${Math.floor(Math.random() * 100) + 1}`;
         }
+
+        var MISSIONS;
+        var xhr = new XMLHttpRequest();
+        xhr.open("GET", "./missions.json");
+        xhr.responseType = "json";
+        xhr.addEventListener('load', function () {
+            MISSIONS = xhr.response;
+        });
+        xhr.send();
+
+        function generateMission() {
+            var objectiveTypes = Object.keys(MISSIONS["objective"]);
+            var objectiveType = objectiveTypes[Math.floor(Math.random() * objectiveTypes.length)];
+            var objectiveRng = Math.random();
+            var objective = "";
+            for (const [key, value] of Object.entries(MISSIONS["objective"][objectiveType])) {
+                objectiveRng -= value;
+                if (objectiveRng <= 0) {
+                    objective = key;
+                    break;
+                }
+            }
+            var era = document.getElementById("era").value;
+            var target = "";
+            var targetRng = Math.random();
+            for (const [key, value] of Object.entries(MISSIONS["subject"][era][objectiveType])) {
+                targetRng -= value;
+                if (targetRng <= 0) {
+                    target = key;
+                    break;
+                }
+            }
+            while (target.startsWith("REROLL:")) {
+                for (const [key, value] of Object.entries(MISSIONS["subject"][era][target.substring(7)])) {
+                    targetRng -= value;
+                    if (targetRng <= 0) {
+                        target = key;
+                        break;
+                    }
+                }
+            }
+            document.getElementById("variousGens").innerText = "Mission: " + objective + " " + target;
+        }
+
+        function generateCharacter() {
+
+        }
+
+        var tacNullPlots = 0;
+        var TACPLOT;
+        var xhr = new XMLHttpRequest();
+        xhr.open("GET", "./adv_crafter.json");
+        xhr.responseType = "json";
+        xhr.addEventListener('load', function () {
+            TACPLOT = xhr.response;
+        });
+        xhr.send();
+
+        function rollTACPlotPoint(plotnum) {
+            var plot = document.getElementById(`tac${plotnum}Plot`);
+            if (plot.innerText.startsWith("NONE:")) 
+                tacNullPlots--;
+            var theme = document.getElementById(`tac${plotnum}Theme`).innerText.toLowerCase();
+            var rng;
+            if (tacNullPlots >= 3) {
+                rng = Math.floor(Math.random() * 84) + 16;
+            } else {
+                rng = Math.floor(Math.random() * 100);
+            }
+            if (rng < 16) {
+                plot.innerText = TACPLOT["plotPoints"]["description"]["none"];
+                tacNullPlots++;
+            } else if (rng < 24) {
+                plot.innerText = TACPLOT["plotPoints"]["description"]["conclusion"]
+            } else if (rng >= 95) {
+                // Roll on meta table
+                rng = Math.floor(Math.random() * 100);
+                for (const [key, value] of Object.entries(TACPLOT["plotPoints"]["meta"])) {
+                    if (rng < value) {
+                        plot.innerText = TACPLOT["plotPoints"]["description"][key];
+                        return;
+                    }
+                }
+            } else {
+                for (const [key, value] of Object.entries(TACPLOT["plotPoints"][theme])) {
+                    if (rng < value) {
+                        plot.innerText = TACPLOT["plotPoints"]["description"][key];
+                        return;
+                    }
+                }
+            }
+        }
+
+        function rollTACThemeAndPlot(plotnum) {
+            document.getElementById(`tac${plotnum}Theme`).innerText = rollTACTheme();
+            rollTACPlotPoint(plotnum);
+        }
+
+        function rollTACTheme() {
+            var rng = Math.floor(Math.random() * 20);
+            var value;
+            if (rng < 8)
+                value = document.getElementById("tacPrimary").value;
+            else if (rng < 14)
+                value = document.getElementById("tacSecondary").value;
+            else if (rng < 18)
+                value = document.getElementById("tacTertiary").value;
+            else if (rng < 19)
+                value = document.getElementById("tacTangential1").value;
+            else
+                value = document.getElementById("tacTangential2").value;
+            return value;
+        }
+        
+        function rollTACTurningPoint() {
+            rollTACThemeAndPlot("P1");
+            rollTACThemeAndPlot("P2");
+            rollTACThemeAndPlot("P3");
+            rollTACThemeAndPlot("P4");
+            rollTACThemeAndPlot("P5");
+        }
     </script>
     <table class="outer">
         <tr>
@@ -408,6 +574,7 @@
                     <tr>
                         <td colspan="2" class="centred">
                             <button type="button" onclick="rollPool()">Roll</button>
+                            <button type="button" onclick="clearPool()">Clear</button>
                         </td>
                     </tr>
                 </table>
@@ -503,12 +670,221 @@
                 </div>
             </td>
         </tr>
+        <tr>
+            <td colspan="2">
+                <hr>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <table>
+                    <tr>
+                        <td colspan="2">
+                            <h2>The Adventure Crafter Misc</h2>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label for="tacPrimary">Primary Theme: </label>
+                        </td>
+                        <td id="tacPrimaryTd">
+                            
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label for="tacSecondary">Secondary Theme: </label>
+                        </td>
+                        <td id="tacSecondaryTd">
+                            
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label for="tacTertiary">Tertiary Theme: </label>
+                        </td>
+                        <td id="tacTertiaryTd">
+
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label for="tacTangential1">Tangential Theme 1: </label>
+                        </td>
+                        <td id="tacTangential1Td">
+                            
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label for="tacTangential2">Tangential Theme 2: </label>
+                        </td>
+                        <td id="tacTangential2Td">
+
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="2" class="centred">
+                            <button type="button" onclick="rollTACTurningPoint()">Roll Turning Point</button>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+            <td>
+                <div style="border: 1px solid black; padding: 8; width: fit-content;">
+                    <h2>Results</h2>
+                    <table id="tacResults">
+                        <tr>
+                            <th>Theme</th>
+                            <th>Plot Point</th>
+                        </tr>
+                        <tr>
+                            <td id="tacP1Theme"></td>
+                            <td id="tacP1Plot"></td>
+                            <td>
+                                <button type="button" onclick="rollTACPlotPoint('P1')">Reroll Plot</button>
+                                <button type="button" onclick="rollTACThemeAndPlot('P1')">Reroll Theme and Plot</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td id="tacP2Theme"></td>
+                            <td id="tacP2Plot"></td>
+                            <td>
+                                <button type="button" onclick="rollTACPlotPoint('P2')">Reroll Plot</button>
+                                <button type="button" onclick="rollTACThemeAndPlot('P2')">Reroll Theme and Plot</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td id="tacP3Theme"></td>
+                            <td id="tacP3Plot"></td>
+                            <td>
+                                <button type="button" onclick="rollTACPlotPoint('P3')">Reroll Plot</button>
+                                <button type="button" onclick="rollTACThemeAndPlot('P3')">Reroll Theme and Plot</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td id="tacP4Theme"></td>
+                            <td id="tacP4Plot"></td>
+                            <td>
+                                <button type="button" onclick="rollTACPlotPoint('P4')">Reroll Plot</button>
+                                <button type="button" onclick="rollTACThemeAndPlot('P4')">Reroll Theme and Plot</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td id="tacP5Theme"></td>
+                            <td id="tacP5Plot"></td>
+                            <td>
+                                <button type="button" onclick="rollTACPlotPoint('P5')">Reroll Plot</button>
+                                <button type="button" onclick="rollTACThemeAndPlot('P5')">Reroll Theme and Plot</button>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                <hr>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <table>
+                    <tr>
+                        <td colspan="2">
+                            <h2>Various Generators</h2>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label for="era">Galactic Era: </label>
+                        </td>
+                        <td>
+                            <select name="era" id="era">
+                                <option value="oldRepublic">Old Republic</option>
+                                <option value="republic">Republic</option>
+                                <option value="empire" selected="selected">Empire</option>
+                                <option value="newRepublic">New Republic</option>
+                                <option value="resistance">Resistance/First Order</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">
+                            <button type="button" onclick="generateMission()">Generate Quest</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">
+                            <button type="button" onclick="generateCharacter()">Generate Character</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">
+                            <button type="button" class="collapsible">Rolling Tables</button>
+                            <div class="collapseContent">
+                                <table>
+                                    <tr>
+                                        <td></td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+            <td>
+                <div style="border: 1px solid black; padding: 8; width: fit-content;">
+                    <h2>Results</h2>
+                    <label id="variousGens"></label>
+                </div>
+            </td>
+        </tr>
     </table>
     <script>
         document.getElementById("succFail").innerHTML = formatRolled(0, `${SYMBOLS.SUCCESS} Successes`, `${SYMBOLS.FAILURE} Failures`);
         document.getElementById("advThreat").innerHTML = formatRolled(0, `${SYMBOLS.ADVANTAGE} Advantage`, `${SYMBOLS.THREAT} Threat`);
         document.getElementById("triumphDespair").innerHTML = formatRolled(0, `${SYMBOLS.TRIUMPH} Triumph`, `${SYMBOLS.DESPAIR} Despair`);
+
+        var coll = document.getElementsByClassName("collapsible");
+        var i;
+
+        for (i = 0; i < coll.length; i++) {
+        coll[i].addEventListener("click", function() {
+            this.classList.toggle("active");
+            var content = this.nextElementSibling;
+            if (content.style.display === "block") {
+            content.style.display = "none";
+            } else {
+            content.style.display = "block";
+            }
+        });
+        }
+
+        const TAC_THEME_SEL = [
+        `<select name="`,
+        `" id="`,
+        `">
+            <option value="Action">Action</option>
+            <option value="Tension">Tension</option>
+            <option value="Mystery">Mystery</option>
+            <option value="Social">Social</option>
+            <option value="Personal">Personal</option>
+            <option value="None" selected="selected">Select a Theme</option>
+        </select>`
+        ];
+        const TAC_THEME_IDS = ["tacPrimary", "tacSecondary", "tacTertiary", "tacTangential1", "tacTangential2"];
+        for (var id of TAC_THEME_IDS) {
+            document.getElementById(id + "Td").innerHTML = `${TAC_THEME_SEL[0]}${id}${TAC_THEME_SEL[1]}${id}${TAC_THEME_SEL[2]}`;
+        }
+
+        // // TESTING
+        // const req = new XMLHttpRequest();
+        // req.addEventListener('load', function () {
+        //     console.log(this.responseText);
+        // });
+        // req.open("GET", "/swrpg");
+        // req.send();
     </script>
   </body>
-
 </html>

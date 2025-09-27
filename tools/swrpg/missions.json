@@ -1,0 +1,117 @@
+{
+    "objective": {
+        "creature": {
+            "Attack": 0.15,
+            "Capture": 0.15,
+            "Conceal": 0.06,
+            "Deceive": 0.05,
+            "Disable": 0.07,
+            "Expose": 0.02,
+            "Immobilise": 0.05,
+            "Manipulate": 0.07,
+            "Pose as": 0.06,
+            "Protect": 0.10,
+            "Redirect": 0.07,
+            "Rescue": 0.07,
+            "Surveil": 0.08
+        },
+        "group": {
+            "Attack": 0.13,
+            "Capture": 0.03,
+            "Conceal": 0.06,
+            "Deceive": 0.06,
+            "Disable": 0.06,
+            "Infiltrate": 0.11,
+            "Manipulate": 0.06,
+            "Pose as a member of": 0.08,
+            "Protect": 0.08,
+            "Redirect": 0.06,
+            "Rescue": 0.07,
+            "Resist": 0.06,
+            "Surveil": 0.06,
+            "Take Over": 0.08
+        },
+        "object": {
+            "Capture": 0.13,
+            "Conceal": 0.11,
+            "Deliver": 0.12,
+            "Destroy": 0.12,
+            "Disable": 0.12,
+            "Expose": 0.05,
+            "Protect": 0.12,
+            "Redirect": 0.11,
+            "Sabotage": 0.12
+        }
+    },
+    "subject": {
+        "oldRepublic": {
+
+        },
+        "republic": {
+
+        },
+        "empire": {
+            "creature": {
+                "Stormtrooper (or Relevant Variant)": 0.20,
+                "Rebel": 0.15,
+                "Senator": 0.12,
+                "Imperial Officer": 0.08,
+                "Rebel Sympathiser": 0.08,
+                "Crimelord": 0.02,
+                "Bounty Hunter": 0.06,
+                "Smuggler": 0.06,
+                "Inquisitor": 0.03,
+                "Civillian": 0.06,
+                "Droid": 0.03,
+                "Jedi Survivor": 0.01,
+                "REROLL:specialisedEmpireCreatures": 0.08,
+                "Generate Random Character": 0.02
+            },
+            "specialisedEmpireCreatures": {
+                "Imperial Army Trooper": 0.35,
+                "Security Droid": 0.26,
+                "Veteran Clone Trooper": 0.12,
+                "ISB Agent": 0.10,
+                "Dark Trooper": 0.08,
+                "Shadow Trooper": 0.06,
+                "Royal Guard": 0.02,
+                "Shadow Guard": 0.01
+            },
+            "group": {
+                "Stormtrooper Squadron": 0.20,
+                "Villagers/Local Tribespeople": 0.18,
+                "Insurgent Group": 0.18,
+                "Crime Syndicate": 0.18,
+                "Bounty Hunter Group": 0.14,
+                "Smugglers": 0.12
+            },
+            "object": {
+                "Vehicle": 0.16,
+                "Supply Crate": 0.24,
+                "Holocron": 0.01,
+                "Shield Generator": 0.08,
+                "Power Generator": 0.10,
+                "Datacard": 0.31,
+                "Hyperdrive": 0.10
+            }
+        },
+        "newRepublic": {
+
+        },
+        "resistance": {
+
+        }
+    },
+    "location": {
+        "Capital Ship": 0.15,
+        "Prison": 0.15,
+        "Wilderness location": 0.1,
+        "City": 0.1,
+        "Undercity": 0.15,
+        "Temple (Jedi or Sith)": 0.05,
+        "Village": 0.05,
+        "Shipyard": 0.07,
+        "War base": 0.1,
+        "Factory": 0.08
+    }
+}

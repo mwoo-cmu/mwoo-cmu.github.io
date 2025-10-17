@@ -379,13 +379,13 @@
         }
 
         var MISSIONS;
-        var xhr = new XMLHttpRequest();
-        xhr.open("GET", "./missions.json");
-        xhr.responseType = "json";
-        xhr.addEventListener('load', function () {
-            MISSIONS = xhr.response;
+        var missionXhr = new XMLHttpRequest();
+        missionXhr.open("GET", "./missions.json");
+        missionXhr.responseType = "json";
+        missionXhr.addEventListener('load', function () {
+            MISSIONS = missionXhr.response;
         });
-        xhr.send();
+        missionXhr.send();
 
         function generateMission() {
             var objectiveTypes = Object.keys(MISSIONS["objective"]);
@@ -427,13 +427,13 @@
 
         var tacNullPlots = 0;
         var TACPLOT;
-        var xhr = new XMLHttpRequest();
-        xhr.open("GET", "./adv_crafter.json");
-        xhr.responseType = "json";
-        xhr.addEventListener('load', function () {
-            TACPLOT = xhr.response;
+        var tacXhr = new XMLHttpRequest();
+        tacXhr.open("GET", "./adv_crafter.json");
+        tacXhrxhr.responseType = "json";
+        tacXhr.addEventListener('load', function () {
+            TACPLOT = tacXhr.response;
         });
-        xhr.send();
+        tacXhr.send();
 
         function rollTACPlotPoint(plotnum) {
             var plot = document.getElementById(`tac${plotnum}Plot`);

@@ -1,0 +1,421 @@
+<html lang="en-US">
+    <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
+        <meta content="utf-8" http-equiv="encoding">
+        <title>Deck Builder - SWED</title>
+    </head>
+    <body>
+        <script type="text/javascript" src="card.js"></script>
+        <div>
+            NOTE: Everything is stored in-session, so reloading the page will clear everything.
+            <br><br>
+            <b>Format</b>
+            <br>
+            <input type="radio" id="major1" name="format" value="major1" checked>
+            <label for="major1">Major and Personality Minor</label>
+            <input type="radio" id="major2" name="format" value="major2">
+            <label for="major2">Major and 2 Nameless Minors</label>
+            <input type="radio" id="custom" name="format" value="custom">
+            <label for="custom">Custom</label>
+            <br>
+            <div id="majorMinorOptions">
+                <table>
+                    <tr>
+                        <th style="border: 1px solid black;">Major</th>
+                        <th style="border: 1px solid black;">Minor</th>
+                    </tr>
+                    <tr>
+                        <td style="border: 1px solid black;">
+                            Name:
+                            <input type="text" id="majorName" name="majorName">
+                            <br>
+                            Colour:
+                            <input type="color" id="majorColour" name="majorColour">
+                            <br>
+                            <a target="_blank" rel="noopener noreferrer" href="http://epicduels.pbworks.com/w/page/9779469/Glossary">Basic Deck Colour</a>
+                            <input type="text" list="basicDatalist" id="majorBasic" name="majorBasic">
+                            <datalist id="basicDatalist"></datalist>
+                            <div id="majorBasicDeckList" style="display: none;"></div>
+                            <br>
+                            Basic Image:
+                            <input type="text" id="majorBasicImg" name="majorBasicImg">
+                            <br>
+                            Special Image:
+                            <input type="text" id="majorSpecImg" name="majorSpecImg">
+                            <br>
+                            <a target="_blank" rel="noopener noreferrer" href="./cardmaker.html">Special Cards:</a>
+                            <textarea id="majorSpecTsv" placeholder="Put each card on its own line"></textarea>
+                        </td>
+                        <td style="border: 1px solid black;">
+                            Name:
+                            <input type="text" id="minorName" name="minorName">
+                            <br>
+                            Colour:
+                            <input type="color" id="minorColour" name="minorColour">
+                            <br>
+                            <a target="_blank" rel="noopener noreferrer" href="http://epicduels.pbworks.com/w/page/9779469/Glossary">Basic Deck</a>
+                            <input type="text" list="basicDatalist" id="minorBasic" name="minorBasic">
+                            <div id="minorBasicDeckList" style="display: none;"></div>
+                            <br>
+                            Basic Image:
+                            <input type="text" id="minorBasicImg" name="minorBasicImg">
+                            <br>
+                            <div id="minorHasSpec">
+                                Special Image:
+                                <input type="text" id="minorSpecImg" name="minorSpecImg">
+                                <br>
+                                <a target="_blank" rel="noopener noreferrer" href="./cardmaker.html">Special Cards:</a>
+                                <textarea id="minorSpecTsv" placeholder="Put each card on its own line"></textarea>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <div id="customOptions" style="display: none;">
+                Load Character:
+                <input type="text" id="customSel" list="customDatalist" name="customSel">
+                <button onclick="loadCustomChar()">Load</button>
+                <button onclick="delCustomChar()">Delete</button>
+                <datalist id="customDatalist"></datalist>
+                <br><br>
+                Name:
+                <input type="text" id="customName" name="customName">
+                <br>
+                Colour:
+                <input type="color" id="customColour" name="customColour">
+                <br>
+                <a target="_blank" rel="noopener noreferrer" href="http://epicduels.pbworks.com/w/page/9779469/Glossary">Major Basic Deck Colour</a>
+                <input type="text" list="basicDatalist" id="customMajorBasic" name="customMajorBasic">
+                <div id="customMajorBasicDeckList" style="display: none;"></div>
+                <br>
+                <a target="_blank" rel="noopener noreferrer" href="http://epicduels.pbworks.com/w/page/9779469/Glossary">Minor Basic Deck</a>
+                <input type="text" list="basicDatalist" id="customMinorBasic" name="customMinorBasic">
+                <div id="customMinorBasicDeckList" style="display: none;"></div>
+                <br>
+                Basic Image:
+                <input type="text" id="customBasicImg" name="customBasicImg">
+                <br>
+                Special Image:
+                <input type="text" id="customSpecImg" name="customSpecImg">
+                <br>
+                <button onclick="addCustomChar()">Add</button>
+                <br>
+                <br>
+                <a target="_blank" rel="noopener noreferrer" href="./cardmaker.html">Special Cards:</a>
+                <textarea id="customSpecTsv" placeholder="Put each card on its own line"></textarea>
+                <br>
+                Extra Basic Cards:
+                <textarea id="customExtraBasics" placeholder="1/1 Character 1,2/2 Character 1,3/4 Character 2"></textarea>
+            </div>
+            <button type="button" onclick="exportDeck()">Export Deck</button>
+            <textarea id="deckOut" placeholder="Deck will output here"></textarea>
+            <button type="button" onclick="importDeck()">Import Deck</button>
+            <div id="deckDisp"></div>
+        </div>
+        <script>
+            var basicDecks = {};
+
+            var basicDeckXhr = new XMLHttpRequest();
+            basicDeckXhr.open('GET', "./basic_decks.csv", false);
+            basicDeckXhr.onreadystatechange = function() {
+                if (this.readyState == 4 && this.status == 200) {
+                    basicDeckXhr.responseText.split('\n').forEach(function(value) {
+                        var elements = trimAndSplit(value, ',');
+                        basicDecks[elements[0]] = elements.slice(1);
+                    });
+                }
+            };
+            basicDeckXhr.send();
+
+            function lazySwap(activate) {
+                [
+                    "majorMinorOptions", "customOptions"
+                ].forEach(function(value) {
+                    document.getElementById(value).style.display = "none";
+                });
+                document.getElementById(activate).style.display = "block";
+            }
+
+            document.getElementById("major1").addEventListener('change', function() {
+                lazySwap("majorMinorOptions");
+                document.getElementById("minorHasSpec").style.display = "block";
+            });
+            document.getElementById("major2").addEventListener('change', function() {
+                lazySwap("majorMinorOptions");
+                document.getElementById("minorHasSpec").style.display = "none";
+            });
+            document.getElementById("custom").addEventListener('change', function() {
+                lazySwap("customOptions");
+            });
+            document.getElementById("basicDatalist").innerHTML = Object.keys(basicDecks).map((colour) => `<option value="${colour}"></option>`);
+
+            function reloadDisp() {
+                var text = "";
+
+                function addCard(line, character) {
+                    var data = line.split("\t");
+                    if (data.length < 6) 
+                        return;
+                    text += generateSpecCardSvg(data, character ? character : customs["chars"][data[1]]);
+                }
+                if (document.getElementById("custom").checked) {
+                    // save the currently open custom char, since this is easiest
+                    addCustomChar();
+                    Object.values(customs["chars"]).forEach(function(charData) {
+                        var name = charData[0];
+                        var major = charData[1];
+                        var minor = charData[2];
+                        if (major) {
+                            text += basicDecks[major].map((stats) => generateBasicCardSvg(stats, charData)).join("\n");
+                        }
+                        if (minor) {
+                            text += basicDecks[minor].map((stats) => generateBasicCardSvg(stats, charData)).join("\n");
+                        }
+                    });
+                    document.getElementById("customExtraBasics").value.split(",").forEach(function(pair) {
+                        pair = pair.trim();
+                        if (pair.includes(" ")) {
+                            var [stat, name] = pair.split(" ", 1);
+                            text += generateBasicCardSvg(stat, customs["chars"][name]);
+                        }
+                    });
+                    document.getElementById("customSpecTsv").value.split("\n").forEach(function(line) {
+                        addCard(line);
+                    });
+                } else {
+                    var majorChar = ["", "", "", document.getElementById(`majorColour`).value, document.getElementById(`majorBasicImg`).value, document.getElementById("majorSpecImg").value];
+                    var majorBasicColour = document.getElementById("majorBasic").value;
+                    if (basicDecks.hasOwnProperty(majorBasicColour))
+                        text += basicDecks[majorBasicColour].map((stats) => generateBasicCardSvg(stats, majorChar)).join("\n");
+                    var minorChar = ["", "", "", document.getElementById(`minorColour`).value, document.getElementById(`minorBasicImg`).value, document.getElementById("minorSpecImg").value];
+                    var minorBasicColour = document.getElementById("minorBasic").value;
+                    if (basicDecks.hasOwnProperty(minorBasicColour))
+                        text += basicDecks[minorBasicColour].map((stats) => generateBasicCardSvg(stats, minorChar)).join("\n");
+                    document.getElementById("majorSpecTsv").value.split("\n").forEach(function(line) {
+                        addCard(line, majorChar);
+                    });
+                    document.getElementById("minorSpecTsv").value.split("\n").forEach(function(line) {
+                        addCard(line, minorChar);
+                    });
+    
+                }
+                document.getElementById("deckDisp").innerHTML = text;
+            }
+
+            ["major", "minor", "custom"].forEach(function(target) {
+                ["BasicImg", "SpecImg", "Colour", "Name", "SpecTsv"].forEach(function(value) {
+                    document.getElementById(`${target}${value}`).addEventListener('change', function() {
+                        reloadDisp();
+                    });
+                });
+            });
+            ["major", "minor", "customMajor", "customMinor"].forEach(function(target) {
+                document.getElementById(`${target}Basic`).addEventListener('change', function() {
+                    var deckList = document.getElementById(`${target}BasicDeckList`);
+                    if (basicDecks.hasOwnProperty(this.value)) {
+                        deckList.style.display = "block";
+                        deckList.innerText = `Cards in ${this.value}: ${basicDecks[this.value]}`;
+                    } else {
+                        deckList.style.display = "none";    
+                    }
+                    reloadDisp();
+                });
+            });
+
+            function exportDeck() {
+                if (document.getElementById("major1").checked) {
+                    var deckOut = `CHMJ${document.getElementById("majorName").value}\t${document.getElementById("majorBasic").value}\t\t${document.getElementById("majorColour").value}\t${document.getElementById("majorBasicImg").value}\t${document.getElementById("majorSpecImg").value}\nCHMN${document.getElementById("minorName").value}\t\t${document.getElementById("minorBasic").value}\t${document.getElementById("minorColour").value}\t${document.getElementById("minorBasicImg").value}\t${document.getElementById("minorSpecImg").value}\n`;
+                    document.getElementById("majorSpecTsv").value.split("\n").forEach(function(line) {
+                        if (line.split("\t").length >= 6)
+                            deckOut += `SPEC${line}\n`;
+                    });
+                    document.getElementById("minorSpecTsv").value.split("\n").forEach(function(line) {
+                        if (line.split("\t").length >= 6)
+                            deckOut += `SPEC${line}\n`;
+                    });
+                    document.getElementById("deckOut").value = deckOut;
+                } else if (document.getElementById("major2").checked) {
+                    var deckOut = `CHMJ${document.getElementById("majorName").value}\t${document.getElementById("majorBasic").value}\t\t${document.getElementById("majorColour").value}\t${document.getElementById("majorBasicImg").value}\t${document.getElementById("majorSpecImg").value}\nCHMN${document.getElementById("minorName").value}\t\t${document.getElementById("minorBasic").value}\t${document.getElementById("minorColour").value}\t${document.getElementById("minorBasicImg").value}\t\n`;
+                    document.getElementById("majorSpecTsv").value.split("\n").forEach(function(line) {
+                        if (line.split("\t").length >= 6)
+                            deckOut += `SPEC${line}\n`;
+                    });
+                    document.getElementById("deckOut").value = deckOut;
+                } else {
+                    var deckOut = '';
+                    // add all custom chars
+                    Object.values(customs["chars"]).forEach(function(value) {
+                        var prefix = "CHAR";
+                        if (value[1] && value[2]) {
+                            prefix = "CHMM";
+                        } else if (value[1]) {
+                            prefix = "CHMJ";
+                        } else if (value[2]) {
+                            prefix = "CHMN";
+                        }
+                        deckOut += `${prefix}${value.join("\t")}\n`;
+                    });
+                    document.getElementById("customExtraBasics").value.split(",").forEach(function(line) {
+                        pair = pair.trim();
+                        if (pair.includes(" ")) {
+                            var [stat, name] = pair.split(" ", 1);
+                            deckout += `BSIC${stat}\t${name}`;
+                        }
+                    });
+                    document.getElementById("customSpecTsv").value.split("\n").forEach(function(line) {
+                        if (line.split("\t").length >= 6)
+                            deckOut += `SPEC${line}\n`;
+                    });
+                    document.getElementById("deckOut").value = deckOut;
+                }
+            }
+
+            var customs = {
+                // Map "Name": [charInfo]
+                "chars": {
+
+                },
+            };
+
+
+            // TODO: allow loading of existing characters
+            // var charInfoXhr = new XMLHttpRequest();
+            // charInfoXhr.open('GET', "./base_char_info.tsv", false);
+            // charInfoXhr.onreadystatechange = function() {
+            //     if (this.readyState == 4 && this.status == 200) {
+            //         charInfoXhr.responseText.split('\n').slice(1).forEach(function(value) {
+            //             var elements = value.trim().split('\t')
+            //             var name = elements[0];
+            //             customs["chars"][name] = elements;
+            //         });
+            //     }
+            // };
+            // charInfoXhr.send();
+
+            function reloadCustomChars() {
+                document.getElementById("customDatalist").innerHTML = Object.keys(customs["chars"]).map((name) => `<option value="${name}"></option>`).join("\n");
+            }
+            // reloadCustomChars();
+
+            function addCustomChar() {
+                var name = document.getElementById("customName").value;
+                customs["chars"][name] = [
+                    name,
+                    document.getElementById("customMajorBasic").value,
+                    document.getElementById("customMinorBasic").value,
+                    document.getElementById("customColour").value,
+                    document.getElementById("customBasicImg").value,
+                    document.getElementById("customSpecImg").value
+                ];
+                reloadCustomChars();
+            }
+            
+            function loadCustomChar() {
+                var name = document.getElementById("customSel").value;
+                if (customs["chars"].hasOwnProperty(name)) {
+                    var charData = customs["chars"][name];
+                    document.getElementById("customName").value = charData[0];
+                    document.getElementById("customMajorBasic").value = charData[1];
+                    document.getElementById("customMinorBasic").value = charData[2];
+                    document.getElementById("customColour").value = charData[3];
+                    document.getElementById("customBasicImg").value = charData[4];
+                    document.getElementById("customSpecImg").value = charData[5];
+                }
+            }
+
+            function delCustomChar() {
+                var name = document.getElementById("customSel").value;
+                if (customs["chars"].hasOwnProperty(name)) {
+                    delete customs["chars"][name];
+                    reloadCustomChars();
+                }
+            }
+
+            function importDeck() {
+                var lines = document.getElementById("deckOut").value.split("\n");
+                var mustCustom = false;
+                var nMajor = 0;
+                var major;
+                var nMinor = 0;
+                var minor;
+                var chars = [];
+                var specs = {};
+                var basics = [];
+                lines.forEach(function(line) {
+                    var prefix = line.substring(0, 4);
+                    var data = line.substring(4).split("\t");
+                    if (prefix === "CHMM") {
+                        mustCustom = true;
+                        chars.push(data);
+                    } else if (prefix === "CHMJ") {
+                        nMajor += 1;
+                        chars.push(data);
+                        if (nMajor == 1)
+                            major = data;
+                        else
+                            mustCustom = true;
+                    } else if (prefix === "CHMN") {
+                        nMinor += 1;
+                        chars.push(data);
+                        if (nMinor == 1)
+                            minor = data;
+                        else
+                            mustCustom = true;
+                    } else if (line.startsWith("SPEC")) {
+                        if (!specs.hasOwnProperty(data[1]))
+                            specs[data[1]] = [];
+                        specs[data[1]].push(line.substring(4));
+                    } else if (line.startsWith("BSIC")) {
+                        basics.push(data);
+                        mustCustom = true;
+                    }
+                });
+                if (Object.keys(specs).some((name) => name != major[0] && name != minor[0])) {
+                    // not necessarily, but we don't know whose colour this should be, so we'll make it full custom...
+                    mustCustom = true;
+                }
+                if (mustCustom) {
+                    chars.forEach(function(data) {
+                        if (data.length >= 6)
+                            customs["chars"][data[0]] = data;
+                    });
+                    document.getElementById("customExtraBasics").value = basics.map((data) => data.join(" ")).join(",");;
+                    document.getElementById("customSpecTsv").value = Object.values(specs).flat().join("\n");
+                    document.getElementById("custom").checked = true;
+                    lazySwap("customOptions");
+                } else {
+                    // load major
+                    document.getElementById("majorName").value = major[0];
+                    document.getElementById("majorBasic").value = major[1];
+                    document.getElementById("majorColour").value = major[3];
+                    document.getElementById("majorBasicImg").value = major[4];
+                    document.getElementById("majorSpecImg").value = major[5];
+                    // load minor
+                    document.getElementById("minorName").value = minor[0];
+                    document.getElementById("minorBasic").value = minor[2];
+                    document.getElementById("minorColour").value = minor[3];
+                    document.getElementById("minorBasicImg").value = minor[4];
+                    if (minor[5]) {
+                        // personality minor
+                        document.getElementById("major1").checked = true;
+                        lazySwap("majorMinorOptions");
+                        document.getElementById("minorHasSpec").style.display = "block";
+                        document.getElementById("minorSpecImg").value = minor[5];
+                        document.getElementById("minorSpecTsv").value = specs[minor[0]].join("\n");
+                    } else {
+                        // 2x nameless
+                        document.getElementById("major2").checked = true;
+                        lazySwap("majorMinorOptions");
+                        document.getElementById("minorHasSpec").style.display = "none";
+                    }
+                    // load special cards
+                    document.getElementById("majorSpecTsv").value = specs[major[0]].join("\n");
+                }
+                reloadCustomChars();
+                reloadDisp();
+            }
+        </script>
+    </body>
+</html>

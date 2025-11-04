@@ -1,0 +1,125 @@
+<html lang="en-US">
+    <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
+        <meta content="utf-8" http-equiv="encoding">
+        <title>Card Maker - SWED</title>
+    </head>
+    <body>
+        <script type="text/javascript" src="card.js"></script>
+        <script>
+            function createCard() {
+                if (document.getElementById("special").checked) {
+                    document.getElementById("test").innerHTML = generateSpecCardSvg(
+                        [
+                            document.getElementById("cardName").value,
+                            document.getElementById("charName").value,
+                            document.getElementById("attack").value,
+                            document.getElementById("defend").value,
+                            document.getElementById("playWhen").value,
+                            document.getElementById("cardText").value,
+                            document.getElementById("image").value,
+                        ],
+                        [
+                            "",
+                            "",
+                            "",
+                            document.getElementById("colour").value,
+                            "",
+                            document.getElementById("image").value,
+                        ]
+                    );
+                } else {
+                    document.getElementById("test").innerHTML = generateBasicCardSvg(
+                        `${document.getElementById("attack").value}/${document.getElementById("defend").value}`,
+                        [
+                            "",
+                            "",
+                            "",
+                            document.getElementById("colour").value,
+                            document.getElementById("image").value,
+                            ""
+                        ]
+                    );
+                }
+            }
+
+            function exportTsv() {
+                document.getElementById("tsvOut").innerText = `${document.getElementById("cardName").value}\t${document.getElementById("charName").value}\t${document.getElementById("attack").value}\t${document.getElementById("defend").value}\t${document.getElementById("playWhen").value}\t${document.getElementById("cardText").value}\t${document.getElementById("image").value}`;
+            }
+        </script>
+        NOTE: Everything is stored in-session, so reloading the page will clear everything.
+        <br><br>
+        <table>
+            <tr>
+                <td>
+                    <div style="text-align: center;">
+                        <b>Type</b>
+                        <br>
+                        <input type="radio" id="basic" name="cardType" value="basic">
+                        <label for="basic">Basic Card</label>
+                        <input type="radio" id="special" name="cardType" value="special">
+                        <label for="special">Special Card</label>
+                        <br>
+                        <table>
+                            <tr>
+                                <th>Attack</th>
+                                <th>Defend</th>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <input type="text" id="attack" name="attack" size="1">
+                                </td>
+                                <td>
+                                    <input type="text" id="defend" name="defend" size="1">
+                                </td>
+                            </tr>
+                        </table>
+                        <b>Colour:</b>
+                        <input type="color" id="colour" name="colour">
+                        <br>
+                        <b>Image:</b>
+                        <input type="text" id="image" name="image">
+                        <br>
+                        <div id="specialOptions" style="display: none;">
+                            <b>Card Name:</b>
+                            <input type="text" id="cardName" name="cardName">
+                            <br>
+                            <b>Character Name:</b>
+                            <input type="text" id="charName" name="charName">
+                            <br>
+                            <b>Play When:</b>
+                            <select name="playWhen" id="playWhen">
+                                <option value="Attacking">Attacking</option>
+                                <option value="Defending">Defending</option>
+                                <option value="Anytime on your turn" selected="selected">Anytime on your turn</option>
+                                <option value="Attacking or Defending">Attacking or Defending</option>
+                                <option value="Anytime">Anytime</option>
+                            </select>
+                            <br>
+                            <b>Text:</b>
+                            <textarea id="cardText"></textarea>
+                        </div>
+                        <button type="button" onclick="createCard()">Create</button>
+                        <!-- <br><button type="button" onclick="">Export Image</button> -->
+                        <br>
+                        <button type="button" onclick="exportTsv()">Export Card to TSV</button>
+                        <textarea id="tsvOut" placeholder="TSV will output here"></textarea>
+                    </div>
+                </td>
+                <td>
+                    <div id="test"></div>
+                </td>
+            </tr>
+        </table>
+        <script>
+            document.getElementById("basic").addEventListener('change', function() {
+                document.getElementById("specialOptions").style.display = "none";
+            });
+            document.getElementById("special").addEventListener('change', function() {
+                document.getElementById("specialOptions").style.display = "block";
+            });
+        </script>
+    </body>
+</html>

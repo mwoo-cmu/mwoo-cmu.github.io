@@ -1,0 +1,76 @@
+Name	Character	Attack	Defend	Play When	Text	Custom Image	Default	Major + 1 PVE	Major + 2 PVE	Minor PVE	Custom
+Missile Launch	Jango Fett	7		Attacking	Draw 3 cards. If you are playing on a KAMINO map, draw 4 cards instead.		2	2		1	Base
+Rocket Retreat	Jango Fett	4		Attacking	After attacking, you may move Jango to any empty space.		3	3		3	Base
+Wrist Cable	Jango Fett			Anytime on your turn	Deal 2 damage to a character that Jango can attack. The controlling player gets 1 less action on their next turn.		2	2			Base
+Fire Up the Jetpack	Jango Fett			Anytime on your turn	You may move Jango to any empty space. Playing this card does not count as an action.		1	1			Base
+Beskar Block	Jango Fett		10	Defending							自己諗
+Sniper Shot	Zam Wesell	3*		Attacking	*If Zam damages an enemy character with this card, the attack value is 6 instead of 3.		3	3		3	Base
+Assassination	Zam Wesell	7		Attacking	After attacking, you may move Zam to any empty space.		1	2		1	Base
+Shape Match	Zam Wesell	3*	*	Attacking or Defending	If the opponent played a card, the attack and defend values of this card are equal to those of the opponent's card.			1			自己諗
+Ally Shape	Zam Wesell			Anytime on your turn	Zam cannot be targeted by enemy attacks until her next attack. 			2			自己諗
+Mabari Armourweave	Zam Wesell		7	Defending							自己諗
+Force Control	Obi-Wan Kenobi	6		Attacking	After attacking, move Obi-Wan and the defending character up to 3 spaces each.		2	2	2		Base
+The High Ground	Obi-Wan Kenobi	5		Attacking	After attacking, you may move Obi-Wan up to 6 spaces.		3	3	3	2	Base
+I Don't Think So	Obi-Wan Kenobi		12	Defending	Draw a card.		2	2	2	1	Base
+Force Balance	Obi-Wan Kenobi			Anytime on your turn	All players discard their hands. Each player draws 3 new cards.		1				Base
+Force Healing	Obi-Wan Kenobi			Anytime on your turn	Any character adjacent to Obi-Wan recovers 2 damage.				1		自己諗
+Jedi Mind Trick	Obi-Wan Kenobi			Anytime on your turn	Take any card from your discard pile and put that card in your hand.		1	1	1	1	Base
+Force Speed	Obi-Wan Kenobi			Anytime on your turn	Move Obi-Wan up to 6 spaces, then draw a card.		3		3		Base
+Justice	Luke Skywalker	6*		Attacking	*If Leia has been destroyed, the attack value of this card is 10.		2				Base
+Justice	Luke Skywalker	6*		Attacking	*If an ally has been destroyed, the attack value of this card is 10.			2	1	2	自己諗
+I Will Not Fight You	Luke Skywalker			Anytime on your turn	Choose an opponent and reveal your hands to each other. Both of you must discard all cards with an attack value greater than 1.		3				Base
+Children of the Force	Luke Skywalker			Anytime on your turn	Move Luke and Leia up to 6 spaces each. Draw 2 cards.		3				Base
+There is Another	Leia Organa	7	7	Attacking or Defending	Draw a card.		2			2	Base
+Luke's in Trouble	Leia Organa			Anytime on your turn	If Leia is adjacent to Luke, he recovers 4 damage. If Luke has been destroyed, Leia recovers 4 damage.		2				Base
+Size Matters Not	Yoda	6		Attacking	Draw a card.		2		2		Base
+Force Rebound	Yoda		*	Defending	Yoda receives no damage from the attack. Instead, the attacker receives damage equal to the attack value on the opponent's card		1		1	1	Base
+Serenity	Yoda		15	Defending	Draw a card.		2		2	1	Base
+Force Lift	Yoda			Anytime on your turn	Turn any character adjacent to Yoda on its side. This character cannot move, attack, or defend until any player discards 3 cards to stand it back up.		3		3	2	Base
+Force Push	Yoda			Anytime on your turn	Move any character adjacent to Yoda to any empty space. That character receives 3 damage.		2		2		Base
+Insight	Yoda			Anytime on your turn	Look at any opponent's hand, then choose one of their cards to discard.		2				Base
+Force Lightning	Emperor Palpatine			Anytime on your turn	Choose any character. That character receives 3 damage. The controlling player must discard a card at random.		4				Base
+Let Go Of Your Hatred	Emperor Palpatine			Anytime on your turn	Choose an opponent. That opponent discards 2 cards of their choice.		2				Base
+You Will Die	Emperor Palpatine			Anytime on your turn	Choose an opponent to reveal their hand. For every 2 cards in their hand, they must choose and discard a card.		2				Base
+Meditation	Emperor Palpatine			Anytime on your turn	Choose an opponent. They cannot draw cards their next turn. Palpatine recovers 4 damage.		2				Base
+Future Foreseen	Emperor Palpatine			Anytime on your turn	Look at the top 4 cards of your deck. Put one in your hand and place the rest back on top of your deck in any order.		2				Base
+Masterful Fighting	Mace Windu	5		Attacking	Draw a card.		2		2		Base
+Battlemind	Mace Windu	*	*	Attacking or Defending	*The attack and defense values of this card are equal to the number of cards in your hand after this card is played.		4		4	2	Base
+Wisdom	Mace Windu			Anytime on your turn	Move Mace up to 5 spaces, then draw a card.		4		4		Base
+Whirlwind Attack	Mace Windu			Anytime on your turn	Mace does 4 damage to all opponent characters he can attack.		2		2	2	Base
+Gambler's Luck	Han Solo	4*		Attacking	*If Han does damage with this attack, choose an opponent to discard a card at random.		3				Base
+Heroic Retreat	Han Solo	6		Attacking	After attacking, you may move Han up to 5 spaces.		2	2		1	Base
+Never Tell Me The Odds	Han Solo			Anytime on your turn	Han does 3 damage to all opponent characters he can attack. You may then shuffle your discard pile into your draw pile.		2	2			Base
+Bowcaster	Chewbacca	11		Attacking	Draw a card.		1			1	Base
+It's Not Wise	Chewbacca			Anytime on your turn	Move any character adjacent to Chewbacca up to 6 spaces. That character receives 3 damage.		2			2	Base
+Wookiee Endurance	Chewbacca			Anytime on your turn	Chewbacca recovers 3 damage. Move Chewbacca up to 5 spaces.		1			1	Base
+Wookiee Instincts	Chewbacca			Anytime on your turn	Search your deck for the Bowcaster card. If it is in your deck, place it in your hand. Reshuffle your deck.		1			1	Base
+You Disappoint Me	Count Dooku	7		Attacking	Draw a card.		4		4	1	Base
+Force Push	Count Dooku			Anytime on your turn	Move any character adjacent to Dooku to any empty space. That character receives 1 damage.		2		2	1	Base
+Give Orders	Count Dooku			Anytime on your turn	Move Dooku and both Super Battle Droids up to 4 spaces each.		3				Base
+Sith Lightning	Count Dooku			Anytime on your turn	Choose an opponent to discard 2 cards at random.		1				Base
+Twice the Pride	Count Dooku			Anytime on your turn	Draw 3 cards.		2		2	2	Base
+All Too Easy	Darth Vader	7*		Attacking	*If this card is not blocked, the target takes 20 damage instead of 7.		1		1	1	Base
+Dark Side Drain	Darth Vader	5		Attacking	If Vader does damage with this card, he recovers the amount of damage dealt.		2		2	1	Base
+Throw Debris	Darth Vader			Anytime on your turn	Choose any character. That character receives 4 damage.		2		2		Base
+Wrath	Darth Vader			Anytime on your turn	Choose an opponent. Each of their characters receives 2 damage.		3				Base
+Choke	Darth Vader			Anytime on your turn	Choose any minor character. That character receives 6 damage.		3		3		Base
+Your Skills Are Not Complete	Darth Vader			Anytime on your turn	Choose any opponent. They must reveal their hand and discard all Special cards.		1				Base
+Sith Speed	Darth Maul	3		Attacking	Playing this card does not count as an action.		3		3	2	Base
+Super Sith Speed	Darth Maul	4		Attacking	Playing this card does not count as an action.		3		3	2	Base
+Athletic Surge	Darth Maul	6		Attacking	After attacking, move Darth Maul up to 6 spaces.		3		3		Base
+Martial Defense	Darth Maul		10	Defending	Draw a card.		1		1		Base
+Blinding Surge	Darth Maul		0*	Defending	*After taking damage from the attack, Darth Maul does 3 damage to the attacker.		2		2		Base
+Kyber Dart	Boba Fett	9*		Attacking	*If this attack destroys the target, draw 3 cards.		1	1			Base
+Deadly Aim	Boba Fett	7		Attacking	Draw 2 cards.		1	1			Base
+Rocket Retreat	Boba Fett	4		Attacking	After attacking, you may move Boba Fett to any empty space.		3	3			Base
+Wrist Cable	Boba Fett			Anytime on your turn	Deal 2 damage to a character that Boba Fett can attack. The controlling player gets 1 less action on their next turn.		2	2			Base
+Missile Blast	Boba Fett			Anytime on your turn	Deal 4 damage to a character that Boba Fett can attack. All characters adjacent to that character also receive 4 damage.		2	2			Base
+Desperate Shot	Greedo	7*		Attacking	*If you do not destroy the defending character with this card, destroy Greedo.		1			1	Base
+Sudden Arrival	Greedo			Anytime on your turn	Move Greedo adjacent to any character. Then Greedo does 1 damage to all characters he can attack. Playing this card does not count as an action.		2			2	Base
+Anger	Anakin Skywalker	8		Attacking	After attacking, discard every card in your hand except one card. 		2	2			Base
+Counterattack	Anakin Skywalker		*	Defending	Anakin receives no damage from the attack. Instead, the attacker receives 1 damage.		2	2			Base
+Wrath	Anakin Skywalker			Anytime on your turn	You may move Anakin adjacent to any minor character. That character receives 7 damage.		3	3			Base
+Calm	Anakin Skywalker			Anytime on your turn	Move Anakin up to 8 spaces. If this was the last card in your hand, draw up to 5 cards.		2	2			Base
+Precise Shot	Padmé Amidala	9		Attacking	After attacking, you may discard a card to draw a card.		1			1	Base
+Aggressive Negotiations	Padmé Amidala	6		Attacking	After attacking, move Padmé up to 6 spaces.		1			1	Base
+Protection	Padmé Amidala			Anytime on your turn	If Anakin is alive, Padmé recovers 4 damage. If Anakin has been destroyed, Padmé recovers 2 damage.		1			1	Base

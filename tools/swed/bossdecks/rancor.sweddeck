@@ -1,0 +1,13 @@
+CHMMRancor	Brown	Melee Minor	#4f2a08	https://cdn.mos.cms.futurecdn.net/R2B2wHwDiPAwQvfJAgzZG9-1920-80.jpg	https://scontent-sjc6-1.xx.fbcdn.net/v/t39.30808-6/482060660_1183308759823726_1519649477343648400_n.jpg?stp=dst-jpg_s590x590_tt6&_nc_cat=104&ccb=1-7&_nc_sid=f727a1&_nc_ohc=LEUVkuum6kwQ7kNvwEAyj92&_nc_oc=AdmWzE9kAo8gDnLFkkaTxU-r4hpnilnGglcVYBhVhHPEgPsBf7Q-m46q2jWuOby_4XZUJsutmfXSuxGFFFCskkoF&_nc_zt=23&_nc_ht=scontent-sjc6-1.xx&_nc_gid=7br-OTGAR95_-9am2kBv8A&oh=00_AfjcnqldNo2mLcLUE1Sqndjx6FdR_JwFHRvaHqoGLp_odw&oe=690F66DE
+SPECSwipe	Rancor	3	3	Attacking	This attack targets all adjacent characters.		
+SPECSwipe	Rancor	3	3	Attacking	This attack targets all adjacent characters.		
+SPECSwipe	Rancor	3	3	Attacking	This attack targets all adjacent characters.		
+SPECSwipe	Rancor	3	3	Attacking	This attack targets all adjacent characters.		
+SPECSwipe	Rancor	3	3	Attacking	This attack targets all adjacent characters.		
+SPECChomp	Rancor		6	Anytime on your turn	Rancor defeats a character it is holding.		
+SPECGrab	Rancor		4	Anytime on your turn	Rancor grabs hold of an adjacent character. If it is already holding one, put that one down on the nearest empty tile.		
+SPECGrab	Rancor		4	Anytime on your turn	Rancor grabs hold of an adjacent character. If it is already holding one, put that one down on the nearest empty tile.		
+SPECGrab	Rancor		4	Anytime on your turn	Rancor grabs hold of an adjacent character. If it is already holding one, put that one down on the nearest empty tile.		
+SPECStomp	Rancor	2	2	Attacking	Turn characters adjacent to Rancor on their side. They cannot move, attack, or defend until any player discards 3 cards to stand it back up.		
+SPECRoar	Rancor		3	Anytime on your turn	Each player discards a card.		
+SPECRoar	Rancor		3	Anytime on your turn	Each player discards a card.		

@@ -1,0 +1,7 @@
+Name	Character	Attack	Defend	Play When	Text	Count	Custom
+Swipe	Rancor	3	0	Attacking	This attack targets all adjacent characters.		自己諗
+Chomp	Rancor	0	0	Anytime on your turn	Rancor defeats a character it is holding.		自己諗
+Grab	Rancor	0	0	Anytime on your turn	Rancor grabs hold of an adjacent character. If it is already holding one, put that one down on the nearest empty tile.		自己諗
+Stomp	Rancor	2	0	Attacking	Turn characters adjacent to Rancor on their side. They cannot move, attack, or defend until any player discards 3 cards to stand it back up.		自己諗
+Roar	Rancor	0	0	Anytime on your turn	Each player discards a card.		自己諗
+Charge	Reek	0	0	Anytime on your turn	Reek moves until it hits a wall. Turn characters along the path on their side. They cannot move, attack, or defend until any player discards 3 cards to stand it back up		自己諗

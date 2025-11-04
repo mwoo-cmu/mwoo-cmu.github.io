@@ -1,0 +1,259 @@
+<html lang="en-US">
+    <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
+        <meta content="utf-8" http-equiv="encoding">
+        <title>Deck Simulator - SWED</title>
+    </head>
+    <body>
+        <script type="text/javascript" src="card.js"></script>
+        <div id="customInput" style="display: none">
+            Paste Deck from <a target="_blank" rel="noopener noreferrer" href="./deckbuilder.html">Deck Builder</a>: 
+            <textarea id="customDeckList" placeholder="Paste your deck here"></textarea>
+            <button onclick="buildCustom()">Build</button>
+        </div>
+        <button type="button" onclick="drawCard()">Draw</button>
+        Deck Resuffles: <span id="deckReshuffles">0</span>
+        <br>
+        <button type="button" onclick="rollMovement()">Roll Movement</button>
+        <span id="movementResult"></span>
+        <br>
+        <div id="hand"></div>
+        <div id="discard"></div>
+        <script>
+            const urlParams = new URLSearchParams(window.location.search);
+            
+            var charInfo = {};
+            var cardMap = {};
+            var basicDecks = {};
+
+            var basicDeckXhr = new XMLHttpRequest();
+            basicDeckXhr.open('GET', "./basic_decks.csv", false);
+            basicDeckXhr.onreadystatechange = function() {
+                if (this.readyState == 4 && this.status == 200) {
+                    basicDeckXhr.responseText.split('\n').forEach(function(value) {
+                        var elements = trimAndSplit(value, ',');
+                        basicDecks[elements[0]] = elements.slice(1);
+                    });
+                }
+            };
+            basicDeckXhr.send();
+
+            var charInfoXhr = new XMLHttpRequest();
+            charInfoXhr.open('GET', "./base_char_info.tsv", false);
+            charInfoXhr.onreadystatechange = function() {
+                if (this.readyState == 4 && this.status == 200) {
+                    charInfoXhr.responseText.split('\n').slice(1).forEach(function(value) {
+                        var elements = value.trim().split('\t')
+                        var name = elements[0];
+                        charInfo[name] = elements;
+                        cardMap[name] = {
+                            "major": [],
+                            "minor": basicDecks[elements[2]].map((stats) => [stats, name]),
+                            "special": {
+                                "standard": [],
+                                "major1": [],
+                                "major2": [],
+                                "minor": []
+                            }
+                        };
+                        var majorColour = elements[1];
+                        if (majorColour)
+                            cardMap[name]["major"] = basicDecks[majorColour].map((stats) => [stats, name]);
+                    });
+                }
+            };
+            charInfoXhr.send();
+
+            var cardListXhr = new XMLHttpRequest();
+            cardListXhr.open('GET', "./card_list.tsv", false);
+            cardListXhr.onreadystatechange = function() {
+                if (this.readyState == 4 && this.status == 200) {
+                    cardListXhr.responseText.split('\n').slice(1).forEach(function(value) {
+                        var elements = trimAndSplit(value, '\t');
+                        var cardInfo = elements.slice(0, 7);
+                        var charName = elements[1];
+                        // standard
+                        for (var i = 0; i < elements[7]; i++) {
+                            cardMap[charName]["special"]["standard"].push(cardInfo);
+                        } 
+                        // major +1
+                        for (var i = 0; i < elements[8]; i++) {
+                            cardMap[charName]["special"]["major1"].push(cardInfo);
+                        } 
+                        // major +2
+                        for (var i = 0; i < elements[9]; i++) {
+                            cardMap[charName]["special"]["major2"].push(cardInfo);
+                        } 
+                        // minor
+                        for (var i = 0; i < elements[10]; i++) {
+                            cardMap[charName]["special"]["minor"].push(cardInfo);
+                        } 
+                    });
+                }
+            };
+            cardListXhr.send();
+
+            var stdDecks = {
+                "Jango and Zam": {
+                    "image": "https://static.wixstatic.com/media/2468c6_0fc84f5b202844f6be3db60c6d6372b2~mv2.png/v1/fill/w_292,h_390,fp_0.50_0.50,q_95,enc_avif,quality_auto/2468c6_0fc84f5b202844f6be3db60c6d6372b2~mv2.png",
+                    "deck": cardMap["Jango Fett"]["major"].concat(cardMap["Jango Fett"]["special"]["standard"], cardMap["Zam Wesell"]["minor"], cardMap["Zam Wesell"]["special"]["standard"])
+                },
+                "Obi-Wan Kenobi": {
+                    "image": "https://static.wixstatic.com/media/2468c6_7cf77cf06b38427e8c8c369190f62650~mv2.png/v1/fill/w_292,h_390,fp_0.50_0.50,q_95,enc_avif,quality_auto/2468c6_7cf77cf06b38427e8c8c369190f62650~mv2.png",
+                    "deck": cardMap["Obi-Wan Kenobi"]["major"].concat(cardMap["Obi-Wan Kenobi"]["special"]["standard"], cardMap["Clone Trooper (212th)"]["minor"])
+                },
+                "Luke and Leia": {
+                    "image": "https://static.wixstatic.com/media/2468c6_3fa64cdc93714058a89804bf0dbdf4a3~mv2.png/v1/fill/w_292,h_390,fp_0.50_0.50,q_95,enc_avif,quality_auto/2468c6_3fa64cdc93714058a89804bf0dbdf4a3~mv2.png",
+                    "deck": cardMap["Luke Skywalker"]["major"].concat(cardMap["Luke Skywalker"]["special"]["standard"], cardMap["Leia Organa"]["minor"], cardMap["Leia Organa"]["special"]["standard"])
+                },
+                "Boba and Greedo": {
+                    "image": "https://static.wixstatic.com/media/2468c6_0f1b0aa6e7944af4ad34789b3b5a614c~mv2.png/v1/fill/w_292,h_390,fp_0.50_0.50,q_95,enc_avif,quality_auto/2468c6_0f1b0aa6e7944af4ad34789b3b5a614c~mv2.png",
+                    "deck": cardMap["Boba Fett"]["major"].concat(cardMap["Boba Fett"]["special"]["standard"], cardMap["Greedo"]["minor"], cardMap["Greedo"]["special"]["standard"])
+                },
+                "Anakin and Padmé": {
+                    "image": "https://static.wixstatic.com/media/2468c6_460fac5984f346699795033a6fe8da76~mv2.png/v1/fill/w_292,h_390,fp_0.50_0.50,q_95,enc_avif,quality_auto/2468c6_460fac5984f346699795033a6fe8da76~mv2.png",
+                    "deck": cardMap["Anakin Skywalker"]["major"].concat(cardMap["Anakin Skywalker"]["special"]["standard"], cardMap["Padmé Amidala"]["minor"], cardMap["Padmé Amidala"]["special"]["standard"])
+                },
+                "Darth Maul": {
+                    "image": "https://static.wixstatic.com/media/2468c6_6a0e38e5d3474769af9f3462b621db5f~mv2.png/v1/fill/w_292,h_390,fp_0.50_0.50,q_95,enc_avif,quality_auto/2468c6_6a0e38e5d3474769af9f3462b621db5f~mv2.png",
+                    "deck": cardMap["Darth Maul"]["major"].concat(cardMap["Darth Maul"]["special"]["standard"], cardMap["B1 Battle Droid"]["minor"])
+                },
+                "Count Dooku": {
+                    "image": "https://static.wixstatic.com/media/2468c6_91875b60c21d49a8be88d47dc8010aff~mv2.png/v1/fill/w_292,h_390,fp_0.50_0.50,q_95,enc_avif,quality_auto/2468c6_91875b60c21d49a8be88d47dc8010aff~mv2.png",
+                    "deck": cardMap["Count Dooku"]["major"].concat(cardMap["Count Dooku"]["special"]["standard"], cardMap["B2 Super Battle Droid"]["minor"])
+                },
+                "Darth Vader": {
+                    "image": "https://static.wixstatic.com/media/2468c6_4f6d163c568b48f38b93afe6c015f40b~mv2.png/v1/fill/w_292,h_390,fp_0.50_0.50,q_95,enc_avif,quality_auto/2468c6_4f6d163c568b48f38b93afe6c015f40b~mv2.png",
+                    "deck": cardMap["Darth Vader"]["major"].concat(cardMap["Darth Vader"]["special"]["standard"], cardMap["Stormtrooper"]["minor"])
+                },
+                "Han and Chewbacca": {
+                    "image": "https://static.wixstatic.com/media/2468c6_9abcd18543614a229a8cdafa87a69b0a~mv2.png/v1/fill/w_292,h_390,fp_0.50_0.50,q_95,enc_avif,quality_auto/2468c6_9abcd18543614a229a8cdafa87a69b0a~mv2.png",
+                    "deck": cardMap["Han Solo"]["major"].concat(cardMap["Han Solo"]["special"]["standard"], cardMap["Chewbacca"]["minor"], cardMap["Chewbacca"]["special"]["standard"])
+                },
+                "Emperor Palpatine": {
+                    "image": "https://static.wixstatic.com/media/2468c6_d5ced57c2087435e856e186feffffa78~mv2.png/v1/fill/w_292,h_390,fp_0.50_0.50,q_95,enc_avif,quality_auto/2468c6_d5ced57c2087435e856e186feffffa78~mv2.png",
+                    "deck": cardMap["Emperor Palpatine"]["major"].concat(cardMap["Emperor Palpatine"]["special"]["standard"], cardMap["Royal Guard"]["minor"])
+                },
+                "Yoda": {
+                    "image": "https://static.wixstatic.com/media/2468c6_e0a975d7921446589033b7b85a7650ce~mv2.png/v1/fill/w_292,h_390,fp_0.50_0.50,q_95,enc_avif,quality_auto/2468c6_e0a975d7921446589033b7b85a7650ce~mv2.png",
+                    "deck": cardMap["Yoda"]["major"].concat(cardMap["Yoda"]["special"]["standard"], cardMap["Clone Trooper (41st)"]["minor"])
+                },
+                "Mace Windu": {
+                    "image": "https://static.wixstatic.com/media/2468c6_8460880bd4ae4cfa96df0fb9b0145e67~mv2.png/v1/fill/w_292,h_390,fp_0.50_0.50,q_95,enc_avif,quality_auto/2468c6_8460880bd4ae4cfa96df0fb9b0145e67~mv2.png",
+                    "deck": cardMap["Mace Windu"]["major"].concat(cardMap["Mace Windu"]["special"]["standard"], cardMap["Clone Trooper (187th)"]["minor"])
+                },
+            }
+
+            var deck = [];
+            var hand = [];
+            var discard = [];
+            (function() {
+                var stdDeck = urlParams.get("stdDeck");
+                if (stdDeck) {
+                    deck = stdDecks[stdDeck]["deck"];
+                    return;
+                }
+                var major = urlParams.get("major");
+                var minor = urlParams.get("minor");
+                if (major && minor) {
+                    if (minor.startsWith("[2x] ")) {
+                        deck = cardMap[major]["major"].concat(cardMap[major]["special"]["major2"], cardMap[minor.substring(5)]["minor"]);
+                    } else {
+                        deck = cardMap[major]["major"].concat(cardMap[major]["special"]["major1"], cardMap[minor]["minor"], cardMap[minor]["special"]["minor"]);
+                    }
+                    return;
+                }
+                var custom = urlParams.get("custom");
+                if (custom.endsWith(".sweddeck")) {
+                    var xhr = new XMLHttpRequest();
+                    xhr.open('GET', custom, false);
+                    xhr.onreadystatechange = function() {
+                        if (this.readyState == 4 && this.status == 200) {
+                            _buildCustom(xhr.responseText);
+                        }
+                    };
+                    xhr.send();
+                    return;
+                } else if (custom) {
+                    document.getElementById("customInput").style.display = "block";
+                    return;
+                }
+            })()
+
+            function _buildCustom(string) {
+                deck = [];
+                string.split('\n').forEach(function(line) {
+                    if (line.startsWith("CHAR")) {
+                        var elements = line.substring(4).trim().split("\t");
+                        charInfo[elements[0]] = elements;
+                    } else if (line.startsWith("CHMJ")) {
+                        var elements = line.substring(4).trim().split("\t");
+                        var name = elements[0];
+                        charInfo[name] = elements;
+                        deck.push(...basicDecks[elements[1]].map((stats) => [stats, name]));
+                    } else if (line.startsWith("CHMN")) {
+                        var elements = line.substring(4).trim().split("\t");
+                        var name = elements[0];
+                        charInfo[name] = elements;
+                        deck.push(...basicDecks[elements[2]].map((stats) => [stats, name]));
+                    } else if (line.startsWith("CHMM")) {
+                        var elements = line.substring(4).trim().split("\t");
+                        var name = elements[0];
+                        charInfo[name] = elements;
+                        deck.push(...basicDecks[elements[1]].map((stats) => [stats, name]));
+                        deck.push(...basicDecks[elements[2]].map((stats) => [stats, name]));
+                    } else if (line.startsWith("SPEC")) {
+                        var elements = trimAndSplit(line.substring(4), '\t');
+                        var cardInfo = elements.slice(0, 7);
+                        deck.push(cardInfo);
+                    } else if (line.startsWith("BSIC")) {
+                        // should be ['a/d', 'Name'];
+                        var elements = trimAndSplit(line.substring(4), '\t');
+                        deck.push(elements);
+                    }
+                });
+            }
+
+            function buildCustom() {
+                _buildCustom(document.getElementById("customInput"));
+            }
+
+            function renderHand() {
+                // basic card in the form ["atk/def", "character"]
+                // special card still matching csv
+                document.getElementById("hand").innerHTML = hand
+                    .map((cardData, index) => 
+                        `<div onclick="discardCard(${index})" style="display: inline-block">
+                            ${cardData.length == 2 ? generateBasicCardSvg(cardData[0], charInfo[cardData[1]]) : generateSpecCardSvg(cardData, charInfo[cardData[1]])}
+                        </div>`
+                    )
+                    .join("\n");
+            }
+
+            function drawCard() {
+                if (hand.length >= 10) 
+                    return;
+                if (deck.length == 0) {
+                    deck = discard;
+                    discard = [];
+                    document.getElementById("deckReshuffles").innerText = parseInt(document.getElementById("deckReshuffles").innerText) + 1;
+                }
+                let i = Math.floor(Math.random() * deck.length);
+                hand.push(...deck.splice(i, 1));
+                renderHand();
+            }
+
+            function discardCard(index) {
+                discard.push(...hand.splice(index, 1));
+                renderHand();
+            }
+
+            const movementDie = ["3", "4", "5", "All 2", "All 3", "All 4"];
+            function rollMovement() {
+                document.getElementById("movementResult").innerText = movementDie[Math.floor(Math.random() * movementDie.length)];
+            }
+        </script>
+    </body>
+</html>

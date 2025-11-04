@@ -1,0 +1,168 @@
+<html lang="en-US">
+    <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
+        <meta content="utf-8" http-equiv="encoding">
+        <title>Deck Selector - SWED</title>
+    </head>
+    <body>
+        <table>
+            <tr>
+                <td>
+                    <b>Deck Type</b>
+                    <br>
+                    <input type="radio" id="standard" name="deckType" value="standard">
+                    <label for="standard">10YA Tweaked (PvP)</label>
+                    <input type="radio" id="preset" name="deckType" value="preset">
+                    <label for="preset">Preset (PvE)</label>
+                    <input type="radio" id="pveMix" name="deckType" value="pveMix" checked>
+                    <label for="pveMix">Mix & Match (PvE)</label>
+                    <input type="radio" id="custom" name="deckType" value="custom">
+                    <label for="custom">Custom</label>
+                    <br>
+                    <div id="stdDecks" style="display: none"></div>
+                    <div id="presetDecks" style="display: none"></div>
+                    <div id="mixDecks">
+                        <input type="text" id="mixMajor" list="majorDatalist" placeholder="Major Character">
+                        <datalist id="majorDatalist"></datalist>
+                        <input type="text" id="mixMinor" list="minorDatalist" placeholder="Minor Character">
+                        <datalist id="minorDatalist"></datalist>
+                        <button onclick="mixDecks()">Play</button>
+                    </div>
+                    <div id="customDeck" style="display: none">
+                        <input type="text" id="boss" list="bossDatalist" placeholder="Custom Boss">
+                        <datalist id="bossDatalist"></datalist>
+                        <button onclick="playBoss()">Play</button>
+                        <br><br>
+                        Please use <a target="_blank" rel="noopener noreferrer" href="./deckbuilder.html">Deck Builder</a> and paste into <a target="_blank" rel="noopener noreferrer" href="./decksim.html?custom=true">Deck Simulator</a>
+                    </div>
+                </td>
+            </tr>
+        </table>
+        <script>
+            var charInfo = {};
+
+            var charInfoXhr = new XMLHttpRequest();
+            charInfoXhr.open('GET', "./base_char_info.tsv", false);
+            charInfoXhr.onreadystatechange = function() {
+                if (this.readyState == 4 && this.status == 200) {
+                    charInfoXhr.responseText.split('\n').slice(1).forEach(function(value) {
+                        var elements = value.trim().split('\t')
+                        var name = elements[0];
+                        charInfo[name] = {
+                            "canMajor": elements[1] !== '',
+                            "canMinor": elements[2] !== ''
+                        }
+                    });
+                }
+            };
+            charInfoXhr.send();
+
+            var stdDecks = {
+                "Jango and Zam": {
+                    "image": "https://static.wixstatic.com/media/2468c6_0fc84f5b202844f6be3db60c6d6372b2~mv2.png/v1/fill/w_292,h_390,fp_0.50_0.50,q_95,enc_avif,quality_auto/2468c6_0fc84f5b202844f6be3db60c6d6372b2~mv2.png",
+                },
+                "Obi-Wan Kenobi": {
+                    "image": "https://static.wixstatic.com/media/2468c6_7cf77cf06b38427e8c8c369190f62650~mv2.png/v1/fill/w_292,h_390,fp_0.50_0.50,q_95,enc_avif,quality_auto/2468c6_7cf77cf06b38427e8c8c369190f62650~mv2.png",
+                },
+                "Luke and Leia": {
+                    "image": "https://static.wixstatic.com/media/2468c6_3fa64cdc93714058a89804bf0dbdf4a3~mv2.png/v1/fill/w_292,h_390,fp_0.50_0.50,q_95,enc_avif,quality_auto/2468c6_3fa64cdc93714058a89804bf0dbdf4a3~mv2.png",
+                },
+                "Boba and Greedo": {
+                    "image": "https://static.wixstatic.com/media/2468c6_0f1b0aa6e7944af4ad34789b3b5a614c~mv2.png/v1/fill/w_292,h_390,fp_0.50_0.50,q_95,enc_avif,quality_auto/2468c6_0f1b0aa6e7944af4ad34789b3b5a614c~mv2.png",
+                },
+                "Anakin and Padmé": {
+                    "image": "https://static.wixstatic.com/media/2468c6_460fac5984f346699795033a6fe8da76~mv2.png/v1/fill/w_292,h_390,fp_0.50_0.50,q_95,enc_avif,quality_auto/2468c6_460fac5984f346699795033a6fe8da76~mv2.png",
+                },
+                "Darth Maul": {
+                    "image": "https://static.wixstatic.com/media/2468c6_6a0e38e5d3474769af9f3462b621db5f~mv2.png/v1/fill/w_292,h_390,fp_0.50_0.50,q_95,enc_avif,quality_auto/2468c6_6a0e38e5d3474769af9f3462b621db5f~mv2.png",
+                },
+                "Count Dooku": {
+                    "image": "https://static.wixstatic.com/media/2468c6_91875b60c21d49a8be88d47dc8010aff~mv2.png/v1/fill/w_292,h_390,fp_0.50_0.50,q_95,enc_avif,quality_auto/2468c6_91875b60c21d49a8be88d47dc8010aff~mv2.png",
+                },
+                "Darth Vader": {
+                    "image": "https://static.wixstatic.com/media/2468c6_4f6d163c568b48f38b93afe6c015f40b~mv2.png/v1/fill/w_292,h_390,fp_0.50_0.50,q_95,enc_avif,quality_auto/2468c6_4f6d163c568b48f38b93afe6c015f40b~mv2.png",
+                },
+                "Han and Chewbacca": {
+                    "image": "https://static.wixstatic.com/media/2468c6_9abcd18543614a229a8cdafa87a69b0a~mv2.png/v1/fill/w_292,h_390,fp_0.50_0.50,q_95,enc_avif,quality_auto/2468c6_9abcd18543614a229a8cdafa87a69b0a~mv2.png",
+                },
+                "Emperor Palpatine": {
+                    "image": "https://static.wixstatic.com/media/2468c6_d5ced57c2087435e856e186feffffa78~mv2.png/v1/fill/w_292,h_390,fp_0.50_0.50,q_95,enc_avif,quality_auto/2468c6_d5ced57c2087435e856e186feffffa78~mv2.png",
+                },
+                "Yoda": {
+                    "image": "https://static.wixstatic.com/media/2468c6_e0a975d7921446589033b7b85a7650ce~mv2.png/v1/fill/w_292,h_390,fp_0.50_0.50,q_95,enc_avif,quality_auto/2468c6_e0a975d7921446589033b7b85a7650ce~mv2.png",
+                },
+                "Mace Windu": {
+                    "image": "https://static.wixstatic.com/media/2468c6_8460880bd4ae4cfa96df0fb9b0145e67~mv2.png/v1/fill/w_292,h_390,fp_0.50_0.50,q_95,enc_avif,quality_auto/2468c6_8460880bd4ae4cfa96df0fb9b0145e67~mv2.png",
+                },
+            }
+
+            function lazySwap(activate) {
+                [
+                    "stdDecks", "presetDecks", "mixDecks", "customDeck"
+                ].forEach(function(value) {
+                    document.getElementById(value).style.display = "none";
+                });
+                document.getElementById(activate).style.display = "block";
+            }
+
+            document.getElementById("standard").addEventListener('change', function() {
+                lazySwap("stdDecks");
+            });
+            document.getElementById("preset").addEventListener('change', function() {
+                lazySwap("presetDecks");
+            });
+            document.getElementById("pveMix").addEventListener('change', function() {
+                lazySwap("mixDecks");
+            });
+            document.getElementById("custom").addEventListener('change', function() {
+                lazySwap("customDeck");
+            });
+
+            document.getElementById("stdDecks").innerHTML = `<a target="_blank" rel="noopener noreferrer" href="http://epicduels.pbworks.com/w/page/63710059/10%20Year%20Anniversary%20Tournament%20Set%20Breakdown">10YA Tweak Info</a><br>` + Object.entries(stdDecks).map(([key, value]) => `
+            <div style="display: inline-block"><a target="_blank" rel="noopener noreferrer" href="./decksim.html?stdDeck=${key}"><img src="${value["image"]}" alt="${key}"><br>${key}</a></div>
+            `).join("\n");
+            (function() {
+                var majors = "";
+                var minors = "";
+                Object.entries(charInfo).forEach(function([key, value]) {
+                    var canMajor = value["canMajor"];
+                    if (canMajor) {
+                        majors += `<option value="${key}"></option>`;
+                    }
+                    if (value["canMinor"]) {
+                        if (canMajor) {
+                            minors += `<option value="${key}"></option>`;
+                        } else {
+                            minors += `<option value="[2x] ${key}"></option>`
+                        }
+                    }
+                });
+                document.getElementById("majorDatalist").innerHTML = majors;
+                document.getElementById("minorDatalist").innerHTML = minors;
+            })();
+
+            var bossDecks = {
+                "Rancor": {
+                    "link": "bossdecks/rancor.sweddeck",
+                }
+            };
+            (function() {
+                var bosses = "";
+                Object.entries(bossDecks).forEach(function([key, value]) {
+                    bosses += `<option value="${key}"></option>`;
+                });
+                document.getElementById("bossDatalist").innerHTML = bosses;
+            })();
+
+            function mixDecks() {
+                window.open(`./decksim.html?major=${document.getElementById("mixMajor").value}&minor=${document.getElementById("mixMinor").value}`, "_blank");
+            }
+            
+            function playBoss() {
+                window.open(`./decksim.html?custom=${bossDecks[document.getElementById("boss").value]["link"]}`, "_blank");
+            }
+        </script>
+    </body>
+</html>

@@ -130,7 +130,7 @@ function generateSpecCardSvg(data, charInfo) {
     </foreignObject>
     <text x="66" y="272" fill="white" font-size="24">${data[0]}</text>
     ${playWhenElem(30, 285, 12, data[4], data[1])}
-    <foreignObject x="20" y="295" width="280" height="100">
+    <foreignObject x="20" y="295" width="280" height="136">
         <p xmlns="http://www.w3.org/1999/xhtml" style="width: 280px; word-wrap: break-word;">${data[5]}</p>
     </foreignObject>
     ${firstBubble}
@@ -195,5 +195,6 @@ function trimAndSplit(string, delim) {
 
 https://developer.mozilla.org/en-US/docs/Web/SVG/Reference/Attribute/viewBox#examples
 https://developer.mozilla.org/en-US/docs/Web/SVG/Reference/Attribute/preserveAspectRatio
+
 
 */

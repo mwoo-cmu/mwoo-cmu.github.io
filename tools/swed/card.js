@@ -126,7 +126,7 @@ function generateSpecCardSvg(data, charInfo) {
     <rect x="0" y="245" width="310" height="37" fill="black"/>
     <path d="M 0 0 V 311 l 66 -66 H 310 v -103 l -66 61 H 95 V 68 L 161 0 Z" fill="${charInfo[3]}"/>
     <foreignObject x="20" y="180" width="280" height="100">
-        <p xmlns="http://www.w3.org/1999/xhtml" style="color: white; font-size: 30px; width: 280px; word-wrap: break-word; text-align: right;">${data[1]}</p>
+        <p xmlns="http://www.w3.org/1999/xhtml" style="color: white; font-size: 26px; width: 280px; word-wrap: break-word; text-align: right;">${data[1]}</p>
     </foreignObject>
     <text x="66" y="272" fill="white" font-size="24">${data[0]}</text>
     ${playWhenElem(30, 285, 12, data[4], data[1])}
@@ -198,3 +198,4 @@ https://developer.mozilla.org/en-US/docs/Web/SVG/Reference/Attribute/preserveAsp
 
 
 */
+

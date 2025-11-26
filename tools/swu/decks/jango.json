@@ -1,0 +1,24 @@
+{
+    "char": {
+        "name": "Jango Fett",
+        "icon": "https://images.steamusercontent.com/ugc/1011563720480699963/2CB24B977B061F0DD8474EC40CDD8549B7DFB0BB/?imw=512&&ima=fit&impolicy=Letterbox&imcolor=%23000000&letterbox=false",
+        "colours": {
+            "nameplate": "#1b286b",
+            "nameAccent": "#787f87",
+            "right": "#1b286b",
+            "left": "#1b286b",
+            "botLeft": "#3d0e05",
+            "botMid": "#787f87",
+            "botFront": "#1b286b",
+            "botRight": "#bddde5",
+            "background": "#020718"
+        }
+    },
+    "cards": [
+        {
+            "effects": "",
+            "image": "",
+            "ability": null
+        }
+    ]
+}

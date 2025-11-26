@@ -1,0 +1,130 @@
+<html lang="en-US">
+    <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="./fonts.css" rel="stylesheet">
+        <link href="./card.css" rel="stylesheet">
+        <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
+        <meta content="utf-8" http-equiv="encoding">
+        <title>Card Maker - SWU</title>
+    </head>
+    <body>
+        <script type="text/javascript" src="card.js"></script>
+        <div id="test"></div>
+        <div id="ruler"></div>
+        <script>
+            function createCard() {
+                var cardName = document.getElementById("cardName").value;
+                var cardText = document.getElementById("cardText").value;
+                var effect = (cardName !== '' || cardText !== '') ? {
+                    "name": cardName,
+                    "desc": cardText,
+                } : null;
+                var svg = genCard(
+                    document.getElementById("iconImage").value,
+                    document.querySelector('input[name="effects1"]:checked').value + document.querySelector('input[name="effects2"]:checked').value,
+                    document.getElementById("charName").value,
+                    effect,
+                    document.getElementById("cardImage").value,
+                    {
+                        "nameplate": document.getElementById("nameColour").value,
+                        "nameAccent": document.getElementById("accentColour").value,
+                        "right": document.getElementById("rightColour").value,
+                        "left": document.getElementById("leftColour").value,
+                        "botLeft": document.getElementById("botLeftColour").value,
+                        "botMid": document.getElementById("botMidColour").value,
+                        "botFront": document.getElementById("botFrontColour").value,
+                        "botRight": document.getElementById("botRightColour").value,
+                        "background": document.getElementById("backgroundColour").value
+                    }
+                );
+                document.getElementById("cardOut").innerHTML = svg;
+                document.getElementById("svgOut").innerText = svg;
+            }
+        </script>
+        <br><br>
+        <table>
+            <tr>
+                <td>
+                    <div style="text-align: center;">
+                        <input type="text" id="charName" name="charName" placeholder="Character's Name (e.g. Jango Fett)">
+                        <br>
+                        <b>Colours:</b>
+                        <br>
+                        Nameplate: 
+                        <input type="color" id="nameColour" name="nameColour">
+                        <input type="color" id="accentColour" name="accentColour">
+                        <br>
+                        Accents:
+                        <input type="color" id="leftColour" name="leftColour">
+                        <input type="color" id="rightColour" name="rightColour">
+                        <br>
+                        <input type="color" id="botLeftColour" name="botLeftColour">
+                        <input type="color" id="botMidColour" name="botMidColour">
+                        <input type="color" id="botFrontColour" name="botFrontColour">
+                        <input type="color" id="botRightColour" name="botRightColour">
+                        <br>
+                        Background:
+                        <input type="color" id="backgroundColour" name="backgroundColour">
+                        <br>
+                        <b>Images:</b>
+                        <br>
+                        <input type="text" id="iconImage" name="iconImage" placeholder="Link to Character's icon image">
+                        <br>
+                        <input type="text" id="cardImage" name="cardImage" placeholder="Link to card's main image">
+                        <br>
+                        <table>
+                            <tr>
+                                <td>
+                                    <input type="radio" id="e1none" name="effects1" value="" checked>
+                                    <label for="e1none">None</label>
+                                    <br>
+                                    <input type="radio" id="e1attack" name="effects1" value="A">
+                                    <label for="e1attack"><img height="50" src="resources/IMAGES/Attack_Icon.png"></label>
+                                    <br>
+                                    <input type="radio" id="e1move" name="effects1" value="M">
+                                    <label for="e1move"><img height="50" src="resources/IMAGES/Move_Icon.png"></label>
+                                    <br>
+                                    <input type="radio" id="e1heroic" name="effects1" value="H">
+                                    <label for="e1heroic"><img height="50" src="resources/IMAGES/Heroic_Icon.png"></label>
+                                    <br>
+                                    <input type="radio" id="e1wild" name="effects1" value="W">
+                                    <label for="e1wild"><img height="50" src="resources/IMAGES/Wild_Icon.png"></label>
+                                </td>
+                                <td>
+                                    <input type="radio" id="e2none" name="effects2" value="" checked>
+                                    <label for="e2none">None</label>
+                                    <br>
+                                    <input type="radio" id="e2attack" name="effects2" value="A">
+                                    <label for="e2attack"><img height="50" src="resources/IMAGES/Attack_Icon.png"></label>
+                                    <br>
+                                    <input type="radio" id="e2move" name="effects2" value="M">
+                                    <label for="e2move"><img height="50" src="resources/IMAGES/Move_Icon.png"></label>
+                                    <br>
+                                    <input type="radio" id="e2heroic" name="effects2" value="H">
+                                    <label for="e2heroic"><img height="50" src="resources/IMAGES/Heroic_Icon.png"></label>
+                                    <br>
+                                    <input type="radio" id="e2wild" name="effects2" value="W">
+                                    <label for="e2wild"><img height="50" src="resources/IMAGES/Wild_Icon.png"></label>
+
+                                </td>
+                            </tr>
+                        </table>
+                        <b>Optional:</b>
+                        <br>
+                        <input type="text" id="cardName" name="cardName" placeholder="Effect Name (e.g. Rocket Jump)">
+                        <br>
+                        <textarea id="cardText" placeholder="Card Effect Description"></textarea>
+                        <br>
+                        <button type="button" onclick="createCard()">Create</button>
+                        <br>
+                        <textarea id="svgOut" placeholder="SVG Text Output"></textarea>
+                    </div>
+                </td>
+                <td>
+                    <div id="cardOut"></div>
+                </td>
+            </tr>
+        </table>
+    </body>
+</html>

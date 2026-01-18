@@ -1,0 +1,47 @@
+<html lang="en-US">
+    <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
+        <meta content="utf-8" http-equiv="encoding">
+        <link href="./style.css" rel="stylesheet">
+        <title>Rules Changes - Solo Shatterpoint</title>
+    </head>
+    <body>
+        <script type="text/javascript" src="util.js"></script>
+        <h2>Enemies</h2>
+        Enemy <b>Primary</b> and <b>Secondary Units</b> have an <span style="font-family: shatterpoint_icons;">j</span> deck. On the enemy turn, draw an Order card from their Order deck. Play cards from the selected enemy's <span style="font-family: shatterpoint_icons;">j</span> deck equal to their <span style="font-family: shatterpoint_icons;">j</span> number. 
+        <br>
+        The Enemy <b>Primary Unit</b> also has a <span style="font-family: shatterpoint_icons;">i</span> deck. Whenever it is Wounded, play a card from their <span style="font-family: shatterpoint_icons;">i</span> deck.
+        <br><br>
+        Whenever an enemy Unit makes an attack, remove one die from the attack roll for each Wound or Injury it has.
+        <h2>Grid System</h2>
+        <span style="font-family: shatterpoint_icons;">g</span>: count the number of orthogonal spaces in the shortest path from one object to another.
+        <br>
+        <span style="font-family: shatterpoint_icons;">p</span>: The affected character can be moved 1 <span style="font-family: shatterpoint_icons;">g</span> away from (backwards or diagonally backwards, but not horizontal) the shoving character, then the shoving character may immediately move toward the affected character 1 <span style="font-family: shatterpoint_icons;">g</span>.
+        <br>
+        Pull: The affected character can be moved towards (forwards or diagonally forwards, but not horizontal) the pulling character. Alternatively, move the affected character along the shortest path to the pulling character, even if this would increase the Euclidean distance between the two.
+        <br>
+        <span style="font-family: shatterpoint_icons;">x</span>: Move up to 5 spaces, can move through allies, but not enemies; must end on an empty space. If Engaged, <span style="font-family: shatterpoint_icons;">h</span> instead.
+        <br>
+        <span style="font-family: shatterpoint_icons;">h</span>: Move up to 2 spaces, can move through allies and enemies; must end on an empty space.
+        <br>
+        <span style="font-family: shatterpoint_icons;">t</span>: Move to any other empty space in LOS.
+        <br>
+        <span style="font-family: shatterpoint_icons;">u</span>: Convert to <span style="font-family: shatterpoint_icons;">h</span>.
+        <br>
+        LOS: two grid spaces have Line of Sight as long as an uninterupted line can be drawn from any point within one grid space to any point within the other.
+        <br>
+        Cover: The LOS requirement for Cover applies similarly. If an interupted line from any point in the attacker's grid space to any point in the defender's grid space, this condition is met.
+        <h2>Locations</h2>
+        Each time you reshuffle your Order deck, draw an Event card and resolve its effects.
+        <br>
+        Mission token: A marker used for tracking missions. The specific interactions of this token are dependent on the Mission.
+        <br>
+        Priority Objective token: A marker used primarily by the Enemy deck to determine movement.
+        <h2>Stacking Supporting Units</h2>
+        If things are getting too cluttered, or there aren't enough minifigures, you may choose to stack <b>Supporting Units</b> together. The <b>Unit Stack</b> has the combined <span style="font-family: shatterpoint_icons;">r</span> and <span style="font-family: shatterpoint_icons;">w</span> of all of the stacked <b>Supporting Units</b>. A <b>Unit Stack</b>'s dice pool for attack and defence increases by one for each extra character added to it. Each time the <b>Unit Stack</b> is Injured, remove one character from the stack.
+        <script>
+        </script>
+    </body>
+</html>

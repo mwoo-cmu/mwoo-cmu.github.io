@@ -1,0 +1,407 @@
+<html lang="en-US">
+    <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
+        <meta content="utf-8" http-equiv="encoding">
+        <link href="./style.css" rel="stylesheet">
+        <title>Gameplay Helper - Solo Shatterpoint</title>
+    </head>
+    <body>
+        <script type="text/javascript" src="util.js"></script>
+        <datalist id="unitDatalist"></datalist>
+        <datalist id="enemyDatalist"></datalist>
+        <table style="height: 100%">
+            <tr style="vertical-align: top">
+                <td style="width: 35%; max-width: 35%; ">
+                    <div id="playerOverview" style="overflow: auto; overflow-y: scroll; height: 100%">
+                        <h2 style="margin-block: .33em;" id="playerFaction">Player</h2>
+                        <span style="font-family: shatterpoint_icons;">v</span>
+                        <input type="number" id="forceCount" name="force" style="width: 50">
+                        / 
+                        <span id="forceMax"></span>
+                        <br>
+                        <button type="button" onclick="drawOrderCard()">Draw Order Card</button>
+                        <span id="orderCur"></span>
+                        <br>
+                        <button type="button" onclick="reserveOrderCard()">Reserve Order Card</button>
+                        <span id="orderReserve"></span>
+                        <button type="button" onclick="playReservedOrderCard()" id="playReserveButton" style="display: none;">Play Reserved Order Card</button>
+                        <div id="playerUnits"></div>
+                        <hr>
+                        <div id="addlPlayer"></div>
+                        <input type="text" id="addUnit" list="unitDatalist" placeholder="Player Unit">
+                        <button type="button" onclick="addPlayerUnit()">Add Player Unit</button>
+                    </div>
+                </td>
+                <td style="width: 30%; max-width: 30%">
+                    <div style="overflow: auto; overflow-y: scroll; height: 100%">
+                        <h2 style="margin-block: .33em;">Missions</h2>
+                        <div id="missions"></div>
+                        <div style="text-align: center">
+                            <input type="radio" id="location" name="rightPane" checked>
+                            <label for="location" id="locationLabel">Location</label>
+                            <!-- location will have events -->
+                            <input type="radio" id="enemies" name="rightPane">
+                            <label for="enemies" id="enemiesLabel">Enemies</label>
+                            <input type="radio" id="combat" name="rightPane">
+                            <label for="combat">Combat</label>
+                        </div>
+                        <div id="locationInfo">
+                            <button type="button" onclick="drawEventCard()">Draw Event Card</button>
+                            <div id="eventCards"></div>
+                            <div id="gameSetup"></div>
+                            <h2 style="margin-block: .33em;">Room-Specific Abilities</h2>
+                            <div id="roomAbilities"></div>
+                        </div>
+                        <div id="enemyInfo" style="display: none">
+                            <button type="button" onclick="drawEnemyOrderCard()">Draw Order Card</button>
+                            <span id="enemyOrderCur"></span>
+                            <br>
+                            <button type="button" onclick="drawEnemyCard()">Draw <span style="font-family: shatterpoint_icons">j</span> Card</button>
+                            <button type="button" onclick="drawWoundCard()">Draw <span style="font-family: shatterpoint_icons">i</span> Card</button>
+                            <button type="button" onclick="clearEnemyCards()">Clear Drawn Cards</button>
+                            <div id="enemyCards"></div>
+                        </div>
+                        <div id="combatInfo" style="display: none">
+                            <!-- maybe an autofill for X attacks Y? gonna add complication to adding units on either side -->
+                            <label for="attackCount">Attack</label>
+                            <input type="number" id="attackCount" name="attack" style="width: 50">
+                            <label for="defenceCount">Defence</label>
+                            <input type="number" id="defenceCount" name="defence" style="width: 50">
+                            <br>
+                            <button type="button" onclick="rollDice()">Roll</button>
+                            <div id="rollResults"></div>
+                        </div>
+                    </div>
+                </td>
+                <td style="width: 35%; max-width: 35%; ">
+                    <div style="overflow: auto; overflow-y: scroll; height: 100%">
+                        <h2 style="margin-block: .33em;" id="enemyFaction">Enemy</h2>
+                        <div id="enemyOverview"></div>
+                        <hr>
+                        <div id="addlEnemies"></div>
+                        <input type="text" id="addEnemy" list="enemyDatalist" placeholder="Enemy Unit">
+                        <button type="button" onclick="addEnemyUnit()">Add Enemy Unit</button>
+                    </div>
+                </td>
+            </tr>
+        </table>
+        <script>
+            const urlParams = new URLSearchParams(window.location.search);
+
+            const RIGHT_PANE = ["locationInfo", "enemyInfo", "combatInfo"];
+            document.getElementById("location").addEventListener('change', function() {lazySwap("locationInfo", RIGHT_PANE)});
+            document.getElementById("enemies").addEventListener('change', function() {lazySwap("enemyInfo", RIGHT_PANE)});
+            document.getElementById("combat").addEventListener('change', function() {lazySwap("combatInfo", RIGHT_PANE)});
+
+            const ATTACK = ["{b}", "{a}", "{a}", "{a}", "{c}", "{c}", "{d}", "{d}"].map((face) => addTextIcons(face));
+            const DEFENCE = ["{e}", "{e}", "{f}", "{f}", "{d}", "{d}"].map((face) => addTextIcons(face));
+            function rollDice() {
+                var attack = {};
+                attack[ATTACK[0]] = 0;
+                attack[ATTACK[1]] = 0;
+                attack[ATTACK[4]] = 0;
+                attack[ATTACK[6]] = 0;
+                for (var i = 0; i < document.getElementById("attackCount").value; i++) {
+                    var face = ATTACK[Math.floor(Math.random() * ATTACK.length)];
+                    attack[face] += 1;
+                }
+                var defence = {};
+                defence[DEFENCE[0]] = 0;
+                defence[DEFENCE[2]] = 0;
+                defence[DEFENCE[4]] = 0;
+                for (var i = 0; i < document.getElementById("defenceCount").value; i++) {
+                    var face = DEFENCE[Math.floor(Math.random() * DEFENCE.length)];
+                    defence[face] += 1;
+                }
+                function formatPair(pair) {
+                    return `<input style="width: 50" type="number" value="${pair[1]}"/>&nbsp;${pair[0]}`;
+                }
+                var out = `Attack:<br>${Object.entries(attack).map((pair) => formatPair(pair)).join(", ")}<br><br>Defence:<br>${Object.entries(defence).map((pair) => formatPair(pair)).join(", ")}`;
+                document.getElementById("rollResults").innerHTML = out;
+            }
+
+            var ENEMY_POOL = {};
+            var enemyDeck = {};
+            var enemyDiscard = {};
+            var enemyShownI = 0;
+            var enemyOrderInPlay = [];
+            var addlEnemyI = 0;
+            var woundDeck = [];
+            var woundPool = [];
+
+            var EVENT_POOL;
+            var eventDeck = [];
+            var eventDiscard = [];
+            var gameLocation;
+
+            var orderDeck = [];
+            var orderInPlay = [];
+            var maxForce = 0;
+            var playerFaction = urlParams.get("faction");
+            var enemyFaction = urlParams.get("enemyFaction");
+            var addlPlayerI = 0;
+            var addlPlayerOrder = {};
+
+            (function() {
+                document.getElementById("playerFaction").innerText = playerFaction;
+                var loc = urlParams.get("location");
+                if (loc) {
+                    document.getElementById("locationLabel").innerText = loc;
+                    withLocations((LOCATIONS) => {
+                        gameLocation = LOCATIONS[loc];
+                        eventDeck = gameLocation["events"]["deck"];
+                        EVENT_POOL = gameLocation["events"]["pool"];
+                        var factionEvents = gameLocation["factions"][playerFaction]["events"];
+                        eventDeck.push(...factionEvents["deck"].map((idx) => idx + EVENT_POOL.length));
+                        EVENT_POOL.push(...factionEvents["pool"]);
+
+                        document.getElementById("roomAbilities").innerHTML = renderLocationAbilities(gameLocation["rooms"]);
+
+                        var missionCount = urlParams.get("missions");
+                        var locationMissions = gameLocation["factions"][playerFaction]["missions"];
+                        
+                        var factionList = Object.keys(gameLocation["factions"]);
+                        if (factionList.length == 2) {
+                            enemyFaction = factionList[factionList.indexOf(playerFaction) === 0 ? 1 : 0];
+                        } else {
+                            enemyFaction = urlParams.get("enemyFaction");
+                        }
+                        document.getElementById("enemiesLabel").innerText = enemyFaction;
+                        if (factionList.includes(enemyFaction)) {
+                            var enemyEvents = gameLocation["factions"][enemyFaction]["enemyEvents"];
+                            eventDeck.push(...enemyEvents["deck"].map((idx) => idx + EVENT_POOL.length));
+                            EVENT_POOL.push(...enemyEvents["pool"]);
+                            locationMissions.push(...gameLocation["factions"][enemyFaction]["enemyMissions"]);
+                        }
+                        document.getElementById("enemyFaction").innerText = enemyFaction;
+
+                        // roll missions
+                        drawMissions(locationMissions, missionCount);
+
+                        document.getElementById("gameSetup").innerHTML = generateSetup(gameLocation);
+                    })
+                }
+                withEnemies((ENEMIES) => {
+                    var enemy = urlParams.get("enemies");
+                    if (enemy) {
+                        document.getElementById("enemyOverview").innerHTML = renderEnemy(enemy, false, urlParams.get("difficulty"));
+                        enemyDeck[enemy] = ENEMIES[enemy]["deck"]["cards"];
+                        ENEMY_POOL[enemy] = ENEMIES[enemy]["deck"]["pool"];
+                        enemyDiscard[enemy] = [];
+                        woundDeck = ENEMIES[enemy]["wounded"]["cards"];
+                        woundPool = ENEMIES[enemy]["wounded"]["pool"];
+                        document.getElementById("enemyOrderCur").innerHTML = enemy;
+                    }
+                    document.getElementById("enemyDatalist").innerHTML = Object.keys(ENEMIES).map((key) => `<option value="${key}"></option>`).join("");
+                });
+                withUnits((UNITS) => {
+                    document.getElementById("unitDatalist").innerHTML = Object.keys(UNITS).map((key) => `<option value="${key}"></option>`).join("");
+                    var overview = '';
+                    var p = urlParams.get("p");
+                    if (p) {
+                        overview += dropdownUnit(UNITS[p], true);
+                        orderDeck.push(getOrderCard(UNITS[p], true));
+                    }
+                    var se = urlParams.get("se");
+                    if (se) {
+                        overview += dropdownUnit(UNITS[se], false);
+                        orderDeck.push(getOrderCard(UNITS[se], false));
+                    }
+                    var su = urlParams.get("su");
+                    if (su) {
+                        overview += dropdownUnit(UNITS[su], false);
+                        orderDeck.push(getOrderCard(UNITS[su], false));
+                    }
+                    var p2 = urlParams.get("p2");
+                    if (p2) {
+                        overview += dropdownUnit(UNITS[p2], true);
+                        orderDeck.push(getOrderCard(UNITS[p2], true));
+                    }
+                    var se2 = urlParams.get("se2");
+                    if (se2) {
+                        overview += dropdownUnit(UNITS[se2], false);
+                        orderDeck.push(getOrderCard(UNITS[se2], false));
+                    }
+                    var su2 = urlParams.get("su2");
+                    if (su2) {
+                        overview += dropdownUnit(UNITS[su2], false);
+                        orderDeck.push(getOrderCard(UNITS[su2], false));
+                    }
+                    orderDeck.push("Shatterpoint");
+                    document.getElementById("playerUnits").innerHTML = overview;
+                });
+                var forceCount = urlParams.get("force");
+                if (forceCount) {
+                    maxForce = forceCount;
+                    document.getElementById("forceMax").innerText = forceCount;
+                    document.getElementById("forceCount").value = forceCount;
+                }
+            })()
+
+            function drawEnemyCard() {
+                var enemy = document.getElementById("enemyOrderCur").innerText;
+                if (enemyDeck[enemy].length === 0) {
+                    enemyDeck[enemy] = [...enemyDiscard[enemy]];
+                }
+                var idx = Math.floor(Math.random() * enemyDeck[enemy].length);
+                var pool_idx = enemyDeck[enemy][idx];
+                var enemyCardDiv = document.getElementById("enemyCards");
+                var tag = "enemyCard" + enemyShownI++;
+                enemyCardDiv.innerHTML = `<div id="${tag}">${renderEnemyCard(ENEMY_POOL[enemy][pool_idx])}<button type="button" onclick="removeEnemyCard('${tag}')">Remove</button></div><br>${enemyCardDiv.innerHTML}`;
+                enemyDiscard[enemy].push(pool_idx);
+                enemyDeck[enemy].splice(idx, 1);
+            }
+
+            function drawWoundCard() {
+                var idx = Math.floor(Math.random() * woundDeck.length);
+                var poolIdx = woundDeck[idx];
+                var enemyCardDiv = document.getElementById("enemyCards");
+                var tag = "enemyCard" + enemyShownI++;
+                var card = woundPool[poolIdx];
+                var cardText = addTextIcons(`<h4 style="margin-block: .33em">{i} ${card["name"]}</h4>${card["desc"]}`);
+                enemyCardDiv.innerHTML = `<div id="${tag}" style="border: 1px solid black">${cardText}<br><button type="button" onclick="removeEnemyCard('${tag}')">Remove</button></div><br>${enemyCardDiv.innerHTML}`;
+                woundDeck.splice(idx, 1);
+            }
+
+            function removeEnemyCard(tag) {
+                document.getElementById(tag).remove();
+            }
+
+            function clearEnemyCards() {
+                document.getElementById("enemyCards").innerHTML = '';
+            }
+
+            function drawEventCard() {
+                if (eventDeck.length === 0)
+                    eventDeck = [...eventDiscard];
+                var idx = Math.floor(Math.random() * eventDeck.length);
+                var pool_idx = eventDeck[idx];
+                var eventCardDiv = document.getElementById("eventCards");
+                eventCardDiv.innerHTML = renderEventCard(EVENT_POOL[pool_idx], gameLocation) + "<br>" + eventCardDiv.innerHTML;
+                eventDiscard.push(pool_idx);
+                eventDeck.splice(idx, 1);
+            }
+
+            function drawEnemyOrderCard() {
+                if (enemyOrderInPlay.length === 0) {
+                    enemyOrderInPlay = [...Object.keys(enemyDeck)];
+                }
+                var idx = Math.floor(Math.random() * enemyOrderInPlay.length);
+                document.getElementById("enemyOrderCur").innerHTML = enemyOrderInPlay[idx];
+                enemyOrderInPlay.splice(idx, 1);
+            }
+
+            function drawOrderCard() {
+                if (orderInPlay.length === 0) {
+                    var orderReserve = document.getElementById("orderReserve");
+                    if (orderReserve.innerHTML) {
+                        document.getElementById("orderCur").innerHTML = orderReserve.innerHTML;
+                        orderReserve.innerHTML = '';
+                        return;
+                    }
+                    orderInPlay = [...orderDeck];
+                    document.getElementById("forceCount").value = maxForce;
+                }
+                var idx = Math.floor(Math.random() * orderInPlay.length);
+                document.getElementById("orderCur").innerHTML = orderInPlay[idx];
+                orderInPlay.splice(idx, 1);
+            }
+
+            function reserveOrderCard() {
+                var orderCur = document.getElementById("orderCur");
+                if (!(orderCur.innerHTML))
+                    return;
+                var forceCount = document.getElementById("forceCount");
+                if (forceCount.value === 0)
+                    return;
+                forceCount.value -= 1;
+                if (orderCur.innerHTML === 'Shatterpoint') {
+                    if (orderInPlay.length === 0) {
+                        forceCount.value = parseInt(forceCount.value) + 1;
+                        return;
+                    }
+                    drawOrderCard();
+                    orderInPlay.push("Shatterpoint");
+                    return;
+                }
+                var orderReserve = document.getElementById("orderReserve");
+                var tmp = orderReserve.innerHTML;
+                orderReserve.innerHTML = orderCur.innerHTML;
+                orderCur.innerHTML = tmp;
+                document.getElementById("playReserveButton").style.display = "inline-flex";
+            }
+
+            function playReservedOrderCard() {
+                var orderReserve = document.getElementById("orderReserve");
+                document.getElementById("orderCur").innerHTML = orderReserve.innerHTML;
+                orderReserve.innerHTML = '';
+                document.getElementById("playReserveButton").style.display = "none";
+            }
+
+            function drawMissions(missionList, count) {
+                var workingList = [...missionList];
+                var count = Math.min(count, workingList.length);
+                var missions = "";
+                for (var i = 0; i < count; i++) {
+                    missions += renderMission(workingList.splice(Math.floor(Math.random() * workingList.length), 1)[0]) + "<br>";
+                }
+                document.getElementById("missions").innerHTML = missions;
+            }
+
+            function addPlayerUnit() {
+                var unit = document.getElementById("addUnit").value;
+                var tag = "addlUnit" + addlPlayerI++;
+                document.getElementById("addlPlayer").insertAdjacentHTML('beforeend', `<div id="${tag}">${dropdownUnit(UNITS[unit], false, tag, tag)}</div>`);
+                var orderCard = getOrderCard(UNITS[unit], false);
+                addlPlayerOrder[tag] = orderCard;
+                orderDeck.push(orderCard);
+            }
+
+            function removePlayerUnit(tag) {
+                document.getElementById(tag).remove();
+                if (addlPlayerOrder.hasOwnProperty(tag)) {
+                    var orderCard = addlPlayerOrder[tag];
+                    var idx = orderDeck.indexOf(orderCard);
+                    if (idx > -1)
+                        orderDeck.splice(idx, 1);
+                    idx = orderInPlay.indexOf(orderCard);
+                    if (idx > -1)
+                        orderInPlay.splice(idx, 1);
+                    // TODO: may be wrong for duplicates...
+                    var orderReserve = document.getElementById("orderReserve");
+                    if (orderReserve.innerHTML === orderCard)
+                        orderReserve.innerHTML = '';
+                }
+            }
+            
+            function addEnemyUnit() {
+                var enemy = document.getElementById("addEnemy").value;
+                if (Object.keys(enemyDeck).includes(enemy)) {
+                    // currently, we just prevent adding duplicates of an enemy with a deck for simplicity. 
+                    // If we really need to, we might be able to use tags to get around this
+                    return;
+                }
+                var tag = "addlEnemy" + addlEnemyI++;
+                document.getElementById("addlEnemies").insertAdjacentHTML('beforeend', `<div id="${tag}">${renderEnemy(enemy, false, urlParams.get("difficulty"), tag, tag)}</div>`);
+
+                var deck = ENEMIES[enemy]["deck"];
+                if (deck["cards"].length !== 0) {
+                    enemyDeck[enemy] = deck["cards"];
+                    ENEMY_POOL[enemy] = deck["pool"];
+                    enemyDiscard[enemy] = [];
+                }
+            }
+
+            function removeEnemyUnit(tag) {
+                var enemyHtml = document.getElementById(tag);
+                var enemy = enemyHtml.firstChild.innerText;
+                delete enemyDeck[enemy];
+                delete enemyDiscard[enemy];
+                delete ENEMY_POOL[enemy];
+                enemyHtml.remove();
+            }
+        </script>
+    </body>
+</html>

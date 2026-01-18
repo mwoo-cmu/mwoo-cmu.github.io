@@ -1,0 +1,1532 @@
+{
+    "Jango Fett, Best in the Business": {
+        "name": "Jango Fett, Best in the Business",
+        "tags": ["Mandalorian", "Bounty Hunter", "Mercenary", "Scoundrel", "Separatist Alliance"],
+        "stackable": false,
+        "durability": {
+            "primary": 3,
+            "secondary": 2
+        },
+        "stamina": {
+            "primary": 11,
+            "secondary": 9
+        },
+        "force": 2,
+        "abilities": {
+            "primary": [1, 6, 2, 3, 5],
+            "secondary": [1, 0, 2, 3, 4],
+            "pool": [
+                {
+                    "type": "{j}",
+                    "name": "Jet Pack",
+                    "cost": "{v}",
+                    "desc": "Each character in this Unit may {t}."
+                },
+                {
+                    "type": "{j}",
+                    "name": "Capture Wire",
+                    "cost": "{v}",
+                    "desc": "Choose a character in this Unit and an enemy character within {g} 3 of that character. Pull the chosen enemy character {g} 2 toward the chosen allied character. Then, the chosen enemy character gains {1}."
+                },
+                {
+                    "type": "{i}",
+                    "name": "Not So Fast",
+                    "cost": "{v}",
+                    "desc": "When this Unit is Wounded by an attack, after the attack is resolved, one character in this Unit may immediately make a 5 dice attack targeting the character that Wounded it."
+                },
+                {
+                    "type": "{l}",
+                    "name": "I'm Just Looking to Get Paid",
+                    "cost": "",
+                    "desc": "When a character in this Unit Wounds an enemy <b>Primary Unit</b> or an enemy <b>Secondary Unit</b>, after the effect is resolved, refresh {v} and one character in this unit may {rr}."
+                },
+                {
+                    "type": "{l}",
+                    "name": "My Client Is Getting Impatient",
+                    "cost": "",
+                    "desc": "After this unit makes a focus action, one character in this Unit may {t}."
+                },
+                {
+                    "type": "{m}",
+                    "name": "I am the Best. Always Was.",
+                    "cost": "",
+                    "comments": "Maybe something to deal extra damage to Scoundrels/Bounty Hunters? Seems too weak tho",
+                    "descOld": "Once per Turn, when [SOMETHING OCCURS], one character in this Unit may make a 5 dice attack. Then if the enemy Unit was a <b>Scoundrel</b> Unit or a <b>Bounty Hunter</b> Unit, refresh {v} and one character in this Unit may {t}.",
+                    "desc": "This Unit does not increase the cost of its {j} and {i} abilities due to having Wounded and Injured tokens."
+                },
+                {
+                    "type": "{j}",
+                    "name": "Rocket Launch",
+                    "cost": "{v}",
+                    "desc": "Choose a point in LOS. All Units within {g} 2 of that point suffer {qq}."
+                }
+            ]
+        },
+        "count": 1,
+        "stances": {
+            "primary": [
+                {
+                    "name": "Galaxy's Most Feared",
+                    "tree": [
+                        [null, { "value": "q<br>q", "unlocks": [[1, 0], [1, 2]] }, null],
+                        [{"value": "h<br>q", "unlocks": [[2, 0]] }, null, {"value": "5<br>q", "unlocks": [[2, 2]]}],
+                        [{"value": "t<br>qq", "unlocks": [[3, 1]] }, null, {"value": "j", "unlocks": [[3, 1], [3, 2]]}],
+                        [null, {"value": "p<br>qq", "unlocks": [[4, 0], [3, 2]] }, {"value": "4<br>q", "unlocks": [[3, 1]]}],
+                        [{"value": "sq<br>qq", "unlocks": [] }, null, null]
+                    ],
+                    "ranged": {
+                        "attack": 8,
+                        "defence": 6,
+                        "range": 4,
+                        "name": "Customised WESTAR-34s",
+                        "breakpoints": {
+                            "1 – 2": "{b}, {q}",
+                            "3 ": "{b}, {a}, {a}",
+                            "4+": "{b}, {b}, {a}"
+                        }
+                    },
+                    "melee": {
+                        "attack": 6,
+                        "defence": 6,
+                        "name": "Flamethrower",
+                        "breakpoints": {
+                            "1": "{a}",
+                            "2 – 3": "{b}, {a}",
+                            "4+": "{b}, {b}, {q}"
+                        }
+                    },
+                    "defence": {
+                        "name": "Beskar Armour",
+                        "breakpoints": {
+                            "1 – 2": "{e}, <span style=\"color: #df802a\">{b}▶</span>{a}",
+                            "3 – 4": "{e}, {e}, <span style=\"color: #df802a\">{b}▶</span>{d}",
+                            "5+": "{e}, {e}, <span style=\"color: #df802a\">{b}▶</span>{d}, {s}"
+                        }
+                    }
+                },
+                {
+                    "name": "The Jedi Killer",
+                    "tree": [
+                        [null, { "value": "p<br>q", "unlocks": [[1, 1]] }, null],
+                        [null, { "value": "q<br>q", "unlocks": [[2, 0], [2, 2]] }, null],
+                        [{ "value": "t<br>q", "unlocks": [[3, 0]] }, null, { "value": "1<br>q", "unlocks": [[3, 2]] }],
+                        [{ "value": "p<br>qq", "unlocks": [[4, 1]] }, null, { "value": "5<br>q", "unlocks": [[4, 2]] }],
+                        [null, { "value": "q<br>qq", "unlocks": [[4, 2]] }, { "value": "4<br>q", "unlocks": [[4, 1]] }]
+                    ],
+                    "ranged": {
+                        "attack": 6,
+                        "defence": 5,
+                        "range": 4,
+                        "name": "Customised WESTAR-34s",
+                        "breakpoints": {
+                            "1": "{a}, {h}",
+                            "2 – 3": "{b}, {a}, {h}",
+                            "4+": "{b}, {b}, {t}"
+                        }
+                    },
+                    "melee": {
+                        "attack": 7,
+                        "defence": 8,
+                        "name": "Unarmed Combat Master",
+                        "breakpoints": {
+                            "1": "{b}",
+                            "2 – 4": "{b}, <span style=\"color: #df802a\">{e}▶</span>{d}",
+                            "5+": "{b}, {b}, <span style=\"color: #df802a\">{e}▶</span>{d}, {q}"
+                        }
+                    },
+                    "defence": {
+                        "name": "Beskar Armour",
+                        "breakpoints": {
+                            "1 – 2": "{e}, <span style=\"color: #df802a\">{b}▶</span>{a}",
+                            "3 – 4": "{e}, {e}, <span style=\"color: #df802a\">{b}▶</span>{d}",
+                            "5+": "{e}, {e}, <span style=\"color: #df802a\">{b}▶</span>{d}, {s}"
+                        }
+                    }
+                }
+            ],
+            "secondary": {
+                "name": "Resourceful Gunslinger",
+                "tree": [
+                    [null, { "value": "q<br>q", "unlocks": [[1, 1]] }, null],
+                    [null, { "value": "5<br>q", "unlocks": [[2, 0], [2, 2]] }, null],
+                    [{ "value": "t<br>qq", "unlocks": [[3, 1]] }, null, { "value": "j", "unlocks": [[3, 1]] }],
+                    [null, { "value": "p<br>qq", "unlocks": [[4, 0], [4, 2]] }, null],
+                    [{ "value": "tq<br>qq", "unlocks": [] }, null, { "value": "pq<br>qq", "unlocks": [] }]
+                ],
+                "ranged": {
+                    "attack": 6,
+                    "defence": 5,
+                    "range": 4,
+                    "name": "Customised WESTAR-34s",
+                    "breakpoints": {
+                        "1": "{b}",
+                        "2 – 3": "{b}, {b}",
+                        "4+": "{b}, {b}, {a}"
+                    }
+                },
+                "melee": {
+                    "attack": 6,
+                    "defence": 5,
+                    "name": "Flamethrower",
+                    "breakpoints": {
+                        "1": "{q}",
+                        "2 – 3": "{a}, {q}",
+                        "4+": "{b}, {a}, {q}"
+                    }
+                },
+                "defence": {
+                    "name": "Beskar Armour",
+                    "breakpoints": {
+                        "1 – 2": "{e}, {e}",
+                        "3+": "{e}, {e}, {e}"
+                    }
+                }
+            }
+        }
+    },
+    "Zam Wesell, Shape-Shifting Assassin": {
+        "name": "Zam Wesell, Shape-Shifting Assassin",
+        "tags": ["Bounty Hunter", "Mercenary", "Scoundrel", "Separatist Alliance"],
+        "stackable": false,
+        "durability": {
+            "primary": 3,
+            "secondary": 2
+        },
+        "stamina": {
+            "primary": 9,
+            "secondary": 7
+        },
+        "force": 2,
+        "abilities": {
+            "primary": [4, 1, 3, 6, 2],
+            "secondary": [5, 4, 1, 3, 6],
+            "pool": [
+                {
+                    "type": "{l}",
+                    "name": "",
+                    "cost": "",
+                    "desc": "When a character in this Unit makes a {n} attack as part of a combat action, if the defender is not within {g} 4, it may add 1 die per {g} over 4 to the target."
+                },
+                {
+                    "type": "{i}",
+                    "name": "Muh-Muh-Marby Welcus",
+                    "cost": "{v}",
+                    "desc": "At the end of this Unit's activation, if there are no enemy Units in LOS, each character in this Unit may become <b>Disguised</b> and cannot be targeted with attacks until the next time it makes an attack or uses a {j} ability."
+                },
+                {
+                    "type": "{m}",
+                    "name": "In the Most Unexpected of Guises",
+                    "cost": "",
+                    "desc": "When an allied <b>Bounty Hunter</b> character makes an attack as part of a combat action, add one die to the attack roll for each Priority Objective token in the target's location."
+                },
+                {
+                    "type": "{i}",
+                    "name": "Just Long Enough For a Nap",
+                    "cost": "",
+                    "desc": "At the end of this Unit's activation, if there are no enemy Units within {g} 5, one character in this Unit may remove one condition from itself and then may {rr}. Then, this Unit may gain {4} to refresh {v}."
+                },
+                {
+                    "type": "{j}",
+                    "name": "Explosive Polymer",
+                    "cost": "{v}",
+                    "desc": "Choose one character in this Unit and roll 5 Attack Dice. Each other Unit within {g} 2 of the chosen character suffers {q} for each {c} result in the roll. Then, the chosen character may {x} and remove {9} from itself."
+                },
+                {
+                    "type": "{k}",
+                    "name": "Oh, No You Don't",
+                    "cost": "",
+                    "desc": "At the start of this Unit's activation, if no characters in this Unit are Engaged, choose an enemy Unit in LOS. The chosen Unit suffers {q} and removes all its {3}."
+                },
+                {
+                    "type": "{l}",
+                    "name": "Sorry I'm Late to the Party",
+                    "cost": "",
+                    "desc": "When a character in this Unit makes an attack as part of a combat action, if this Unit is <b>Disguised</b>, it may add 2 dice to its attack roll."
+                }
+            ]
+        },
+        "count": 1,
+        "stances": {
+            "primary": [
+                {
+                    "name": "Assassination From Afar",
+                    "tree": [
+                        [null, { "value": "q<br>q", "unlocks": [[1, 1]] }],
+                        [null, { "value": "1<br>q", "unlocks": [[2, 0], [2, 1]] }],
+                        [{ "value": "p<br>q", "unlocks": [[3, 0], [3, 1]] }, { "value": "9<br>q", "unlocks": [[3, 1]] }],
+                        [{ "value": "q<br>q", "unlocks": [[4, 0], [3, 1]] }, { "value": "4<br>5", "unlocks": [[4, 1], [3, 0], [4, 0]] }],
+                        [{ "value": "p<br>qq", "unlocks": [[5, 0]] }, { "value": "s<br>q", "unlocks": [[5, 0]] }],
+                        [{ "value": "q<br>qq", "unlocks": [[6, 0]] }, null],
+                        [{ "value": "p<br>qq", "unlocks": [[7, 0]] }, null],
+                        [{ "value": "qq<br>qq", "unlocks": [] }, null]
+                    ],
+                    "ranged": {
+                        "attack": 10,
+                        "defence": 5,
+                        "range": 6,
+                        "name": "KiSteer 1284 Projectile Rifle",
+                        "breakpoints": {
+                            "1 – 2": "{b}, {a}, {q}",
+                            "3 – 4": "{b}, {b}, {q}",
+                            "5+": "{b}, {b}, {q}, {q}"
+                        }
+                    },
+                    "melee": {
+                        "attack": 5,
+                        "defence": 4,
+                        "name": "KYD-21 Blaster",
+                        "breakpoints": {
+                            "1": "{a}, {a}",
+                            "2": "{b}, {a}",
+                            "3+": "{b}, {b}"
+                        }
+                    },
+                    "defence": {
+                        "name": "Mabari Armourweave",
+                        "breakpoints": {
+                            "1": "{e}, {h}",
+                            "2": "{e}, <span style=\"color: #df802a\">{b}▶</span>{a}, {s}",
+                            "3+": "{e}, {e}, <span style=\"color: #df802a\">{b}▶</span>{d}, {s}"
+                        }
+                    }
+                },
+                {
+                    "name": "The Shape-Shifter Strikes",
+                    "tree": [
+                        [{ "value": "h<br>q", "unlocks": [[1, 0]] }, { "value": "4<br>q", "unlocks": [[1, 1]] }, { "value": "q<br>q", "unlocks": [[1, 2]] }],
+                        [{ "value": "1<br>q", "unlocks": [[2, 0]] }, { "value": "5<br>q", "unlocks": [[2, 0], [2, 2]] }, { "value": "9<br>q", "unlocks": [[2, 2]] }],
+                        [{ "value": "p<br>r", "unlocks": [[3, 1]] }, null, { "value": "j", "unlocks": [[3, 1]] }],
+                        [null, { "value": "s<br>q", "unlocks": [[4, 0], [4, 2]] }, null],
+                        [{ "value": "p<br>qq", "unlocks": [] }, null, { "value": "q<br>qq", "unlocks": [] }]
+                    ],
+                    "ranged": {
+                        "attack": 7,
+                        "defence": 6,
+                        "range": 4,
+                        "name": "KYD-21 Blaster",
+                        "breakpoints": {
+                            "1": "{b}, {a}",
+                            "2 – 3": "{b}, {a}, {a}",
+                            "4+": "{b}, {b}, {a}, {a}"
+                        }
+                    },
+                    "melee": {
+                        "attack": 6,
+                        "defence": 7,
+                        "name": "Mabari Mastery",
+                        "breakpoints": {
+                            "1 – 2": "{b}, {a}",
+                            "3 ": "{b}, {a}, {a}",
+                            "4+": "{b}, {b}, {a}"
+                        }
+                    },
+                    "defence": {
+                        "name": "Mabari Armourweave",
+                        "breakpoints": {
+                            "1": "{e}, {h}",
+                            "2": "{e}, <span style=\"color: #df802a\">{b}▶</span>{a}, {s}",
+                            "3+": "{e}, {e}, <span style=\"color: #df802a\">{b}▶</span>{d}, {s}"
+                        }
+                    }
+                }
+            ],
+            "secondary": {
+                "name": "An Extra Set of Eyes",
+                "tree": [
+                    [null, { "value": "q<br>q", "unlocks": [[1, 1]] }],
+                    [null, { "value": "1<br>q", "unlocks": [[2, 0], [2, 1]] }],
+                    [{ "value": "p<br>q", "unlocks": [[3, 0]] }, { "value": "9<br>q", "unlocks": [[3, 1]] }],
+                    [{ "value": "q<br>q", "unlocks": [[4, 0]] }, { "value": "4<br>5", "unlocks": [[4, 1], [4, 0]] }],
+                    [{ "value": "p<br>qq", "unlocks": [[5, 0]] }, { "value": "s<br>q", "unlocks": [[5, 0]] }],
+                    [{ "value": "q<br>qq", "unlocks": [[6, 0]] }, null],
+                    [{ "value": "p<br>qq", "unlocks": [[7, 0]] }, null],
+                    [{ "value": "qq<br>qq", "unlocks": [] }, null]
+                ],
+                "ranged": {
+                    "attack": 7,
+                    "defence": 5,
+                    "range": 5,
+                    "name": "KiSteer 1284 Projectile Rifle",
+                    "breakpoints": {
+                        "1 – 2": "{a}, {a}, {q}",
+                        "3 – 4": "{b}, {a}, {q}",
+                        "5+": "{b}, {b}, {q}, {q}"
+                    }
+                },
+                "melee": {
+                    "attack": 6,
+                    "defence": 5,
+                    "name": "KYD-21 Blaster",
+                    "breakpoints": {
+                        "1": "{a}, {a}",
+                        "2 – 3": "{b}, {a}",
+                        "4+": "{b}, {b}"
+                    }
+                },
+                "defence": {
+                    "name": "Mabari Armourweave",
+                    "breakpoints": {
+                        "1 – 2": "{e}, <span style=\"color: #df802a\">{b}▶</span>{a}, {h}",
+                        "3+": "{e}, <span style=\"color: #df802a\">{b}▶</span>{d}, {s}"
+                    }
+                }
+            }
+        }
+    },
+    "Boba Fett, A Growing Legacy": {
+        "name": "Boba Fett, A Growing Legacy",
+        "tags": ["Bounty Hunter", "Mercenary", "Scoundrel"],
+        "stackable": false,
+        "durability": {
+            "primary": 3,
+            "secondary": 2
+        },
+        "stamina": {
+            "primary": 8,
+            "secondary": 6
+        },
+        "force": 2,
+        "abilities": {
+            "primary": [4, 5, 3, 2],
+            "secondary": [0, 4, 1, 3],
+            "pool": [
+                {
+                    "type": "{k}",
+                    "name": "Quick Learner",
+                    "cost": "",
+                    "desc": "At the start of this Unit's activation, choose an allied <b>Primary Unit</b> and a {j} or {i} ability that Unit has. This Unit has the chosen ability."
+                },
+                {
+                    "type": "{i}",
+                    "name": "Sworn Vengeance",
+                    "cost": "{v}",
+                    "desc": "When another allied Unit is Wounded by an enemy attack, after the effect is resolved, one character in this Unit may make a 5 dice attack targeting the attacking character."
+                },
+                {
+                    "type": "{m}",
+                    "name": "You Have No Idea Who You're Talking To",
+                    "cost": "",
+                    "desc": "Once per Turn, when an allied character makes an attack as part of a combat action, add one die to the attack roll. If the allied character is a <b>Bounty Hunter</b>, add another die to the attack roll. If the defender is Wounded by the attack, refresh {v}."
+                },
+                {
+                    "type": "{i}",
+                    "name": "I'm Not Quitting Now",
+                    "cost": "",
+                    "desc": "When a character in this Unit makes an attack as part of a combat action, during the Modify Dice Rolls step, this Unit may use this ability. Reroll up to two {d} or {c} results in the attack roll."
+                },
+                {
+                    "type": "{j}",
+                    "name": "Dodge Roll",
+                    "cost": "{v}",
+                    "desc": "Each character in this Unit may {h}. If any characters {h}, this Unit immediately makes a focus action."
+                },
+                {
+                    "type": "{j}",
+                    "name": "Natural Leader",
+                    "cost": "{v}",
+                    "desc": "Choose an allied <b>Bounty Hunter</b> character within {g} 4. The chosen character may {s} or make a 5 dice attack."
+                }
+            ]
+        },
+        "count": 1,
+        "stances": {
+            "primary": [
+                {
+                    "name": "Ruthless Leader",
+                    "tree": [
+                        [null, { "value": "q<br>q", "unlocks": [[1, 0], [1, 2]] }, null],
+                        [{"value": "h<br>q", "unlocks": [[2, 0]] }, null, {"value": "5<br>q", "unlocks": [[2, 2]]}],
+                        [{"value": "s<br>q", "unlocks": [[3, 1]] }, null, {"value": "j", "unlocks": [[3, 1], [3, 2]]}],
+                        [null, {"value": "p<br>qq", "unlocks": [[4, 0], [3, 2]] }, {"value": "4<br>q", "unlocks": [[3, 1]]}],
+                        [{"value": "q<br>qq", "unlocks": [] }, null, null]
+                    ],
+                    "ranged": {
+                        "attack": 7,
+                        "defence": 5,
+                        "range": 4,
+                        "name": "Customised WESTAR-34s",
+                        "breakpoints": {
+                            "1": "{a}, {h}",
+                            "2 – 3": "{b}, {a}, {h}",
+                            "4+": "{b}, {b}, {t}"
+                        }
+                    },
+                    "melee": {
+                        "attack": 5,
+                        "defence": 6,
+                        "name": "Jango's Combat Training",
+                        "breakpoints": {
+                            "1": "{a}",
+                            "2 – 3": "{a}, <span style=\"color: #df802a\">{e}▶</span>{d}",
+                            "4+": "{b}, {a}, <span style=\"color: #df802a\">{e}▶</span>{d}"
+                        }
+                    },
+                    "defence": {
+                        "name": "Custom Combat Suit",
+                        "breakpoints": {
+                            "1 – 2": "{e}, <span style=\"color: #df802a\">{b}▶</span>{a}",
+                            "3 – 4": "{e}, {e}, <span style=\"color: #df802a\">{b}▶</span>{d}",
+                            "5+": "{e}, {e}, <span style=\"color: #df802a\">{b}▶</span>{d}, {s}"
+                        }
+                    }
+                },
+                {
+                    "name": "Honourable Hunter",
+                    "tree": [
+                        [null, { "value": "p<br>q", "unlocks": [[1, 1]] }, null],
+                        [null, { "value": "5<br>q", "unlocks": [[2, 0], [2, 2]] }, null],
+                        [{ "value": "s<br>q", "unlocks": [[3, 0]] }, null, { "value": "1<br>q", "unlocks": [[3, 2]] }],
+                        [{ "value": "p<br>qq", "unlocks": [[4, 1]] }, null, { "value": "j", "unlocks": [[4, 2]] }],
+                        [null, { "value": "q<br>qq", "unlocks": [[4, 2]] }, { "value": "4<br>q", "unlocks": [[4, 1]] }]
+                    ],
+                    "ranged": {
+                        "attack": 6,
+                        "defence": 5,
+                        "range": 4,
+                        "name": "Customised WESTAR-34s",
+                        "breakpoints": {
+                            "1": "{a}, {h}",
+                            "2 – 3": "{b}, {a}, {h}",
+                            "4+": "{b}, {b}, {t}"
+                        }
+                    },
+                    "melee": {
+                        "attack": 6,
+                        "defence": 6,
+                        "name": "Jango's Combat Training",
+                        "breakpoints": {
+                            "1": "{a}",
+                            "2 – 3": "{a}, <span style=\"color: #df802a\">{e}▶</span>{d}",
+                            "4+": "{b}, {a}, <span style=\"color: #df802a\">{e}▶</span>{d}"
+                        }
+                    },
+                    "defence": {
+                        "name": "Nimble Dodge",
+                        "breakpoints": {
+                            "1": "{e}, <span style=\"color: #df802a\">{b}▶</span>{a}",
+                            "2 – 3": "{e}, <span style=\"color: #df802a\">{b}▶</span>{d}, {s}",
+                            "4+": "{e}, <span style=\"color: #df802a\">{b}▶</span>{d}, <span style=\"color: #df802a\">{b}▶</span>{d}, {s}"
+                        }
+                    }
+                }
+            ],
+            "secondary": {
+                "name": "Training on the Job",
+                "tree": [
+                    [null, { "value": "q<br>q", "unlocks": [[1, 1]] }, null],
+                    [null, { "value": "4<br>q", "unlocks": [[2, 0], [2, 2]] }, null],
+                    [{ "value": "s<br>qq", "unlocks": [[3, 1]] }, null, { "value": "j", "unlocks": [[3, 1]] }],
+                    [null, { "value": "p<br>qq", "unlocks": [[4, 0], [4, 2]] }, null],
+                    [{ "value": "r<br>qq", "unlocks": [] }, null, { "value": "q<br>qq", "unlocks": [] }]
+                ],
+                "ranged": {
+                    "attack": 6,
+                    "defence": 5,
+                    "range": 4,
+                    "name": "Customised WESTAR-34s",
+                    "breakpoints": {
+                        "1": "{b}",
+                        "2 – 3": "{b}, {b}",
+                        "4+": "{b}, {b}, {a}"
+                    }
+                },
+                "melee": {
+                    "attack": 6,
+                    "defence": 5,
+                    "name": "Concealed Blaster Pistol",
+                    "breakpoints": {
+                        "1": "{b}",
+                        "2 – 3": "{b}, {s}",
+                        "4+": "{b}, {q}, {s}"
+                    }
+                },
+                "defence": {
+                    "name": "Nimble Dodge",
+                    "breakpoints": {
+                        "1": "<span style=\"color: #df802a\">{a}▶</span>{d}",
+                        "2": "{e}, <span style=\"color: #df802a\">{b}▶</span>{d}",
+                        "3+": "{e}, <span style=\"color: #df802a\">{b}▶</span>{d}, {s}"
+                    }
+                }
+            }
+        }
+    },
+    "Boba Fett, On Contract": {
+        "name": "Boba Fett, On Contract",
+        "tags": ["Bounty Hunter", "Mercenary"],
+        "stackable": false,
+        "durability": {
+            "primary": 3,
+            "secondary": 2
+        },
+        "stamina": {
+            "primary": 11,
+            "secondary": 9
+        },
+        "force": 2,
+        "abilities": {
+            "primary": [0, 1, 6, 3, 5],
+            "secondary": [0, 1, 2, 3, 4],
+            "pool": [
+                {
+                    "type": "{k}",
+                    "name": "You're Running out of Options",
+                    "cost": "",
+                    "desc": "At the start of this Unit's activation, one character in this Unit may {t} or make a 5 dice attack targeting an enemy <b>Primary Unit</b>."
+                },
+                {
+                    "type": "{j}",
+                    "name": "Knee Rockets",
+                    "cost": "{v}",
+                    "desc": "Choose up to 2 enemy Units within {g} 3. Each chosen Unit suffers {q}."
+                },
+                {
+                    "type": "{j}",
+                    "name": "Whipcord Launcher",
+                    "cost": "{v}",
+                    "desc": "Choose an enemy Unit within {g} 3. The chosen Unit gains {1} and {9}."
+                },
+                {
+                    "type": "{i}",
+                    "name": "Dead or Alive",
+                    "cost": "",
+                    "desc": "When an enemy <b>Primary Unit</b> ends its activation, this Unit may use this ability. One character in this Unit may {t} toward a character in that <b>Primary Unit</b>."
+                },
+                {
+                    "type": "{l}",
+                    "name": "Hired Hand",
+                    "cost": "",
+                    "desc": "At the end of Setup, choose one Tag from an allied <b>Primary Character</b>. This Unit has that Tag."
+                },
+                {
+                    "type": "{m}",
+                    "name": "If I Take on a Job, I Complete It.",
+                    "cost": "",
+                    "desc": "When a character in this Unit Wounds an enemy Unit, after the effect is resolved, refresh {v} and one character in this Unit may {r}. Then, if the enemy character is a <b>Primary Unit</b>, refresh {v}."
+                },
+                {
+                    "type": "{j}",
+                    "name": "Rocket Launch",
+                    "cost": "{v}",
+                    "desc": "Choose a point in LOS. All Units within {g} 2 of that point suffer {qq}."
+                }
+            ]
+        },
+        "count": 1,
+        "stances": {
+            "primary": [
+                {
+                    "name": "Notorious Disintegrator",
+                    "tree": [
+                        [null, { "value": "q<br>q", "unlocks": [[1, 1]] }, null],
+                        [null, { "value": "4<br>q", "unlocks": [[2, 0], [2, 2]] }, null],
+                        [{ "value": "h<br>q", "unlocks": [[3, 0]] }, null, { "value": "j<br>qq", "unlocks": [[3, 2]] }],
+                        [{ "value": "q<br>q", "unlocks": [[4, 0], [4, 1]] }, null, { "value": "5<br>q", "unlocks": [[4, 1]] }],
+                        [{ "value": "t<br>qq", "unlocks": [[4, 1]] }, { "value": "q<br>qq", "unlocks": [[4, 0]] }, null]
+                    ],
+                    "ranged": {
+                        "attack": 8,
+                        "defence": 5,
+                        "range": 5,
+                        "name": "EE-3 Blaster Carbine",
+                        "breakpoints": {
+                            "1": "{b}",
+                            "2 – 3": "{b}, <span style=\"color: #df802a\">{e}▶</span>{d}",
+                            "4+": "{b}, <span style=\"color: #df802a\">{e}▶</span>{d}, {q}"
+                        }
+                    },
+                    "melee": {
+                        "attack": 7,
+                        "defence": 5,
+                        "name": "Flamethrower",
+                        "breakpoints": {
+                            "1": "{a}",
+                            "2 – 3": "{b}, {q}",
+                            "4+": "{b}, {b}, {q}"
+                        }
+                    },
+                    "defence": {
+                        "name": "Beskar Armour",
+                        "breakpoints": {
+                            "1 – 2": "{e}, <span style=\"color: #df802a\">{b}▶</span>{a}",
+                            "3 – 4": "{e}, {e}, <span style=\"color: #df802a\">{b}▶</span>{d}",
+                            "5+": "{e}, {e}, <span style=\"color: #df802a\">{b}▶</span>{d}, {s}"
+                        }
+                    }
+                },
+                {
+                    "name": "No Disintigrations",
+                    "tree": [
+                        [null, { "value": "4<br>q", "unlocks": [[1, 0], [1, 2]] }, null],
+                        [{ "value": "h<br>q", "unlocks": [[2, 1]] }, null, { "value": "9<br>q", "unlocks": [[2, 1], [2, 2]] }],
+                        [null, { "value": "j", "unlocks": [[3, 0], [3, 2], [2, 2]] }, { "value": "5<br>q", "unlocks": [[3, 2], [2, 1]] }],
+                        [{ "value": "t<br>q", "unlocks": [[4, 1]] }, null, { "value": "q<br>q", "unlocks": [[4, 1]] }],
+                        [null, { "value": "qq<br>qq", "unlocks": [] }, null]
+                    ],
+                    "ranged": {
+                        "attack": 6,
+                        "defence": 7,
+                        "range": 5,
+                        "name": "EE-3 Blaster Carbine",
+                        "breakpoints": {
+                            "1": "{a}, {h}",
+                            "2 – 3": "{b}, {a}, {h}",
+                            "4+": "{b}, {b}, {t}"
+                        }
+                    },
+                    "melee": {
+                        "attack": 5,
+                        "defence": 7,
+                        "name": "Wrist Laser",
+                        "breakpoints": {
+                            "1": "{a}, {h}",
+                            "2 – 3": "{b}, {p}",
+                            "4+": "{b}, {p}, {h}"
+                        }
+                    },
+                    "defence": {
+                        "name": "Beskar Armour",
+                        "breakpoints": {
+                            "1 – 2": "{e}, <span style=\"color: #df802a\">{b}▶</span>{a}",
+                            "3 – 4": "{e}, {e}, <span style=\"color: #df802a\">{b}▶</span>{d}",
+                            "5+": "{e}, {e}, <span style=\"color: #df802a\">{b}▶</span>{d}, {s}"
+                        }
+                    }
+                }
+            ],
+            "secondary": {
+                "name": "Notorious Disintegrator",
+                "tree": [
+                    [null, { "value": "q<br>q", "unlocks": [[1, 1]] }, null],
+                    [null, { "value": "9<br>q", "unlocks": [[2, 0], [2, 2]] }, null],
+                    [{ "value": "p<br>q", "unlocks": [[3, 1]] }, null, { "value": "q<br>q", "unlocks": [[3, 1]] }],
+                    [null, { "value": "j<br>qq", "unlocks": [[4, 0], [4, 2]] }, null],
+                    [{ "value": "4<br>q", "unlocks": [] }, null, { "value": "p<br>q", "unlocks": [] }]
+                ],
+                "ranged": {
+                    "attack": 7,
+                    "defence": 4,
+                    "range": 5,
+                    "name": "EE-3 Blaster Carbine",
+                    "breakpoints": {
+                        "1": "{b}",
+                        "2 – 3": "{b}, <span style=\"color: #df802a\">{e}▶</span>{d}",
+                        "4+": "{b}, {b}, <span style=\"color: #df802a\">{e}▶</span>{d}"
+                    }
+                },
+                "melee": {
+                    "attack": 7,
+                    "defence": 4,
+                    "name": "Flamethrower",
+                    "breakpoints": {
+                        "1": "{b}",
+                        "2 – 3": "{b}, {a}",
+                        "4+": "{b}, {b}, {t}"
+                    }
+                },
+                "defence": {
+                    "name": "Beskar Armour",
+                    "breakpoints": {
+                        "1 – 2": "{e}, {e}",
+                        "3+": "{e}, {e}, {e}"
+                    }
+                }
+            }
+        }
+    },
+    "Boba Fett, Daimyo": {
+        "name": "Boba Fett, Daimyo",
+        "tags": ["Scoundrel", "Warrior", "Fett Gotra"],
+        "stackable": false,
+        "durability": {
+            "primary": 3,
+            "secondary": 2
+        },
+        "stamina": {
+            "primary": 9,
+            "secondary": 7
+        },
+        "force": 2,
+        "abilities": {
+            "primary": [1, 2, 4, 5, 3],
+            "secondary": [1, 2, 4, 5, 6],
+            "pool": [
+                {
+                    "type": "{j}",
+                    "name": "Knee Rockets",
+                    "cost": "{v}",
+                    "desc": "Choose up to 2 enemy Units within {g} 3. Each chosen Unit suffers {q}."
+                },
+                {
+                    "type": "{j}",
+                    "name": "Whipcord Launcher",
+                    "cost": "{v}",
+                    "desc": "Choose a Unit within {g} 3. If it is an allied Unit, you may move it to within {g} 1 of a character in this Unit. Otherwise, it gains {1} and {9}."
+                },
+                {
+                    "type": "{j}",
+                    "name": "Rocket Launch",
+                    "cost": "{v}",
+                    "desc": "Choose a point in LOS. All Units within {g} 2 of that point suffer {qq}."
+                },
+                {
+                    "type": "{m}",
+                    "name": "You Can Only Get So Far Without a Tribe",
+                    "cost": "",
+                    "desc": "When an allied character makes an attack as part of a combat action, add one die to the attack roll for each Tag that character shares with each other allied character within {g} 4 of it. Only when applying this ability, this Unit has the <b>Bounty Hunter</b> and <b>Mercenary</b> Tags."
+                },
+                {
+                    "type": "{i}",
+                    "name": "Get Them to My Bacta Pod",
+                    "cost": "{v}",
+                    "desc": "After an attack targeting an allied character is resolved, this Unit may use this ability. The defending Unit may {h} and {r}. Then, if it is a <b>Bounty Hunter</b> or <b>Scoundrel</b> Unit, it may {3} and {r}."
+                },
+                {
+                    "type": "{i}",
+                    "name": "I Intend to Rule with Respect",
+                    "cost": "{v}",
+                    "desc": "When an allied character deals damage that would Wound an enemy <b>Secondary Unit</b> or an enemy <b>Supporting Unit</b>, before applying the Wound, you may use this ability. Roll a Defence Die. If you roll a {f}, that Unit joins your squad instead of taking a Wound. Otherwise, apply the Wound as normal."
+                },
+                {
+                    "type": "{i}",
+                    "name": "I Offer You Loyalty",
+                    "cost": "{v}",
+                    "desc": "When an allied character within {g} 3 makes an attack as part of a combat action, you may use this ability. If it is a <b>Bounty Hunter</b>, add one die to the attack roll. Then, if it is a <b>Scoundrel</b>, add one die to the attack roll. Then, if it is a <b>Mercenary</b>, add one die to the attack roll."
+                }
+            ]
+        },
+        "count": 1,
+        "stances": {
+            "primary": [
+                {
+                    "name": "This is My City",
+                    "tree": [
+                        [null, { "value": "q<br>q", "unlocks": [[1, 0], [1, 2]] }, null],
+                        [{ "value": "r<br>q", "unlocks": [[2, 1]] }, null, { "value": "5<br>q", "unlocks": [[2, 1]] }],
+                        [null, { "value": "j<br>q", "unlocks": [[3, 0], [3, 2]] }, null],
+                        [{ "value": "r<br>r", "unlocks": [[4, 1]] }, null, { "value": "t<br>q", "unlocks": [[4, 1]] }],
+                        [null, { "value": "q<br>qq", "unlocks": [[5, 0], [5, 2]] }, null],
+                        [{ "value": "q<br>qq", "unlocks": [] }, null, { "value": "4<br>q", "unlocks": [] }]
+                    ],
+                    "ranged": {
+                        "attack": 8,
+                        "defence": 5,
+                        "range": 5,
+                        "name": "EE-3 Blaster Carbine",
+                        "breakpoints": {
+                            "1": "{b}",
+                            "2 – 3": "{b}, <span style=\"color: #df802a\">{e}▶</span>{d}",
+                            "4+": "{b}, <span style=\"color: #df802a\">{e}▶</span>{d}, {q}"
+                        }
+                    },
+                    "melee": {
+                        "attack": 7,
+                        "defence": 5,
+                        "name": "Gaderffi Stick",
+                        "breakpoints": {
+                            "1": "{a}, {p}",
+                            "2 – 3": "{b}, {a}, {p}",
+                            "4+": "{b}, {b}, {q}, {p}"
+                        }
+                    },
+                    "defence": {
+                        "name": "Beskar Armour",
+                        "breakpoints": {
+                            "1 – 2": "{e}, <span style=\"color: #df802a\">{b}▶</span>{a}",
+                            "3 – 4": "{e}, {e}, <span style=\"color: #df802a\">{b}▶</span>{d}",
+                            "5+": "{e}, {e}, <span style=\"color: #df802a\">{b}▶</span>{d}, {s}"
+                        }
+                    }
+                },
+                {
+                    "name": "Tusken Warrior",
+                    "tree": [
+                        [null, { "value": "5<br>q", "unlocks": [[1, 0], [1, 1]] }],
+                        [{ "value": "p<br>q", "unlocks": [[2, 0], [2, 1]] }, { "value": "q<br>q", "unlocks": [[2, 0], [2, 1]] }],
+                        [{ "value": "t<br>q", "unlocks": [[3, 0], [2, 1]] }, { "value": "r<br>q", "unlocks": [[3, 1], [2, 0]] }],
+                        [{ "value": "r<br>r", "unlocks": [[4, 0], [4, 1]] }, { "value": "j", "unlocks": [[4, 0], [4, 1]] }],
+                        [{ "value": "p<br>qq", "unlocks": [[5, 0], [4, 1]] }, { "value": "q<br>qq", "unlocks": [[5, 0], [4, 0]] }],
+                        [{ "value": "qq<br>qq", "unlocks": [] }]
+                    ],
+                    "ranged": {
+                        "attack": 6,
+                        "defence": 5,
+                        "range": 6,
+                        "name": "Cycler Rifle",
+                        "breakpoints": {
+                            "1": "<span style=\"color: #df802a\">{e}▶</span>{d}",
+                            "2 – 3": "<span style=\"color: #df802a\">{e}▶</span>{d}, {q}",
+                            "4+": "<span style=\"color: #df802a\">{e}▶</span>{d}, {q}, {q}"
+                        }
+                    },
+                    "melee": {
+                        "attack": 7,
+                        "defence": 7,
+                        "name": "Gaderffi Stick",
+                        "breakpoints": {
+                            "1": "{a}, <span style=\"color: #df802a\">{e}▶</span>{d}",
+                            "2 – 3": "{b}, {4}, <span style=\"color: #df802a\">{e}▶</span>{d}",
+                            "4+": "{b}, {a}, {4}, <span style=\"color: #df802a\">{e}▶</span>{d}"
+                        }
+                    },
+                    "defence": {
+                        "name": "Gaderffi Stick",
+                        "breakpoints": {
+                            "1": "{e}",
+                            "2 – 3": "{e}, {e}, {4}",
+                            "4+": "{e}, {e}, {4}, {9}"
+                        }
+                    }
+                }
+            ],
+            "secondary": {
+                "name": "This is My City",
+                "tree": [
+                    [null, { "value": "q<br>q", "unlocks": [[1, 1]] }, null],
+                    [null, { "value": "9<br>q", "unlocks": [[2, 0], [2, 2]] }, null],
+                    [{ "value": "p<br>q", "unlocks": [[3, 1]] }, null, { "value": "q<br>q", "unlocks": [[3, 1]] }],
+                    [null, { "value": "j<br>qq", "unlocks": [[4, 0], [4, 2]] }, null],
+                    [{ "value": "r<br>q", "unlocks": [] }, null, { "value": "p<br>q", "unlocks": [] }]
+                ],
+                "ranged": {
+                    "attack": 6,
+                    "defence": 5,
+                    "range": 5,
+                    "name": "EE-3 Blaster Carbine",
+                    "breakpoints": {
+                        "1": "{b}",
+                        "2 – 3": "{b}, <span style=\"color: #df802a\">{e}▶</span>{d}",
+                        "4+": "{b}, {b}, <span style=\"color: #df802a\">{e}▶</span>{d}"
+                    }
+                },
+                "melee": {
+                    "attack": 6,
+                    "defence": 5,
+                    "name": "Gaderffi Stick",
+                    "breakpoints": {
+                        "1": "{a}, {p}",
+                        "2 – 3": "{b}, {a}, {p}",
+                        "4+": "{b}, {b}, {q}, {p}"
+                    }
+                },
+                "defence": {
+                    "name": "Beskar Armour",
+                    "breakpoints": {
+                        "1 – 2": "{e}, {e}",
+                        "3+": "{e}, {e}, {e}"
+                    }
+                }
+            }
+        }
+    },
+    "Luke Skywalker, Mildly Hypothermic": {
+        "name": "Luke Skywalker, Mildly Hypothermic",
+        "tags": ["Force User", "Rebel Alliance", "Padawan"],
+        "stackable": false,
+        "durability": {
+            "primary": 0,
+            "secondary": 2
+        },
+        "stamina": {
+            "primary": 0,
+            "secondary": 7
+        },
+        "force": 3,
+        "hidden": true,
+        "abilities": {
+            "secondary": [0, 1, 2],
+            "pool": [
+                {
+                    "type": "{k}",
+                    "name": "Recovering Hero",
+                    "cost": "",
+                    "desc": "At the start of this Unit's activation, if this Unit has no Wounds, Injuries, or {q}, swap this Unit with <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"./chars.html?name=Luke%20Skywalker,%20Rebel%20Commander\">Luke Skywalker, Rebel Commander</a>."
+                },
+                {
+                    "type": "{i}",
+                    "name": "Bacta Healing",
+                    "cost": "",
+                    "desc": "At the end of this Unit's activation, if this unit has not taken any actions or used any abilities, you may reveal the next card from the Order Deck and activate the corresponding Unit."
+                },
+                {
+                    "type": "{i}",
+                    "name": "You'll Find I'm Full of Surprises",
+                    "cost": "{v}",
+                    "desc": "When a character in this Unit is targeted with a {o} attack, this Unit may use this ability. After the attack is resolved, if the attack contained one or more {d} results, one character in this Unit may {t}."
+                }
+            ]
+        },
+        "count": 1,
+        "stances": {
+            "secondary": {
+                "name": "Recovering Hero",
+                "tree": [
+                    [null, { "value": "q<br>q", "unlocks": [[1, 1]] }, null],
+                    [null, { "value": "q<br>q", "unlocks": [[2, 1]] }, null],
+                    [null, { "value": "4<br>q", "unlocks": [[3, 0], [3, 2]] }, null],
+                    [{ "value": "5<br>q", "unlocks": [[4, 1]] }, null, { "value": "q<br>q", "unlocks": [[4, 1]] }],
+                    [null, { "value": "s<br>q", "unlocks": [[5, 1]] }, null],
+                    [null, { "value": "t<br>qq", "unlocks": [] }, null]
+                ],
+                "ranged": {
+                    "attack": 6,
+                    "defence": 4,
+                    "range": 4,
+                    "name": "Heavy Blaster Pistol",
+                    "breakpoints": {
+                        "1": "{a}, {a}",
+                        "2 – 3": "{b}, {a}",
+                        "4+": "{b}, {q}"
+                    }
+                },
+                "melee": {
+                    "attack": 6,
+                    "defence": 5,
+                    "name": "Anakin's Lightsaber",
+                    "breakpoints": {
+                        "1": "{a}",
+                        "2 – 3": "{b}, {a}",
+                        "4+": "{b}, {a}, {q}"
+                    }
+                },
+                "defence": {
+                    "name": "Dodge Sense",
+                    "breakpoints": {
+                        "1 – 3": "<span style=\"color: #df802a\">{a}▶</span>{d}",
+                        "4+": "<span style=\"color: #df802a\">{b}▶</span>{d}, <span style=\"color: #df802a\">{a}▶</span>{d}, {s}"
+                    }
+                }
+            }
+        }
+    },
+    "Luke Skywalker, Rebel Commander": {
+        "name": "Luke Skywalker, Rebel Commander",
+        "tags": ["Force User", "Rebel Alliance", "Padawan"],
+        "stackable": false,
+        "durability": {
+            "primary": 3,
+            "secondary": 2
+        },
+        "stamina": {
+            "primary": 10,
+            "secondary": 8
+        },
+        "force": 3,
+        "hidden": false,
+        "abilities": {
+            "primary": [1, 3, 2, 4, 0],
+            "secondary": [1, 3, 2, 4],
+            "pool": [
+                {
+                    "type": "{m}",
+                    "name": "I've Got to Help Them",
+                    "cost": "",
+                    "desc": "At the start of this Unit's activation, if another allied character is Engaged with an enemy character, you may move each character in this Unit to within {g} 1 of that allied character and refresh {v}."
+                },
+                {
+                    "type": "{j}",
+                    "name": "I'm Not Afraid",
+                    "cost": "{v}",
+                    "desc": "One character in this Unit may {t}. If, after the {t}, that character is Engaged with an enemy character, refresh {vv}."
+                },
+                {
+                    "type": "{i}",
+                    "name": "Rogue Leader",
+                    "cost": "{v}",
+                    "desc": "When an allied <b>Rebel Alliance</b> character within {g} 5 of this Unit makes an attack as part of a combat action, reroll up to two {d} or {c} results in the attack roll."
+                },
+                {
+                    "type": "{i}",
+                    "name": "I'll Cover For You",
+                    "cost": "{v}",
+                    "desc": "When an enemy character makes a {n} attack against a Unit within {g} 3 of this Unit, before dice are rolled, this Unit may use this ability. The defender may add 2 dice to its defence roll."
+                },
+                {
+                    "type": "{i}",
+                    "name": "You'll Find I'm Full of Surprises",
+                    "cost": "{v}",
+                    "desc": "When a character in this Unit is targeted with a {o} attack, this Unit may use this ability. After the attack is resolved, if the attack contained one or more {d} results, one character in this Unit may {t}."
+                }
+            ]
+        },
+        "count": 1,
+        "stances": {
+            "primary": [
+                {
+                    "name": "Blaster Proficiency",
+                    "tree": [
+                        [null, { "value": "q<br>q", "unlocks": [[1, 1]] }, null],
+                        [null, { "value": "q<br>q", "unlocks": [[2, 0], [2, 2]] }, null],
+                        [{ "value": "5<br>q", "unlocks": [[3, 1]] }, null, { "value": "p<br>q", "unlocks": [[3, 1]] }],
+                        [null, { "value": "4<br>q", "unlocks": [[4, 0], [4, 2]] }, null],
+                        [{ "value": "p<br>q", "unlocks": [[5, 1]] }, null, { "value": "q<br>q", "unlocks": [[5, 1]] }],
+                        [null, { "value": "s<br>qq", "unlocks": [] }, null]
+                    ],
+                    "ranged": {
+                        "attack": 8,
+                        "defence": 5,
+                        "range": 4,
+                        "name": "Heavy Blaster Pistol",
+                        "breakpoints": {
+                            "1 – 2": "{b}, {a}",
+                            "3 ": "{b}, {a}, {a}",
+                            "4+": "{b}, {b}, {a}"
+                        }
+                    },
+                    "melee": {
+                        "attack": 6,
+                        "defence": 6,
+                        "name": "Anakin's Lightsaber",
+                        "breakpoints": {
+                            "1 – 2": "{a}",
+                            "3 ": "{b}, {a}",
+                            "4+": "{b}, {a}, {a}"
+                        }
+                    },
+                    "defence": {
+                        "name": "Dodge Sense",
+                        "breakpoints": {
+                            "1": "<span style=\"color: #df802a\">{a}▶</span>{d}",
+                            "2 – 3": "<span style=\"color: #df802a\">{b}▶</span>{d}, <span style=\"color: #df802a\">{a}▶</span>{d}",
+                            "4+": "<span style=\"color: #df802a\">{b}▶</span>{d}, <span style=\"color: #df802a\">{a}▶</span>{d}, {s}"
+                        }
+                    }
+                },
+                {
+                    "name": "Natural Duelist",
+                    "tree": [
+                        [null, { "value": "q<br>q", "unlocks": [[1, 0], [1, 2]] }, null],
+                        [{ "value": "q<br>q", "unlocks": [[2, 1]] }, null, { "value": "p<br>q", "unlocks": [[2, 1]] }],
+                        [null, { "value": "t<br>q", "unlocks": [[3, 0], [3, 2]] }, null],
+                        [{ "value": "5<br>q", "unlocks": [[4, 0]] }, null, { "value": "p<br>q", "unlocks": [[4, 2]] }],
+                        [{ "value": "4<br>q", "unlocks": [[5, 1]] }, null, { "value": "q<br>q", "unlocks": [[5, 1]] }],
+                        [null, { "value": "q<br>qq", "unlocks": [] }, null]
+                    ],
+                    "ranged": {
+                        "attack": 6,
+                        "defence": 6,
+                        "range": 4,
+                        "name": "Heavy Blaster Pistol",
+                        "breakpoints": {
+                            "1": "{a}, {a}",
+                            "2 – 3": "{b}, {a}",
+                            "4+": "{b}, {q}"
+                        }
+                    },
+                    "melee": {
+                        "attack": 7,
+                        "defence": 5,
+                        "name": "Anakin's Lightsaber",
+                        "breakpoints": {
+                            "1": "{a}",
+                            "2 – 3": "{b}, {a}",
+                            "4+": "{b}, {a}, {q}"
+                        }
+                    },
+                    "defence": {
+                        "name": "Practiced Block",
+                        "breakpoints": {
+                            "1 – 3": "{e}, {e}",
+                            "4+": "{e}, {e}, <span style=\"color: #df802a\">{b}▶</span>{a}"
+                        }
+                    }
+                }
+            ],
+            "secondary": {
+                "name": "Racing to the Rescue",
+                "tree": [
+                    [null, { "value": "q<br>q", "unlocks": [[1, 1]] }, null],
+                    [null, { "value": "q<br>q", "unlocks": [[2, 1]] }, null],
+                    [null, { "value": "4<br>q", "unlocks": [[3, 0], [3, 2]] }, null],
+                    [{ "value": "5<br>q", "unlocks": [[4, 1]] }, null, { "value": "q<br>q", "unlocks": [[4, 1]] }],
+                    [null, { "value": "s<br>q", "unlocks": [[5, 1]] }, null],
+                    [null, { "value": "t<br>qq", "unlocks": [] }, null]
+                ],
+                "ranged": {
+                    "attack": 7,
+                    "defence": 5,
+                    "range": 4,
+                    "name": "Heavy Blaster Pistol",
+                    "breakpoints": {
+                        "1": "{a}, {a}",
+                        "2 – 3": "{b}, {a}",
+                        "4+": "{b}, {q}"
+                    }
+                },
+                "melee": {
+                    "attack": 6,
+                    "defence": 6,
+                    "name": "Anakin's Lightsaber",
+                    "breakpoints": {
+                        "1": "{a}",
+                        "2 – 3": "{b}, {a}",
+                        "4+": "{b}, {a}, {q}"
+                    }
+                },
+                "defence": {
+                    "name": "Practiced Block",
+                    "breakpoints": {
+                        "1 – 3": "{e}, {e}",
+                        "4+": "{e}, {e}, <span style=\"color: #df802a\">{b}▶</span>{a}"
+                    }
+                }
+            }
+        }
+    },
+    "Luke Skywalker, Jedi Master": {
+        "name": "Luke Skywalker, Jedi Master",
+        "tags": ["Force User", "Rebel Alliance", "Jedi"],
+        "stackable": false,
+        "durability": {
+            "primary": 3,
+            "secondary": 2
+        },
+        "stamina": {
+            "primary": 11,
+            "secondary": 9
+        },
+        "force": 4,
+        "hidden": false,
+        "abilities": {
+            "primary": [0, 4, 1, 2, 3],
+            "secondary": [4, 0, 1, 2, 5],
+            "pool": [
+                {
+                    "type": "{k}",
+                    "name": "Return of the Jedi",
+                    "cost": "",
+                    "desc": "At the start of this Unit's activation, one character in this Unit may {t}, then refresh {v}."
+                },
+                {
+                    "type": "{i}",
+                    "name": "Deflect",
+                    "cost": "",
+                    "desc": "After a {n} attack targeting a character in this Unit is resolved, this Unit may use this ability. If the attack roll contained one or more {d} results, the attacking Unit suffers {qq}."
+                },
+                {
+                    "type": "{i}",
+                    "name": "I Will Not Fight You",
+                    "cost": "{v}",
+                    "desc": "When a character in this Unit is targeted with a {o} attack, this Unit may use this ability. After the attack is resolved, if the attack roll contained one or more {d} results, one character in this Unit may {rr} and {t}."
+                },
+                {
+                    "type": "{m}",
+                    "name": "I Am a Jedi, Like My Father Before Me",
+                    "cost": "",
+                    "comments": "Maybe change to something that feels more power fantasy",
+                    "desc": "While this Unit's Order Card is in the Order Deck or in reserve, this Unit and allied <b>Rebel Alliance</b> Units within {g} 5 have <b>Immunity [{4}]</b>.<br>While this Unit's Order Card is not in the Order Deck, this Unit and allied <b>Rebel Alliance</b> Units within {g} 5 have <b>Immunity [{1}]</b>."
+                },
+                {
+                    "type": "{j}",
+                    "name": "Force Repulse",
+                    "cost": "{v}",
+                    "desc": "Choose a character in this Unit. Push all enemy characters within {g} 3 of that character away from that character up to {g} 3. Then, all enemy characters that were pushed suffer {qq}."
+                },
+                {
+                    "type": "{l}",
+                    "name": "Heroic Advance",
+                    "cost": "",
+                    "desc": "This Unit has <b>Immunity [{1}]</b> and can {x} even when Engaged by a character in an enemy Unit that is not Wounded."
+                }
+            ]
+        },
+        "count": 1,
+        "stances": {
+            "primary": [
+                {
+                    "name": "Form V Djem So",
+                    "tree": [
+                        [null, { "value": "q<br>q", "unlocks": [[1, 1]] }, null],
+                        [null, { "value": "q<br>qq", "unlocks": [[2, 1]] }, null],
+                        [null, { "value": "s<br>q", "unlocks": [[3, 0], [3, 2]] }, null],
+                        [{ "value": "4<br>q", "unlocks": [[4, 1]] }, null, { "value": "9<br>q", "unlocks": [[4, 1]] }],
+                        [null, { "value": "5<br>q", "unlocks": [[5, 1]] }, null],
+                        [null, { "value": "t<br>qq", "unlocks": [] }, null]
+                    ],
+                    "ranged": {
+                        "attack": 8,
+                        "defence": 5,
+                        "range": 4,
+                        "name": "Force Crush",
+                        "breakpoints": {
+                            "1 – 2": "{b}, {q}",
+                            "3 ": "{b}, {a}, {q}",
+                            "4+": "{b}, {q}, {q}"
+                        }
+                    },
+                    "melee": {
+                        "attack": 8,
+                        "defence": 5,
+                        "name": "Lightsaber",
+                        "breakpoints": {
+                            "1 – 2": "{a}, {a}",
+                            "3 ": "{b}, {a}",
+                            "4+": "{b}, {a}, {q}"
+                        }
+                    },
+                    "defence": {
+                        "name": "Defensive Form",
+                        "breakpoints": {
+                            "1 – 3": "{e}, <span style=\"color: #df802a\">{b}▶</span>{a}",
+                            "4+": "{e}, {e}, <span style=\"color: #df802a\">{b}▶</span>{a}"
+                        }
+                    }
+                },
+                {
+                    "name": "Form III Soresu",
+                    "tree": [
+                        [null, { "value": "p<br>qq", "unlocks": [[1, 0], [1, 2]] }, null],
+                        [{ "value": "r<br>r", "unlocks": [[2, 1]] }, null, { "value": "p<br>q", "unlocks": [[2, 1]] }],
+                        [null, { "value": "t<br>qq", "unlocks": [[3, 0], [3, 2]] }, null],
+                        [{ "value": "r<br>r", "unlocks": [[4, 0]] }, null, { "value": "1<br>qq", "unlocks": [[4, 2]] }],
+                        [{ "value": "p<br>q", "unlocks": [] }, null, { "value": "9<br>q", "unlocks": [] }]
+                    ],
+                    "ranged": {
+                        "attack": 0,
+                        "defence": 8,
+                        "range": 4,
+                        "name": "",
+                        "breakpoints": {
+                        }
+                    },
+                    "melee": {
+                        "attack": 6,
+                        "defence": 8,
+                        "name": "Lightsaber",
+                        "breakpoints": {
+                            "1": "{b}",
+                            "2 – 3": "{b}, {b}",
+                            "4+": "{b}, {b}, {t}"
+                        }
+                    },
+                    "defence": {
+                        "name": "Defensive Form",
+                        "breakpoints": {
+                            "1": "{e}, <span style=\"color: #df802a\">{b}▶</span>{a}",
+                            "2 – 3": "{e}, {e}, <span style=\"color: #df802a\">{b}▶</span>{a}",
+                            "4+": "{e}, {e}, <span style=\"color: #df802a\">{b}▶</span>{d}"
+                        }
+                    }
+                }
+            ],
+            "secondary": {
+                "name": "Balanced Duelist",
+                "tree": [
+                    [null, { "value": "p<br>qq", "unlocks": [[1, 0], [1, 2]] }, null],
+                    [{ "value": "r<br>r", "unlocks": [[2, 1]] }, null, { "value": "q<br>qq", "unlocks": [[2, 1]] }],
+                    [null, { "value": "t<br>qq", "unlocks": [[3, 0], [3, 2]] }, null],
+                    [{ "value": "r<br>r", "unlocks": [[4, 0]] }, null, { "value": "5<br>qq", "unlocks": [[4, 2]] }],
+                    [{ "value": "p<br>q", "unlocks": [] }, null, { "value": "9<br>q", "unlocks": [] }]
+                ],
+                "ranged": {
+                    "attack": 7,
+                    "defence": 6,
+                    "range": 4,
+                    "name": "Force Crush",
+                    "breakpoints": {
+                        "1 – 2": "{a}, {q}",
+                        "3 ": "{b}, {a}, {q}",
+                        "4+": "{b}, {q}, {q}"
+                    }
+                },
+                "melee": {
+                    "attack": 7,
+                    "defence": 6,
+                    "name": "Lightsaber",
+                    "breakpoints": {
+                        "1": "{b}",
+                        "2 – 3": "{b}, {a}",
+                        "4+": "{b}, {b}, {t}"
+                    }
+                },
+                "defence": {
+                    "name": "Defensive Form",
+                    "breakpoints": {
+                        "1 – 3": "{e}, <span style=\"color: #df802a\">{b}▶</span>{a}",
+                        "4+": "{e}, {e}, <span style=\"color: #df802a\">{b}▶</span>{a}"
+                    }
+                }
+            }
+        }
+    },
+    "Din Djarin & Grogu, The Mandalorian": {
+        "name": "Din Djarin & Grogu, The Mandalorian",
+        "tags": ["Bounty Hunter", "Mandalorian", "Mercenary", "Scoundrel"],
+        "stackable": false,
+        "durability": {
+            "primary": 3,
+            "secondary": 2
+        },
+        "stamina": {
+            "primary": 11,
+            "secondary": 10
+        },
+        "force": 3,
+        "hidden": false,
+        "abilities": {
+            "primary": [0, 1, 2, 3],
+            "secondary": [0, 5, 1, 4],
+            "pool": [
+                {
+                    "type": "{j}",
+                    "name": "A Clan of Two",
+                    "cost": "{v}",
+                    "desc": "Each character in this Unit may {h}. Then, if all allied Units within {g} 2 are <b>Bounty Hunter</b>, <b>Mandalorian</b>, or <b>Scoundrel</b> Units, one character in this Unit may immediately make a 5 dice attack or may choose an enemy character within {g} 3 and Push it {g} 2 Away."
+                },
+                {
+                    "type": "{i}",
+                    "name": "Fearless and Inventive",
+                    "cost": "{v}",
+                    "desc": "When a character in this Unit makes a {o} attack as part of a combat action, before dice are rolled, this Unit may use this ability. Add 2 dice to the attack roll for each enemy character, other than the target, that is not Wounded and is Engaged with one or more characters in this Unit."
+                },
+                {
+                    "type": "{i}",
+                    "name": "Do The Magic Hand Thing",
+                    "cost": "",
+                    "desc": "After a {n} attack targeting a character in this Unit is resolved, this Unit may use this ability. If the attack roll contained one or more {e} results, the attacking Unit suffers {qq}."
+                },
+                {
+                    "type": "{m}",
+                    "name": "This Is The Way",
+                    "cost": "",
+                    "desc": "When an enemy character Wounds another allied Unit, after the effect is resolved, one character in this Unit may {rr} and then may {s}. Then, each other allied <b>Bounty Hunter</b>, <b>Mandalorian</b>, and <b>Scoundrel</b> Unit within {g} 4 may remove one condition from itself and then may gain {3}."
+                },
+                {
+                    "type": "{i}",
+                    "name": "[Leaping Barricade]",
+                    "cost": "",
+                    "desc": "When an allied character within {g} 3 is targeted with an attack, before dice are rolled, you may use this ability. Move a character in this Unit within {g} 1 of the defender. The attack is now targeting this Unit instead."
+                },
+                {
+                    "type": "{j}",
+                    "name": "Force Healing",
+                    "cost": "{vv}",
+                    "desc": "Choose an allied Unit within {g} 3. The chosen Unit removes all {q} and conditions from itself."
+                }
+            ]
+        },
+        "count": 1,
+        "stances": {
+            "primary": [
+                {
+                    "name": "Bring You In Warm",
+                    "tree": [
+                        [null, { "value": "p<br>q", "unlocks": [[1, 1]] }, null],
+                        [null, { "value": "q<br>q", "unlocks": [[2, 1]] }, null],
+                        [null, { "value": "p<br>q", "unlocks": [[3, 0], [3, 2]] }, null],
+                        [{ "value": "h<br>q", "unlocks": [[4, 0]] }, null, { "value": "9<br>q", "unlocks": [[4, 2]] }],
+                        [{ "value": "1<br>q", "unlocks": [[5, 1]] }, null, { "value": "5<br>q", "unlocks": [[5, 1]] }],
+                        [null, { "value": "s<br>qq", "unlocks": [] }, null]
+                    ],
+                    "ranged": {
+                        "attack": 6,
+                        "defence": 6,
+                        "range": 4,
+                        "name": "Modified IB-94 Blaster Pistol",
+                        "breakpoints": {
+                            "1 – 2": "{a}",
+                            "3 ": "{b}, {a}",
+                            "4+": "{b}, {a}, {a}"
+                        }
+                    },
+                    "melee": {
+                        "attack": 7,
+                        "defence": 6,
+                        "name": "Martial Prowess",
+                        "breakpoints": {
+                            "1 – 2": "{b}",
+                            "3 ": "{b}, {a}",
+                            "4+": "{b}, {b}, {a}"
+                        }
+                    },
+                    "defence": {
+                        "name": "Beskar Armour",
+                        "breakpoints": {
+                            "1 – 2": "{e}, <span style=\"color: #df802a\">{b}▶</span>{a}",
+                            "3 – 4": "{e}, {e}, <span style=\"color: #df802a\">{b}▶</span>{d}",
+                            "5+": "{e}, {e}, <span style=\"color: #df802a\">{b}▶</span>{d}, {s}"
+                        }
+                    }
+                },
+                {
+                    "name": "Bring You In Cold",
+                    "tree": [
+                        [null, { "value": "q<br>q", "unlocks": [[1, 1]] }, null],
+                        [null, { "value": "p<br>q", "unlocks": [[2, 1]] }, null],
+                        [null, { "value": "q<br>q", "unlocks": [[3, 0], [3, 1], [3, 2]] }, null],
+                        [{ "value": "s", "unlocks": [[4, 1]] }, { "value": "j", "unlocks": [[3, 0], [3, 2]] }, { "value": "5<br>q", "unlocks": [[4, 1]] }],
+                        [{ "value": "q<br>q", "unlocks": [] }, { "value": "4<br>qq", "unlocks": [[4, 0], [4, 2]] }, { "value": "p<br>q", "unlocks": [] }]
+                    ],
+                    "ranged": {
+                        "attack": 7,
+                        "defence": 6,
+                        "range": 5,
+                        "name": "Amban Sniper Rifle",
+                        "breakpoints": {
+                            "1": "{a}",
+                            "2 – 3": "{b}, {b}",
+                            "4+": "{q}, {q}, {q}, {q}, {q}"
+                        }
+                    },
+                    "melee": {
+                        "attack": 6,
+                        "defence": 6,
+                        "name": "Martial Prowess",
+                        "breakpoints": {
+                            "1": "{a}",
+                            "2 – 3": "{b}, {a}",
+                            "4+": "{b}, {a}, {a}"
+                        }
+                    },
+                    "defence": {
+                        "name": "Beskar Armour",
+                        "breakpoints": {
+                            "1 – 2": "{e}, <span style=\"color: #df802a\">{b}▶</span>{a}",
+                            "3 – 4": "{e}, {e}, <span style=\"color: #df802a\">{b}▶</span>{d}",
+                            "5+": "{e}, {e}, <span style=\"color: #df802a\">{b}▶</span>{d}, {s}"
+                        }
+                    }
+                }
+            ],
+            "secondary": {
+                "name": "",
+                "tree": [
+                    [null, { "value": "p<br>q", "unlocks": [[1, 1]] }, null],
+                    [null, { "value": "q<br>q", "unlocks": [[2, 1]] }, null],
+                    [null, { "value": "p<br>q", "unlocks": [[3, 0], [3, 2]] }, null],
+                    [{ "value": "h<br>q", "unlocks": [[4, 0]] }, null, { "value": "9<br>q", "unlocks": [[4, 2]] }],
+                    [{ "value": "1<br>q", "unlocks": [[5, 1]] }, null, { "value": "5<br>q", "unlocks": [[5, 1]] }],
+                    [null, { "value": "s<br>qq", "unlocks": [] }, null]
+                ],
+                "ranged": {
+                    "attack": 7,
+                    "defence": 6,
+                    "range": 5,
+                    "name": "Amban Sniper Rifle",
+                    "breakpoints": {
+                        "1 – 2": "{a}",
+                        "3 ": "{b}, {b}",
+                        "4+": "{q}, {q}, {q}"
+                    }
+                },
+                "melee": {
+                    "attack": 6,
+                    "defence": 6,
+                    "name": "Martial Prowess",
+                    "breakpoints": {
+                        "1": "{a}",
+                        "2 – 3": "{b}, {a}",
+                        "4+": "{b}, {a}, {a}"
+                    }
+                },
+                "defence": {
+                    "name": "Beskar Armour",
+                    "breakpoints": {
+                        "1 – 2": "{e}, {e}",
+                        "3+": "{e}, {e}, {e}"
+                    }
+                }
+            }
+        }
+    }
+}

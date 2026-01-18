@@ -1,0 +1,247 @@
+{
+    "Darth Vader, Emperor's Fist": {
+        "name": "Darth Vader, Emperor's Fist",
+        "tags": ["Force User", "Galactic Empire", "Inquisitorius", "Sith"],
+        "stackable": false,
+        "durability": {
+            "base": 3,
+            "scaling": 0.5
+        },
+        "stamina": {
+            "base": 12,
+            "scaling": 3
+        },
+        "actions": {
+            "base": 1,
+            "scaling": 1
+        },
+        "stance": {
+            "name": "Form V",
+            "tree": [
+                [{ "value": "p<br>qq", "unlocks": [[1, 0]] }],
+                [{ "value": "q<br>q", "unlocks": [[2, 0]] }],
+                [{ "value": "4<br>q", "unlocks": [[3, 0]] }],
+                [{ "value": "9<br>q", "unlocks": [[4, 0]] }],
+                [{ "value": "5<br>qq", "unlocks": [[5, 0]] }],
+                [{ "value": "pq<br>qq", "unlocks": [[6, 0]] }],
+                [{ "value": "qq<br>qq", "unlocks": [] }]
+            ],
+            "ranged": {
+                "attack": 7,
+                "defence": 6,
+                "range": 4,
+                "name": "Thrown Lightsaber",
+                "breakpoints": {
+                    "1 – 2": "{a}, {a}",
+                    "3 ": "{b}, {a}, {a}",
+                    "4+": "{b}, {b}, {a}, {a}"
+                }
+            },
+            "melee": {
+                "attack": 6,
+                "defence": 6,
+                "name": "Lightsaber",
+                "breakpoints": {
+                    "1 – 2": "{b}, {a}",
+                    "3 ": "{b}, {a}, {a}",
+                    "4+": "{b}, {b}, {a}, {q}"
+                }
+            },
+            "defence": {
+                "name": "Defensive Form",
+                "breakpoints": {
+                    "1 – 3": "{e}, {e}",
+                    "4+": "{e}, {e}, {e}"
+                }
+            }
+        },
+        "deck": {
+            "cards": [0, 0, 1, 1, 1, 2, 2, 3, 4, 4, 5, 5, 5, 6, 6, 7, 7, 8, 8, 8],
+            "pool": [
+                {
+                    "cond": "This Unit is Engaged with an enemy character.",
+                    "true": {
+                        "name": "All Too Easy",
+                        "desc": "This Unit makes a {o} attack against the nearest Engaged enemy character."
+                    },
+                    "false": {
+                        "name": "Relentless Pursuit",
+                        "desc": "Each character in this Unit {x} toward the nearest enemy character. Then, this Unit removes {qq}."
+                    }
+                },
+                {
+                    "cond": "This Unit has at least one other allied <b>Supporting Unit</b>.",
+                    "true": {
+                        "name": "Fire at Will",
+                        "desc": "If possible, all characters in allied <b>Supporting Units</b> make a {n} attack against the nearest enemy character."
+                    },
+                    "false": {
+                        "name": "Endless Troopers",
+                        "desc": "Put a new allied <b>Stormtrooper Supporting Unit</b> with 2 characters within {g} 2 of this Unit."
+                    }
+                },
+                {
+                    "cond": "An enemy character is within {g} 3 of a character in this Unit.",
+                    "true": {
+                        "name": "Then You Will Die Braver Than Most",
+                        "desc": "Pull the enemy character {g} 2 toward the character in this Unit. Then, the enemy character gains {4}."
+                    },
+                    "false": {
+                        "name": "You Cannot Hide Forever",
+                        "desc": "Each character in this Unit {x} toward the room with the most Priority Objective tokens. Then, play the next card from this Unit's {j} deck."
+                    }
+                },
+                {
+                    "cond": "This Unit is Engaged with an enemy character.",
+                    "true": {
+                        "name": "All Too Easy",
+                        "desc": "This Unit makes a {o} attack against the nearest Engaged enemy character."
+                    },
+                    "false": {
+                        "name": "We Would Be Honoured If You Would Join Us",
+                        "desc": "Move all characters in this Unit to the room with the most Priority Objective tokens."
+                    }
+                },
+                {
+                    "cond": "This Unit has at least one other allied <b>Supporting Unit</b>.",
+                    "true": {
+                        "name": "Perhaps I Can Find New Ways to Motivate Them",
+                        "desc": "Remove one character from the nearest allied <b>Supporting Unit</b>. Then, all remaining characters in allied <b>Supporting Units</b> {x} toward the nearest enemy character and, if possible, make a {n} attack against the nearest enemy character."
+                    },
+                    "false": {
+                        "name": "Endless Troopers",
+                        "desc": "Put a new allied <b>Stormtrooper Supporting Unit</b> with 2 characters within {g} 2 of this Unit."
+                    }
+                },
+                {
+                    "cond": "An enemy character is within {g} 4 of a character in this Unit.",
+                    "true": {
+                        "name": "Lightsaber Throw",
+                        "desc": "This Unit makes a {n} attack against the nearest enemy character."
+                    },
+                    "false": {
+                        "name": "Endless Troopers",
+                        "desc": "Put a new allied <b>Stormtrooper Supporting Unit</b> with 2 characters within {g} 2 of this Unit."
+                    }
+                },
+                {
+                    "cond": "This Unit has at least one other allied <b>Supporting Unit</b>.",
+                    "true": {
+                        "name": "I Am Altering the Deal",
+                        "desc": "All characters in allied <b>Supporting Units</b> {x} toward the room with the most Priority Objective tokens."
+                    },
+                    "false": {
+                        "name": "There Is No Escape",
+                        "desc": "Put a new allied <b>Stormtrooper Supporting Unit</b> with 2 characters in the room with the most Priority Objective tokens."
+                    }
+                },
+                {
+                    "cond": "This Unit is Engaged with an enemy character.",
+                    "true": {
+                        "name": "All Too Easy",
+                        "desc": "This Unit makes a {o} attack against the nearest Engaged enemy character."
+                    },
+                    "false": {
+                        "name": "It is Useless to Resist",
+                        "desc": "Pull the nearest enemy character {g} 2 toward this Unit. Then, the enemy character gains {5}."
+                    }
+                },
+                {
+                    "cond": "This Unit has at least one other allied <b>Supporting Unit</b>.",
+                    "true": {
+                        "name": "That is the System",
+                        "desc": "All characters in allied <b>Supporting Units</b> {x} toward the room with the most enemy Units."
+                    },
+                    "false": {
+                        "name": "Endless Troopers",
+                        "desc": "Put a new allied <b>Stormtrooper Supporting Unit</b> with 2 characters within {g} 2 of this Unit."
+                    }
+                }
+            ]
+        },
+        "wounded": {
+            "cards": [0, 1, 1, 2, 2],
+            "pool": [
+                {
+                    "name": "All I'm Surrounded by is Fear. And Dead Men.",
+                    "desc": "All other Units within {g} 2 of this character suffer {q} equal to the number of {f} in the defence roll."
+                }, 
+                {
+                    "name": "Anakin is Dead. I Killed Him.",
+                    "desc": "Remove all conditions from this Unit and {h} towards the nearest enemy character. Then, play the next card from this Unit's {j} deck."
+                },
+                {
+                    "name": "The Sith Lord Strikes Back",
+                    "desc": "One character in this Unit immediately {h} and make a 5 dice {o} attack targeting the character that Wounded it."
+                }
+            ]
+        }
+    },
+    "Stormtroopers": {
+        "name": "Stormtroopers",
+        "tags": ["Galactic Empire", "Stormtrooper", "Trooper"],
+        "stackable": true,
+        "durability": {
+            "base": 2,
+            "scaling": 0
+        },
+        "stamina": {
+            "base": 8,
+            "scaling": 1
+        },
+        "actions": {
+            "base": 0,
+            "scaling": 0
+        },
+        "stance": {
+            "name": "Assault Training",
+            "tree": [
+                [{ "value": "q", "unlocks": [[1, 0]] }],
+                [{ "value": "5<br>q", "unlocks": [[2, 0]] }],
+                [{ "value": "r<br>r", "unlocks": [[3, 0]] }],
+                [{ "value": "p<br>q", "unlocks": [[4, 0]] }],
+                [{ "value": "9<br>q", "unlocks": [[5, 0]] }],
+                [{ "value": "4<br>q", "unlocks": [[6, 0]] }],
+                [{ "value": "q<br>q", "unlocks": [[7, 0]] }],
+                [{ "value": "q<br>q", "unlocks": [[8, 0]] }],
+                [{ "value": "q<br>qq", "unlocks": [[9, 0]] }],
+                [{ "value": "qq<br>qq", "unlocks": [] }]
+            ],
+            "ranged": {
+                "attack": 5,
+                "defence": 5,
+                "range": 4,
+                "name": "E-11 Blaster Rifle",
+                "breakpoints": {
+                    "1": "{1}",
+                    "2 – 3": "{b}, {q}, {1}",
+                    "4+": "{b}, {a}, {q}, {1}"
+                }
+            },
+            "melee": {
+                "attack": 5,
+                "defence": 4,
+                "name": "Combat Training",
+                "breakpoints": {
+                    "1": "{q}",
+                    "2+": "{a}, {q}"
+                }
+            },
+            "defence": {
+                "name": "Stormtrooper Armour",
+                "breakpoints": {
+                    "1 – 2": "{e}",
+                    "3+": "{e}, {e}"
+                }
+            }
+        },
+        "deck": {
+            "cards": [],
+            "pool": []
+        },
+        "wounded": {
+            "cards": [],
+            "pool": []
+        }
+    }
+}

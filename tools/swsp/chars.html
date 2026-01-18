@@ -1,0 +1,28 @@
+<html lang="en-US">
+    <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
+        <meta content="utf-8" http-equiv="encoding">
+        <link href="./style.css" rel="stylesheet">
+        <title>Character List - Solo Shatterpoint</title>
+    </head>
+    <body>
+        <script type="text/javascript" src="util.js"></script>
+        <!-- TODO: filters -->
+        <!-- <table>
+            
+        </table> -->
+        <div id="chars" style="font-size: 24;"></div>
+        <script>
+            withUnits((UNITS) => {
+                const urlParams = new URLSearchParams(window.location.search);
+                var name = urlParams.get("name");
+                if (name)
+                    document.getElementById("chars").innerHTML = renderUnit(name, true);
+                else
+                    document.getElementById("chars").innerHTML = Object.values(UNITS).map((unit) => renderUnit(unit, true)).join("<hr>");
+            });
+        </script>
+    </body>
+</html>

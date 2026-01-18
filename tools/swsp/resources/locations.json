@@ -1,0 +1,207 @@
+{
+    "Echo Base": {
+        "name": "Echo Base",
+        "factions": {
+            "Rebel Alliance": {
+                "events": {
+                    "deck": [],
+                    "pool": []
+                },
+                "enemyEvents": {
+                    "deck": [],
+                    "pool": []
+                },
+                "enemyMissions": [],
+                "missions": [
+                    {
+                        "name": "Evacuation",
+                        "setup": "Add a Priority Objective token to the Front Hangar and Rear Hangar. |set evacCount `shuffle 0 1 1 1 1 2 2;`|<br>Add Mission tokens:<br>•Clabburn Range: |get evacCount 0|<br>•Front Hangar: |get evacCount 1|<br>•Rear Hangar: |get evacCount 2|<br>•Medical Centre: |get evacCount 3|<br>•Command Centre: |get evacCount 4|<br>•Barracks: |get evacCount 5|<br>•Shield Generator: |get evacCount 6|",
+                        "tokens": "•When a Unit Moves from one room to another, it may also move all Mission tokens from the room it started in to the room it ended in.<br>•At the end of the enemy <b>Primary Character</b>'s turn, if there are more enemy characters than Mission tokens in a room, discard one Mission token from that room.",
+                        "bonus": {
+                            "Front Hangar/Rear Hangar": {
+                                "abilities": [
+                                    {
+                                        "type": "{j}",
+                                        "name": "Launch Transport",
+                                        "cost": "{vv}",
+                                        "desc": "Rescue all Mission tokens in the room this character is in."
+                                    }
+                                ]
+                            }
+                        },
+                        "goal": "Rescue 5 Mission tokens from around the map."
+                    },
+                    {
+                        "name": "Lost Search Party",
+                        "setup": "Add a Priority Objective token to the Clabburn Range.",
+                        "tokens": "When a Unit makes a Move action, a character in that Unit may also move a Mission token within {g} 1 to a location within {g} 1 of its ending location.",
+                        "bonus": {
+                            "Clabburn Range": {
+                                "abilities": [
+                                    {
+                                        "type": "{j}",
+                                        "name": "Search",
+                                        "cost": "",
+                                        "desc": "Roll 1 Attack die:<br>{b} or {c}: You find the <b>Lost Search Party</b>! Add a Mission token within {g} 1 of this Unit.<br>{a}: Nothing happens...<br>{d}: Lost in the Snow: This Unit gains {4}."
+                                    }
+                                ]
+                            }
+                        },
+                        "goal": "Find a Mission token in the Clabburn Range using the Search {j} action and bring it to the Medical Centre."
+                    },
+                    {
+                        "name": "Repair the Shield Generator",
+                        "setup": "Add a Priority Objective token to the Shield Generator. Put 4 Mission tokens there.",
+                        "tokens": "Whenever an enemy Unit makes an attack in the Shield Generator, add a Mission token there.",
+                        "bonus": {
+                            "Shield Generator": {
+                                "abilities": [
+                                    {
+                                        "type": "{j}",
+                                        "name": "Repair",
+                                        "cost": "",
+                                        "desc": "Remove 1 Mission token from the Shield Generator."
+                                    }
+                                ]
+                            }
+                        },
+                        "goal": "Remove all Mission tokens from the Shield Generator."
+                    }
+                ]
+            },
+            "Galactic Empire": {
+                "events": {
+                    "deck": [],
+                    "pool": []
+                },
+                "enemyEvents": {
+                    "deck": [],
+                    "pool": []
+                },
+                "enemyMissions": [],
+                "missions": [
+                    {
+                        "name": "Exfiltration",
+                        "setup": "Add a Priority Objective token to the Command Centre.",
+                        "tokens": "When a Unit makes a Move action, a character in that Unit may also move a Mission token within {g} 1 to a location within {g} 1 of its ending location.",
+                        "bonus": {
+                            "Command Centre": {
+                                "abilities": [
+                                    {
+                                        "type": "{j}",
+                                        "name": "Slice",
+                                        "cost": "",
+                                        "desc": "Roll 1 Attack die:<br>{b} or {c}: You copied the data to a <b>Datacard</b>! Add a Mission token within {g} 1 of this Unit.<br>{a}: Locked Out: This ability cannot be used for the next 2 turns.<br>{d}: Caught: Put a new enemy <b>Supporting Unit</b> with 2 characters within {g} 2 of this Unit."
+                                    }
+                                ]
+                            }
+                        },
+                        "goal": "Find a Mission token in the Command Centre using the Slice {j} action and bring it to either the Front Hangar or Rear Hangar."
+                    },
+                    {
+                        "name": "Deactivate the Shield Generator",
+                        "setup": "Add a Priority Objective token to the Shield Generator.",
+                        "tokens": "",
+                        "bonus": {
+                            "Command Centre": {
+                                "abilities": [
+                                    {
+                                        "type": "{j}",
+                                        "name": "",
+                                        "cost": "",
+                                        "desc": ""
+                                    }
+                                ]
+                            }
+                        },
+                        "goal": ""
+
+                    }
+                ]
+            }
+        },
+        "events": {
+            "deck": [4, 0, 0, 0, 0, 3, 3, 2, 1, 1],
+            "pool": [
+                {
+                    "name": "Blizzard",
+                    "desc": "Leave this card in play after resolving its effects. All Units in Clabburn Range or Shield Generator suffer {q} for each Blizzard card in play."
+                },
+                {
+                    "name": "Cave In",
+                    "desc": "All Units in |randomRoom| gain {1} and {5}."
+                },
+                {
+                    "name": "Wampa Attack!",
+                    "desc": "All Units in |randomRoom| suffer {qqq}."
+                },
+                {
+                    "name": "Ambushed!",
+                    "desc": "Put a new enemy <b>Supporting Unit</b> with 4 characters within {g} 3 of the player character nearest to the enemy <b>Primary Unit</b>."
+                },
+                {
+                    "name": "Somehow, Luke Skywalker Returned",
+                    "desc": "Add two Priority Objective tokens to Medical Centre. Then, place <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"./chars.html?name=Luke%20Skywalker,%20Mildly%20Hypothermic\">Luke Skywalker, Mildly Hypothermic</a> in a Bacta Tank there and put an Injury token on him. Add him as a supporting character to the Rebel Alliance faction. Remove the two Priority Tokens if Luke Skywalker leaves the Bacta Tank.",
+                    "effects": [
+                        {
+                            "type": "addUnit",
+                            "name": "Luke Skywalker, Mildly Hypothermic",
+                            "to": {
+                                "type": "faction",
+                                "value": "Rebel Alliance"
+                            }
+                        }
+                    ]
+                }
+            ]
+        },
+        "rooms": {
+            "Clabburn Range": {
+
+            },
+            "Front Hangar": {
+
+            },
+            "Rear Hangar": {
+
+            },
+            "Medical Centre": {
+                "abilities": [
+                    {
+                        "type": "{i}",
+                        "name": "Bacta Tank Bath",
+                        "cost": "",
+                        "desc": "If a Unit is within {g} 1 of an empty Bacta Tank, you may place it into the Bacta Tank. While there, it cannot make any actions except to move within {g} 1 of the Bacta Tank and cannot use defence expertise ({f}) results. At the end of its activation, if it is still in the Bacta Tank, it may {rrr}. If it has no {q}, it may instead remove an Injured token and suffer {q} until it has one Stamina ({r}) remaining."
+                    }
+                ]
+            },
+            "Command Centre": {
+
+            },
+            "Barracks": {
+
+            },
+            "Shield Generator": {
+
+            }
+        },
+        "configs": [
+            {
+                "start": "Command Centre",
+                "enemy": "Clabburn Range"
+            },
+            {
+                "start": "Clabburn Range",
+                "enemy": "Command Centre"
+            },
+            {
+                "start": "Barracks",
+                "enemy": "Rear Hangar"
+            },
+            {
+                "start": "Front Hangar",
+                "enemy": "Shield Generator"
+            }
+        ]
+    }
+}

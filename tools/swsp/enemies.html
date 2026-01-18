@@ -1,0 +1,27 @@
+<html lang="en-US">
+    <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
+        <meta content="utf-8" http-equiv="encoding">
+        <link href="./style.css" rel="stylesheet">
+        <title>Enemy List - Solo Shatterpoint</title>
+    </head>
+    <body>
+        <script type="text/javascript" src="util.js"></script>
+        <table>
+            
+        </table>
+        <div id="enemies" style="font-size: 24;"></div>
+        <script>
+            withEnemies((ENEMIES) => {
+                const urlParams = new URLSearchParams(window.location.search);
+                var name = urlParams.get("name");
+                if (name)
+                    document.getElementById("enemies").innerHTML = renderEnemy(name, true);
+                else
+                    document.getElementById("enemies").innerHTML = Object.values(ENEMIES).map((unit) => renderEnemy(unit, true)).join("<hr>");
+            });
+        </script>
+    </body>
+</html>

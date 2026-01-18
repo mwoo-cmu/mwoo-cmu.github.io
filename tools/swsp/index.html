@@ -1,0 +1,244 @@
+<html lang="en-US">
+    <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
+        <meta content="utf-8" http-equiv="encoding">
+        <link href="./style.css" rel="stylesheet">
+        <title>Setup - Solo Shatterpoint</title>
+    </head>
+    <body>
+        <script type="text/javascript" src="util.js"></script>
+        <!-- Shatterpoint Icons (put in {} e.g. "text&nbsp;{1}&nbsp;more text")
+         1 = pinned
+         3 = hunker
+         4 = exposed
+         5 = strained
+         6 = durability
+         8 = character
+         9 = disarmed
+         a = strike
+         b = critical
+         c = attack expertise
+         d = failure
+         e = block
+         f = defence expertise
+         g = range
+         h = dash
+         i = reactive ability
+         j = active ability
+         k = tactics ability
+         l = innate ability
+         m = identity ability
+         n = ranged
+         o = melee
+         p = shove
+         q = damage
+         r = heal
+         s = reposition
+         t = jump
+         u = climb
+         v = force
+         w = durability in a circle
+         x = advance
+        -->
+        <datalist id="primaryDatalist"></datalist>
+        <datalist id="secondaryDatalist"></datalist>
+        <datalist id="supportDatalist"></datalist>
+        <datalist id="locationDatalist"></datalist>
+        <datalist id="factionDatalist"></datalist>
+        <datalist id="enemyDatalist"></datalist>
+
+        <a target="_blank" rel="noopener noreferrer" href="./rules.html">Special Rules</a>
+        <br>
+        <input type="radio" id="strikeTeam" name="group" checked>
+        <label for="strikeTeam">Strike Team (3 Characters)</label>
+        <input type="radio" id="squad" name="group">
+        <label for="squad">Squad (2 Strike Teams)</label>
+        <br>
+        <a target="_blank" rel="noopener noreferrer" href="./chars.html">Character List</a>
+        <table>
+            <tr>
+                <td style="border: 1px solid black; padding: 10">
+                    <h1>Strike Team 1</h1>
+                    <input type="text" id="s1Primary" list="primaryDatalist" placeholder="Primary Character">
+                    <br>
+                    <input type="text" id="s1Secondary" list="secondaryDatalist" placeholder="Secondary Character">
+                    <br>
+                    <input type="text" id="s1Support" list="supportDatalist" placeholder="Supporting Character">
+                </td>
+                <td id="secondStrikeTeam" style="display: none; border: 1px solid black; padding: 10">
+                    <h1>Strike Team 2</h1>
+                    <input type="text" id="s2Primary" list="primaryDatalist" placeholder="Primary Character">
+                    <br>
+                    <input type="text" id="s2Secondary" list="secondaryDatalist" placeholder="Secondary Character">
+                    <br>
+                    <input type="text" id="s2Support" list="supportDatalist" placeholder="Supporting Character">
+                </td>
+            </tr>
+        </table>
+        Total Force Pool: <span id="forcePool"></span><span style="font-family: shatterpoint_icons">&nbsp;v</span>
+        <br>
+        <br>
+        <a target="_blank" rel="noopener noreferrer" href="./locations.html">Location List</a>
+        <br>
+        <input type="text" id="location" list="locationDatalist" placeholder="Location">
+        <br>
+        <div id="factionSelector" style="display: none">
+            Player Faction: <input type="text" id="faction" list="factionDatalist" placeholder="Allied Faction">
+            <br>
+            Enemy Faction: <input type="text" id="enemyFaction" list="factionDatalist" placeholder="Enemy Faction">
+        </div>
+        <br>
+        <a target="_blank" rel="noopener noreferrer" href="./enemies.html">Enemy List</a>
+        <br>
+        <input type="text" id="enemy" list="enemyDatalist" placeholder="Enemy Primary Unit">
+        <br>
+        Total Strike Teams (Difficulty): 
+        <input type="number" id="difficulty" placeholder="" value="1"/>
+        <br>
+        <br>
+        Number of Missions: 
+        <input type="number" id="missions" placeholder="" min="1" value="1"/>
+        <br>
+        <button onclick="play()">Play</button>
+        <br>
+        <span id="errorLog" style="color:darkred"></span>
+        <!-- <br>
+        Custom characters, enemies, and locations are stored in localStorage.
+        <br>
+        <textarea id="jsonIn" placeholder="Paste Custom JSON Here"></textarea> -->
+        
+        <!-- we probably want to display the force total, tags, and maybe a description? -->
+        <script>
+            withUnits((data) => {
+                var primaries = "";
+                var secondaries = "";
+                var supporting = "";
+                Object.values(data).forEach((unit) => {
+                    // don't allow selecting hidden units
+                    if (unit["hidden"])
+                        return;
+                    // if a unit is missing abilities, we're just gonna skip it for now
+                    if (!unit.hasOwnProperty("abilities"))
+                        return;
+                    var option = `<option value="${unit["name"]}"></option>`;
+                    if (unit["count"] > 1) {
+                        supporting += option;
+                    } else {
+                        if (unit["abilities"].hasOwnProperty("primary")) {
+                            primaries += option;
+                        }
+                        if (unit["abilities"].hasOwnProperty("secondary")) {
+                            secondaries += option;
+                            supporting += option;
+                        }
+                    }
+                });
+                document.getElementById("primaryDatalist").innerHTML = primaries;
+                document.getElementById("secondaryDatalist").innerHTML = secondaries;
+                document.getElementById("supportDatalist").innerHTML = supporting;
+            });
+
+            withLocations((data) => {
+                document.getElementById("locationDatalist").innerHTML = Object.keys(data).map((key) => `<option value="${key}"></option>`).join("");
+            });
+            document.getElementById("location").addEventListener('change', (event) => {
+                var value = event.target.value;
+                var factionSelector = document.getElementById("factionSelector");
+                if (value === '' || !LOCATIONS.hasOwnProperty(value)) {
+                    document.getElementById("factionDatalist").innerHTML = '';
+                    factionSelector.style.display = 'none';
+                    factionSelector.value = "";
+                } else {
+                    document.getElementById("factionDatalist").innerHTML = Object.keys(LOCATIONS[value]["factions"]).map((faction) => `<option value="${faction}"></option>`).join("");
+                    factionSelector.style.display = 'block';
+                    factionSelector.value = "";
+                }
+            });
+
+            withEnemies((data) => {
+                document.getElementById("enemyDatalist").innerHTML = Object.entries(data).filter(([key, unit]) => unit["deck"]["cards"].length > 0).map(([key, unit]) => `<option value="${key}"></option>`).join("");
+            });
+
+            
+
+            document.getElementById("strikeTeam").addEventListener('change', function() {
+                document.getElementById("secondStrikeTeam").style.display = 'none';
+            });
+            document.getElementById("squad").addEventListener('change', function() {
+                document.getElementById("secondStrikeTeam").style.display = 'table-cell';
+            });
+
+            document.getElementById("s1Primary").addEventListener('change', function() {calcForce()});
+            document.getElementById("s1Secondary").addEventListener('change', function() {calcForce()});
+            document.getElementById("s2Primary").addEventListener('change', function() {calcForce()});
+
+            function calcForce() {
+                if (document.getElementById("squad").checked) {
+                    document.getElementById("forcePool").innerText = getForce(document.getElementById("s1Primary").value) + getForce(document.getElementById("s2Primary").value);
+                } else {
+                    document.getElementById("forcePool").innerText = getForce(document.getElementById("s1Primary").value) + Math.ceil(getForce(document.getElementById("s1Secondary").value) / 2);
+                }
+            }
+
+            function getForce(unit) {
+                if (unit === '' || !UNITS.hasOwnProperty(unit))
+                    return 0;
+                return UNITS[unit]["force"];
+            }
+
+            function play() {
+                var errorLog = document.getElementById("errorLog");
+                errorLog.innerText = "";
+
+                var primary = document.getElementById("s1Primary").value;
+                var secondary = document.getElementById("s1Secondary").value;
+                var supporting = document.getElementById("s1Support").value;
+                if (primary === '' && secondary === '' && supporting === '') {
+                    errorLog.innerText = "ERROR: Please specify at least one valid character to play as!";
+                    return;
+                }
+                var strike1 = `p=${primary}&se=${secondary}&su=${supporting}`;
+                var strike2 = "";
+                if (document.getElementById("squad").checked) {
+                    var primary = document.getElementById("s2Primary").value;
+                    var secondary = document.getElementById("s2Secondary").value;
+                    var supporting = document.getElementById("s2Support").value;
+                    strike2 = `&p2=${primary}&se2=${secondary}&su2=${supporting}`;
+                }
+
+                var location = document.getElementById("location").value;
+                // if (location === '' || !LOCATIONS.hasOwnProperty(location)) {
+                //     errorLog.innerText = "ERROR: Please specify a valid location to play in!";
+                //     return;
+                // }
+                var faction = document.getElementById("faction").value;
+                // if (faction === '' || !LOCATIONS[location]["factions"].hasOwnProperty(faction)) {
+                //     errorLog.innerText = "ERROR: Please specify a valid faction to play with!";
+                //     return;
+                // }
+                var enemyFaction = document.getElementById("enemyFaction").value; 
+                if (enemyFaction !== '' && LOCATIONS[location]["factions"].hasOwnProperty(enemyFaction)) {
+                    enemyFaction = `&enemyFaction=${enemyFaction}`;
+                }
+                
+                var enemies = document.getElementById("enemy").value;
+                // if (enemies === '' || !ENEMIES.hasOwnProperty(enemies)) {
+                //     errorLog.innerText = "ERROR: Please specify a valid enemy to play against!";
+                //     return;
+                // }
+
+                var difficulty = document.getElementById("difficulty").value;
+                if (!difficulty)
+                    difficulty = 0;
+
+                var missions = document.getElementById("missions").value;
+                if (!missions)
+                    missions = 1;
+                
+                window.open(`./emu.html?${strike1}${strike2}&force=${document.getElementById("forcePool").innerText}&location=${location}&faction=${faction}&enemies=${enemies}${enemyFaction}&difficulty=${difficulty}&missions=${missions}`, "_blank");
+            }
+        </script>
+    </body>
+</html>

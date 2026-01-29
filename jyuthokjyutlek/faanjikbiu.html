@@ -14,7 +14,7 @@
     <a href="/index.html"><img style="height: 70px;" src="/images/logo/jhjl.png" alt="越學粵叻"></a>
     <hr>
   </header>
-    <script type="text/javascript" src="/include/util.js"></script>
+    <script type="text/javascript" src="./include/util.js"></script>
     <script>
         var lines;
         const cantoTones = ["˥", "˧˥", "˧", "˨˩", "˩˧", "˨", "˥", "˧", "˨"];
@@ -149,7 +149,7 @@
 
         (function (){
             var xhr = new XMLHttpRequest();
-            xhr.open("GET", "/jyutjik.csv", true);
+            xhr.open("GET", "./jyutjik.csv", true);
             xhr.overrideMimeType('charset=UTF-16');
             xhr.onload = () => {
                 // Request finished. Do processing here.

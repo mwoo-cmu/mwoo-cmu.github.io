@@ -1,6 +1,6 @@
 .article {
   border-collapse: collapse;
-  display: flex;
+  display: table;
   width: 70%;
   left: 15%;
   position: relative;
@@ -129,7 +129,7 @@ ruby {
 }
 
 ruby rt {
-  font-family: VF;
+  font-family: system-ui;
   font-size: medium;
   letter-spacing: normal;
 }

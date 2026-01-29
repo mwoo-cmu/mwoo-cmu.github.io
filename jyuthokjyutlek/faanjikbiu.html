@@ -1,0 +1,247 @@
+<html lang="zh-HK">
+  <head>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+HK" rel="stylesheet">
+    <link href="./tones.css" rel="stylesheet">
+    <link href="./content.css" rel="stylesheet">
+    <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
+    <meta content="utf-8" http-equiv="encoding">
+    <title>翻譯表 (Translation Table) - 越學粵叻</title>
+  </head>
+  <body>
+        <header>
+    <a href="/index.html"><img style="height: 70px;" src="/images/logo/jhjl.png" alt="越學粵叻"></a>
+    <hr>
+  </header>
+    <script type="text/javascript" src="/include/util.js"></script>
+    <script>
+        var lines;
+        const cantoTones = ["˥", "˧˥", "˧", "˨˩", "˩˧", "˨", "˥", "˧", "˨"];
+        const TABLE_HEADER = `<tbody style="width:100%">
+            <tr>
+                <th style="width: 25%"><ruby>廣<rt>gwong˧˥</rt></ruby><ruby>東<rt>dung˥˧</rt></ruby><ruby>話<rt>waa˧˥</rt></ruby></th>
+                <th style="width: 25%"><ruby style="ruby-position: under;"><ruby>文<rt>mjunP</rt></ruby><rt>man˨˩</rt></ruby><ruby style="ruby-position: under;"><ruby>言<rt>ngjonP</rt></ruby><rt>jin˨˩</rt></ruby><ruby style="ruby-position: under;"><ruby>文<rt>mjunP</rt></ruby><rt>man˧˥</rt></ruby></th>
+                <th style="width: 25%"><ruby style="ruby-position: under;"><ruby>台<rt>hoi˨</rt></ruby><rt>toi˨˩</rt></ruby><ruby style="ruby-position: under;"><ruby>山<rt>san˧</rt></ruby><rt>shaan˥˧</rt></ruby><ruby style="ruby-position: under;"><ruby>話<rt>va˧˨˥</rt></ruby><rt>waa˧˥</rt></ruby></th>
+                <th style="width: 25%"><ruby style="ruby-position: under;"><ruby>國<rt>guo˧˥</rt></ruby><rt>gwok˧</rt></ruby><ruby style="ruby-position: under;"><ruby>語<rt>yu˨˩˦</rt></ruby><rt>jyu˩˧</rt></ruby></th>
+            </tr>`;
+        // const classicalTones = ["P", "S", "H", "Y"];
+        // const hoisanTones = [""];
+
+        function jyutpingToRegexKaiping(jyutping) {
+            return jyutping.replace("s", "[s|sh]").replace("z", "[z|ts]").replace("c", "[c|ch]").replace("zh", "[zh|z]");
+        }
+
+        function search(word, ping, lang) {
+            var chineseIdx = 4;
+            var pingIdx = 5; // 6;
+            if (lang === "canto") {
+                chineseIdx = 0;
+                pingIdx = 1;
+            } else if (lang === "hoisan") {
+                chineseIdx = 9;
+                pingIdx = 10; // 11;
+            } else if (lang === "mandarin") {
+                chineseIdx = 14;
+                pingIdx = 15; // 16;
+            }
+            if (ping) {
+                ping = ping.replace(/[1-9]/g, m => {
+                    return cantoTones[parseInt(m) - 1]
+                });
+                console.log(ping);
+            }
+            var exact = "";
+            var substring = "";
+            var related = "";
+            var chineseNoSpace = word.replace(" ", "");
+            ping = ping.replace(" ", "")
+            var pingRegexStr = jyutpingToRegexKaiping(ping);
+            var pingRegex = new RegExp(pingRegexStr);
+            var pingExactRegex = new RegExp("^" + pingRegexStr + "$");
+            lines.forEach((line) => {
+                var segments = line.split(",");
+                if (segments.length < 19)
+                    return;
+                var entryChinese = segments[chineseIdx].replace(" ", "");
+                var entryPing = segments[pingIdx].replace(" ", "");
+
+                if (chineseNoSpace && entryChinese) {
+                    if (entryChinese === chineseNoSpace) {
+                        exact += parseLine(line);
+                        return;
+                    }
+
+                    if (entryChinese.includes(chineseNoSpace) || chineseNoSpace.includes(entryChinese)) {
+                        substring += parseLine(line);
+                        return;
+                    }
+
+                    // NOTE: only works perfectly if there are spaces between chinese words
+                    var words = word.includes(" ") ? word.split(" ") : word.split("");
+                    words.forEach((character) => {
+                        if (entryChinese.includes(character))
+                            related += parseLine(line);
+                    });
+                }
+
+                if (ping && entryPing) {
+                    if (pingExactRegex.test(entryPing)) {
+                        exact += parseLine(line);
+                        return;
+                    }
+
+                    var entryPingRegex = new RegExp(jyutpingToRegexKaiping(entryPing));
+                    if (entryPingRegex.test(ping) || pingRegex.test(entryPing)) {
+                        substring += parseLine(line);
+                        return;
+                    }
+                }
+            });
+            var full = exact + substring + related;
+            document.getElementById("searchTable").innerHTML = full ? TABLE_HEADER + full + "</tbody>" : "";
+        }
+
+        function runSearch() {
+            var word = document.getElementById("chineseInput").value;
+            var ping = document.getElementById("pingInput").value;
+            var lang = document.getElementById("searchForm").searchLang.value;
+            search(word, ping, lang);
+        }
+
+        function splitAlts(chinese, pingtop, pingbot, example, notes) {
+            var text = "";
+            if (chinese.includes(";")) {
+                var ptAlts = pingtop.split(";");
+                var pbAlts = pingbot ? pingbot.split(";") : null;
+                var exAlts = example ? example.split(";") : null;
+                chinese.split(";").forEach((word, idx) => {
+                    text += rubyify(word, ptAlts[idx], pbAlts ? pbAlts[idx] : null) + "<br>";
+                    if (exAlts)
+                        text += `<br>${exAlts[idx]}`;
+                })
+                if (notes)
+                    text += `<br><br>${notes}`;
+            } else {
+                text += rubyify(chinese, pingtop, pingbot);
+                text += `<br>${example}`
+                if (notes)
+                    text += `<br><br>${notes}`;
+            }
+            return text;
+        }
+
+        function parseLine(line) {
+            var segments = line.split(",");
+            if (segments.length < 19)
+                return `<tr colspan="4"><td>erroneous line in data file: ${line}</td></tr>`;
+            var canto = splitAlts(segments[0], segments[1], null, segments[2], segments[3]);
+            var classical = splitAlts(segments[4], segments[6], segments[5], segments[7], segments[8]);
+            var hoisan = splitAlts(segments[9], segments[11], segments[10], segments[12], segments[13]);
+            var manda = splitAlts(segments[14], segments[16], segments[15], segments[17], segments[18]);
+            return `<tr>
+                <td>${canto}</td>
+                <td>${classical}</td>
+                <td>${hoisan}</td>
+                <td>${manda}</td>
+            </tr>`
+        }
+
+        (function (){
+            var xhr = new XMLHttpRequest();
+            xhr.open("GET", "/jyutjik.csv", true);
+            xhr.overrideMimeType('charset=UTF-16');
+            xhr.onload = () => {
+                // Request finished. Do processing here.
+                var table = document.getElementById("translation-table");
+                var content = TABLE_HEADER;
+                if (xhr.readyState === xhr.DONE) {
+                    if (xhr.status === 200) {
+                        var data = xhr.responseText;
+                        lines = data.split(/\r?\n/);
+                        lines.forEach((line) => {
+                            if (line)
+                                content += parseLine(line);
+                        });
+                        table.innerHTML = content + "</tbody>";
+                    }
+                }
+            };
+            xhr.send();
+        })()
+    </script>
+    <div style="width: 15%; position: fixed;">
+      <span style="font-size: 30px;font-family: Noto Sans HK;font-weight: 400;color: black;"><ruby>大<rt>daai6</rt></ruby><ruby>綱<rt>gong1</rt></ruby> <span class="english">(Outline)</span></span>
+      <ul class="outline">
+        <li><a href="#intro"><ruby>引<rt>jan5</rt></ruby><ruby>言<rt>jin4</rt></ruby> <span class="english">(Intro)</span></a></li>
+        
+        <li><a href="#references"><ruby>參<rt>caam1</rt></ruby><ruby>考<rt>haau2</rt></ruby><ruby>書<rt>syu1</rt></ruby><ruby>目<rt>muk6</rt></ruby> <span class="english">(References)</span></a></li>
+      </ul>
+    </div>
+    <table class="article">
+      <tbody>
+        <tr id="">
+          <th lang="zh-HK" class="chinese"><ruby><rb>中<rt>zung˥˧<rb>文<rt>man˧˥<rb>語<rt>jyu˩˧<rb>言<rt>jin˨˩</ruby><ruby><rb>翻<rt>faan˥˧<rb>譯<rt>jik˨<rb>表<rt>biu˧˥</ruby></th>
+          <th lang="en" class="english">Chinese Languages Translation Table</th>
+        </tr>
+        <tr>
+            <td colspan="2">
+                <form id="searchForm">
+                    <fieldset>
+                        <legend>Search Translation Table 搵字:</legend>
+                        <input type="text" id="chineseInput" placeholder="Chinese... 中文詞…" size="">
+                        <input type="text" id="pingInput" placeholder="Transliteration... 粵拼…">
+                        <br>
+                        <label>Language 語言:</label>
+                        <div>
+                            <input type="radio" id="langCanto" name="searchLang" value="canto">
+                            <label for="langCanto">Cantonese 廣東話</label>
+                            
+                            <input type="radio" id="langClassical" name="searchLang" value="classical" checked>
+                            <label for="langClassical">Classical Chinese 文言文</label>
+                            
+                            <input type="radio" id="langHoisan" name="searchLang" value="hoisan">
+                            <label for="langHoisan">Hoisanese 台山話</label>
+                            
+                            <input type="radio" id="langMandarin" name="searchLang" value="mandarin">
+                            <label for="langMandarin">Mandarin 國語</label>
+                        </div>
+                        <button type="button" onclick="runSearch()">Search 搵</button>
+                    </fieldset>
+                </form>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                <table class="fig-table" id="searchTable"></table>
+            </td>
+        </tr>
+        <tr>
+            <td lang="zh-HK" class="chinese"><h2>全翻譯表</h2></td>
+            <td lang="en" class="english"><h2>Full Translation Table</h2></td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                <table class="fig-table" id="translation-table"></table>
+            </td>
+        </tr>
+        <tr id="third-person">
+            <td lang="zh-HK" class="chinese"><h2></h2></td>
+            <td lang="en" class="english"><h2></h2></td>
+        </tr>
+        <tr>
+            <td lang="zh-HK" class="chinese"></td>
+            <td lang="en" class="english"></td>
+        </tr>
+        <tr id="mat-noun">
+            <td lang="zh-HK" class="chinese"><h2></h2></td>
+            <td lang="en" class="english"><h2></h2></td>
+        </tr>
+        <tr>
+            <td lang="zh-HK" class="chinese"></td>
+            <td lang="en" class="english"></td>
+        </tr>
+      </tbody>
+    </table>
+  </body>
+</html>

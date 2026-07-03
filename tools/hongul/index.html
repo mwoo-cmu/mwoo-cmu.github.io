@@ -1,1 +1,1662 @@
+<!DOCTYPE html>
+<html lang="ko">
 
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cantonese Hon-gul Keyboard</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&family=Noto+Serif+KR:wght@300;400;500;700;900&display=swap"
+        rel="stylesheet">
+
+    <!-- simple-keyboard CDN CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/simple-keyboard@latest/build/css/index.css">
+
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <style>
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            background-color: #0d1117;
+            color: #c9d1d9;
+        }
+
+        /* Prioritize Malgun Gothic / Apple SD Gothic Neo with fallbacks */
+        .old-korean-editor {
+            font-family: 'Malgun Gothic', 'Apple SD Gothic Neo', 'Noto Serif KR', 'Noto Sans KR', sans-serif;
+            font-variant-ligatures: normal;
+            font-feature-settings: "ccmp" 1, "jamo" 1, "clig" 1;
+            line-height: 2.2;
+        }
+
+        /* Interactive Ruby Text Styles */
+        ruby {
+            ruby-position: over;
+            margin: 0 2px;
+            padding: 2px 4px;
+            background: rgba(99, 102, 241, 0.12);
+            border-radius: 4px;
+            border-bottom: 1.5px dashed rgba(99, 102, 241, 0.4);
+            transition: all 0.2s ease;
+            cursor: pointer;
+            display: inline-block;
+        }
+
+        ruby:hover {
+            background: rgba(99, 102, 241, 0.25);
+            border-bottom: 1.5px solid rgba(99, 102, 241, 0.8);
+        }
+
+        rt {
+            font-family: 'Noto Sans KR', sans-serif;
+            font-size: 0.55em;
+            color: #818cf8;
+            font-weight: 500;
+            padding-bottom: 2px;
+            user-select: none;
+        }
+
+        /* Simple-Keyboard Theme Overrides */
+        .simple-keyboard.hg-theme-default {
+            background-color: #161b22;
+            border-radius: 12px;
+            padding: 10px;
+            border: 1px solid #30363d;
+        }
+
+        .simple-keyboard.hg-theme-default .hg-button {
+            background: #21262d;
+            color: #c9d1d9;
+            border-bottom: 2px solid #0d1117;
+            font-family: 'Noto Sans KR', sans-serif;
+            border-radius: 6px;
+            font-size: 1.1rem;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.1s ease, transform 0.05s ease;
+        }
+
+        .simple-keyboard.hg-theme-default .hg-button:active {
+            background: #30363d !important;
+            transform: scale(0.97);
+        }
+
+        .simple-keyboard.hg-theme-default .hg-button.hg-activeButton {
+            background: #4f46e5;
+        }
+
+        .simple-keyboard.hg-theme-default .hg-button.special-key {
+            background: #312e81 !important;
+            color: #a5b4fc;
+            font-weight: bold;
+            border: 1px solid #4338ca;
+        }
+
+        .simple-keyboard.hg-theme-default .hg-button.functional-key {
+            background: #161b22 !important;
+            color: #8b949e;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+
+<body class="min-h-screen flex flex-col justify-between">
+
+    <!-- Header Section -->
+    <header id="mainHeader"
+        class="border-b border-slate-800 bg-slate-900/80 backdrop-blur-md sticky top-0 z-10 px-4 py-4 transition-all duration-300 overflow-hidden">
+        <div class="max-w-6xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-4">
+            <div class="flex items-center gap-3">
+                <div class="p-2 bg-indigo-600 rounded-lg text-white">
+                    <i data-lucide="cpu" class="w-6 h-6"></i>
+                </div>
+                <div>
+                    <h1 class="font-extrabold text-xl tracking-tight text-white flex items-center gap-2">
+                        廣東話韓字鍵盤 <span
+                            class="text-xs bg-emerald-500/20 text-emerald-400 font-semibold px-2 py-0.5 rounded-full border border-emerald-500/30">Extensible</span>
+                    </h1>
+                    <p class="text-xs text-slate-400 mt-0.5">Type Jamo sequentially and/or use inline radical/tone
+                        annotations with
+                        word{ruby}</p>
+                </div>
+            </div>
+
+            <!-- Extensible Layout Selection Dropdown -->
+            <div class="flex items-center gap-3">
+                <label for="layoutSelector" class="text-xs font-semibold text-slate-400">Layout:</label>
+                <select id="layoutSelector"
+                    class="bg-slate-800 border border-slate-700 text-slate-100 text-sm rounded-lg px-3 py-1.5 focus:outline-none focus:border-indigo-500 transition-colors cursor-pointer">
+                    <!-- Layout options are dynamically generated on initialization -->
+                </select>
+                <button id="btnToggleKeyboard"
+                    class="p-2 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-lg border border-slate-700 transition-all flex items-center gap-2"
+                    title="Toggle Keyboard">
+                    <i data-lucide="eye" class="w-4.5 h-4.5"></i>
+                </button>
+                <button id="btnHideHeader"
+                    class="sm:hidden p-2 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-lg border border-slate-700 transition-all"
+                    title="Hide Header">
+                    <i data-lucide="chevron-up" class="w-4.5 h-4.5"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Mobile Header Toggle Button (Floating) -->
+    <button id="btnToggleHeaderFloating"
+        class="sm:hidden fixed top-4 right-4 z-40 p-2 bg-slate-800/90 backdrop-blur-md hover:bg-slate-700 text-slate-200 rounded-lg border border-slate-700 shadow-lg transition-all hidden"
+        title="Toggle Header">
+        <i data-lucide="chevron-down" class="w-4.5 h-4.5"></i>
+    </button>
+
+    <!-- Workspace Grid -->
+    <main class="max-w-6xl mx-auto w-full px-4 py-6 flex-grow grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+
+        <!-- Left Column: Rich Text Box Area -->
+        <section class="lg:col-span-7 flex flex-col gap-4 w-full">
+
+            <div
+                class="bg-slate-900 border border-slate-800 rounded-xl p-3 flex flex-wrap items-center justify-between gap-3 shadow-xl">
+                <div class="flex items-center flex-wrap gap-1">
+                    <button id="btnInsertRuby"
+                        class="px-3.5 py-1.5 bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold rounded-lg flex items-center gap-1.5 shadow-lg shadow-indigo-600/10 transition-all">
+                        <span
+                            class="text-[10px] bg-indigo-800 text-white px-1.5 py-0.5 rounded font-mono font-bold">A</span>
+                        <span>Add Ruby Text</span>
+                    </button>
+
+                    <div class="h-5 w-px bg-slate-800 mx-2"></div>
+
+                    <button id="btnFontDec"
+                        class="p-2 text-slate-400 hover:text-white hover:bg-slate-800 rounded-lg transition-colors">
+                        <i data-lucide="minus" class="w-4 h-4"></i>
+                    </button>
+                    <span id="lblFontSize" class="text-xs text-slate-400 font-mono px-2">32px</span>
+                    <button id="btnFontInc"
+                        class="p-2 text-slate-400 hover:text-white hover:bg-slate-800 rounded-lg transition-colors">
+                        <i data-lucide="plus" class="w-4 h-4"></i>
+                    </button>
+                </div>
+
+                <!-- Keyboard Mode Indicator -->
+                <div id="keyboardStatusIndicator"
+                    class="hidden sm:flex items-center gap-2 bg-slate-950 px-3 py-1 rounded-lg border border-slate-800">
+                    <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" id="statusPulse"></span>
+                    <span class="text-xs text-slate-400 font-mono" id="statusText">Old Korean Mode</span>
+                </div>
+
+                <div>
+                    <button id="btnClear"
+                        class="px-3 py-1.5 border border-slate-800 hover:bg-red-950/30 hover:text-red-400 hover:border-red-900/50 text-slate-400 text-xs font-medium rounded-lg transition-all flex items-center gap-1.5">
+                        <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+                        <span>Clear All</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Contenteditable Box -->
+            <div
+                class="relative bg-slate-950 border border-slate-800 rounded-2xl shadow-inner min-h-[350px] lg:min-h-[420px] flex flex-col">
+                <div id="editor"
+                    class="old-korean-editor flex-grow w-full p-6 text-slate-100 text-3xl outline-none overflow-y-auto"
+                    contenteditable="true" spellcheck="false" inputmode="none"></div>
+
+                <div id="editorPlaceholder"
+                    class="absolute top-6 left-6 text-slate-600 pointer-events-none text-2xl hidden">
+                    你有冇諗過想用韓字寫廣東話？冇？哦。得我會諗得到啲噉嘅嘢呀？哦。噉凈係我會用呢個鍵盤……
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <button id="btnCopyText"
+                    class="w-full py-2.5 bg-slate-800 hover:bg-slate-700 text-slate-200 text-sm font-semibold rounded-xl border border-slate-700 flex items-center justify-center gap-2 transition-all">
+                    <i data-lucide="copy" class="w-4 h-4"></i>
+                    <span>Copy Pure Text</span>
+                </button>
+                <button id="btnCopyHTML"
+                    class="w-full py-2.5 bg-slate-900 hover:bg-slate-800 text-slate-300 text-sm font-semibold rounded-xl border border-slate-800 flex items-center justify-center gap-2 transition-all">
+                    <i data-lucide="code" class="w-4 h-4"></i>
+                    <span>Copy HTML Markup</span>
+                </button>
+            </div>
+
+        </section>
+
+        <!-- Right Column: Interactive Diagnostic Info and Mapping Guides -->
+        <section class="lg:col-span-5 flex flex-col gap-5 w-full">
+
+            <!-- Real-time Diagnostic Dashboard -->
+            <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 shadow-xl">
+                <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block mb-2">Automaton Cluster
+                    Stream</span>
+                <div class="bg-slate-950 rounded-lg p-3 font-mono text-xs space-y-1.5 text-slate-300">
+                    <div class="flex justify-between border-b border-slate-800/60 pb-1.5 mb-1.5">
+                        <span>Parser State:</span>
+                        <span id="diagState" class="text-emerald-400 font-bold">EMPTY</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span>Choseong (L):</span>
+                        <span id="diagL" class="text-indigo-400 font-semibold">-</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span>Jungseong (V):</span>
+                        <span id="diagV" class="text-indigo-400 font-semibold">-</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span>Jongseong (T):</span>
+                        <span id="diagT" class="text-indigo-400 font-semibold">-</span>
+                    </div>
+                    <div
+                        class="flex justify-between border-t border-slate-800/60 pt-1.5 mt-1.5 text-[10px] text-slate-500">
+                        <span>Combined Hex Payload:</span>
+                        <span id="diagHex" class="text-slate-400">-</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Testing Guide card -->
+            <!-- <div
+                class="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-xl text-xs text-slate-400 space-y-3">
+                <h3 class="font-bold text-slate-200 flex items-center gap-1.5">
+                    <i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-400"></i>
+                    <span>Try typing with the inline syntax!</span>
+                </h3>
+                <div class="space-y-2">
+                    <div class="p-3 bg-slate-950 rounded border border-slate-800 space-y-2">
+                        <p class="font-bold text-slate-300 flex items-center gap-1">
+                            <i data-lucide="sparkles" class="w-3.5 h-3.5 text-amber-400"></i>
+                            <span>How to type inline annotations:</span>
+                        </p>
+                        <p class="leading-relaxed">
+                            Type <span class="font-bold text-slate-200">r → x</span> to make <span
+                                class="text-indigo-400 font-semibold">ᄀᆞ</span>, then type <span
+                                class="font-bold text-slate-200">{</span>.
+                            The keyboard automatically swaps layouts. Type <span class="font-bold text-slate-200">r →
+                                k</span> to make <span class="text-indigo-400 font-semibold">가</span>, and press <span
+                                class="font-bold text-slate-200">}</span>.
+                        </p>
+                        <p class="font-mono text-emerald-400 font-semibold text-[11px] mt-1">
+                            Result: ᄀᆞ{가} matches and turns into ᄀᆞ with 가 above it!
+                        </p>
+                    </div>
+                    <div class="p-2 bg-slate-950 rounded border border-slate-800">
+                        <p class="font-bold text-slate-300">Layout Combinations Available:</p>
+                        <p class="mt-1 font-mono text-[10px]">
+                            • ᅎ (Ssangyetsieung): <span class="text-indigo-400 font-semibold">w → w</span><br>
+                            • ᅔ (Chieubhieut): <span class="text-indigo-400 font-semibold">c → g</span><br>
+                            • ᄼ (Chitueumsios): <span class="text-indigo-400 font-semibold">t → d</span>
+                        </p>
+                    </div>
+                </div>
+            </div> -->
+
+        </section>
+
+    </main>
+
+    <!-- Virtual On-Screen Touch Keyboard -->
+    <section id="keyboardWrapper"
+        class="fixed bottom-0 left-0 right-0 bg-slate-900/95 backdrop-blur-md border-t border-slate-800 px-4 py-5 shadow-2xl transition-all duration-300 max-h-[450px] overflow-hidden z-50">
+        <div class="max-w-5xl mx-auto flex flex-col gap-4">
+            <div class="flex items-center justify-between px-2">
+                <span class="text-xs text-slate-400 flex items-center gap-1">
+                    <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" id="virtualPulse"></span>
+                    <span id="lblActiveKeyboardType">Universal Old Jamo Layout</span>
+                </span>
+                <span class="text-xs font-mono text-slate-500">Universal Old Jamo Layout</span>
+            </div>
+
+            <div class="simple-keyboard"></div>
+        </div>
+    </section>
+
+    <!-- Ruby Modal -->
+    <div id="rubyModal"
+        class="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/80 backdrop-blur-sm hidden opacity-0 transition-opacity duration-200">
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 w-full max-w-md shadow-2xl transform scale-95 transition-transform duration-200"
+            id="rubyModalContent">
+
+            <div class="flex items-center gap-3 mb-4">
+                <div class="p-2 bg-indigo-600/20 text-indigo-400 rounded-lg">
+                    <i data-lucide="highlighter" class="w-5 h-5"></i>
+                </div>
+                <div>
+                    <h3 class="font-bold text-white text-base">Add Ruby Annotation</h3>
+                    <p class="text-xs text-slate-400">Display mini guide/pronunciation helper on top of selection</p>
+                </div>
+            </div>
+
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-xs font-semibold text-slate-400 mb-1">Base Character(s)</label>
+                    <input type="text" id="modalBaseInput"
+                        class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-slate-100 font-serif text-lg focus:outline-none focus:border-indigo-500"
+                        placeholder="e.g. ᄀᆞ">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-400 mb-1">Ruby text (displays above)</label>
+                    <input type="text" id="modalRubyInput"
+                        class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-slate-100 text-sm focus:outline-none focus:border-indigo-500"
+                        placeholder="e.g. 가" autofocus>
+                </div>
+            </div>
+
+            <div class="flex items-center justify-end gap-2 mt-6">
+                <button id="btnCancelRuby"
+                    class="px-4 py-2 border border-slate-800 hover:bg-slate-800 text-slate-300 text-xs font-semibold rounded-lg transition-colors">
+                    Cancel
+                </button>
+                <button id="btnConfirmRuby"
+                    class="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold rounded-lg transition-colors">
+                    Add Annotation
+                </button>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Notification Toast -->
+    <div id="toast"
+        class="fixed bottom-6 right-6 z-50 bg-slate-800 border border-slate-700 text-slate-100 px-4 py-3 rounded-xl shadow-2xl flex items-center gap-3 transform translate-y-12 opacity-0 pointer-events-none transition-all duration-300">
+        <div id="toastIcon" class="p-1.5 rounded-lg bg-indigo-600/20 text-indigo-400">
+            <i data-lucide="check" class="w-4 h-4"></i>
+        </div>
+        <span id="toastText" class="text-xs font-medium">Copied!</span>
+    </div>
+
+    <!-- simple-keyboard CDN JS -->
+    <script src="https://cdn.jsdelivr.net/npm/simple-keyboard@latest/build/index.js"></script>
+
+    <script>
+        // Init Lucide
+        lucide.createIcons();
+
+        const editor = document.getElementById('editor');
+        const editorPlaceholder = document.getElementById('editorPlaceholder');
+        const btnToggleKeyboard = document.getElementById('btnToggleKeyboard');
+        const keyboardWrapper = document.getElementById('keyboardWrapper');
+        const btnInsertRuby = document.getElementById('btnInsertRuby');
+        const rubyModal = document.getElementById('rubyModal');
+        const rubyModalContent = document.getElementById('rubyModalContent');
+        const modalBaseInput = document.getElementById('modalBaseInput');
+        const modalRubyInput = document.getElementById('modalRubyInput');
+        const btnCancelRuby = document.getElementById('btnCancelRuby');
+        const btnConfirmRuby = document.getElementById('btnConfirmRuby');
+        const btnCopyText = document.getElementById('btnCopyText');
+        const btnCopyHTML = document.getElementById('btnCopyHTML');
+        const btnClear = document.getElementById('btnClear');
+        const btnFontDec = document.getElementById('btnFontDec');
+        const btnFontInc = document.getElementById('btnFontInc');
+        const lblFontSize = document.getElementById('lblFontSize');
+        const toast = document.getElementById('toast');
+        const layoutSelector = document.getElementById('layoutSelector');
+        const lblActiveKeyboardType = document.getElementById('lblActiveKeyboardType');
+        const keyboardStatusIndicator = document.getElementById('keyboardStatusIndicator');
+        const statusPulse = document.getElementById('statusPulse');
+        const statusText = document.getElementById('statusText');
+        const virtualPulse = document.getElementById('virtualPulse');
+
+        const btnToggleHeaderFloating = document.getElementById('btnToggleHeaderFloating');
+        const btnHideHeader = document.getElementById('btnHideHeader');
+        const mainHeader = document.getElementById('mainHeader');
+
+        // Diagnostics Elements
+        const diagState = document.getElementById('diagState');
+        const diagL = document.getElementById('diagL');
+        const diagV = document.getElementById('diagV');
+        const diagT = document.getElementById('diagT');
+        const diagHex = document.getElementById('diagHex');
+
+        let currentFontSize = 32;
+        let savedRange = null;
+        let isKeyboardVisible = true;
+
+        // Auto-switch back tracking
+        let savedLayoutBeforeAnnotation = "standard-old-korean";
+
+        // Track the cursor position state inside the editor across focus loss events
+        let lastActiveRange = null;
+
+        // =======================================================
+        // REGISTERABLE EXTENSIBLE KEYBOARD SCHEMAS
+        // =======================================================
+        const KEYBOARD_LAYOUTS = {};
+
+        // 1. Register: Standard Old Korean Keyboard Layout
+        KEYBOARD_LAYOUTS["standard-old-korean"] = {
+            name: "Standard Old Korean",
+            jamoMap: {
+                'q': { type: 'C', l: '\u1107', t: '\u11B8' }, // ㅂ
+                'w': { type: 'C', l: '\u110C', t: '\u11BD' }, // ㅈ
+                'e': { type: 'C', l: '\u1103', t: '\u11AE' }, // ㄷ
+                'r': { type: 'C', l: '\u1100', t: '\u11A8' }, // ㄱ
+                't': { type: 'C', l: '\u1109', t: '\u11BA' }, // ㅅ
+                'y': { type: 'V', v: '\u116D' },             // ㅛ
+                'u': { type: 'V', v: '\u1167' },             // ㅕ
+                'i': { type: 'V', v: '\u1163' },             // ㅑ
+                'o': { type: 'V', v: '\u1162' },             // ㅐ
+                'p': { type: 'V', v: '\u1166' },             // ㅔ
+                'a': { type: 'C', l: '\u1106', t: '\u11B7' }, // ㅁ
+                's': { type: 'C', l: '\u1102', t: '\u11AB' }, // ㄴ
+                'd': { type: 'C', l: '\u110B', t: '\u11BC' }, // ㅇ
+                'f': { type: 'C', l: '\u1105', t: '\u11AF' }, // ㄹ
+                'g': { type: 'C', l: '\u1112', t: '\u11C2' }, // ㅎ
+                'h': { type: 'V', v: '\u1169' },             // ㅗ
+                'j': { type: 'V', v: '\u1165' },             // ㅓ
+                'k': { type: 'V', v: '\u1161' },             // ㅏ
+                'l': { type: 'V', v: '\u1175' },             // ㅣ
+                'z': { type: 'C', l: '\u110F', t: '\u11BF' }, // ㅋ
+                'x': { type: 'C', l: '\u1110', t: '\u11C0' }, // ᄐ
+                'c': { type: 'C', l: '\u110E', t: '\u11BE' }, // ㅊ
+                'v': { type: 'C', l: '\u1111', t: '\u11C1' }, // ㅍ
+                'b': { type: 'V', v: '\u1172' },             // ㅠ
+                'n': { type: 'V', v: '\u116E' },             // ㅜ
+                'm': { type: 'V', v: '\u1173' },             // ㅡ
+
+                // Shift Mapping layers
+                'Q': { type: 'C', l: '\u1108', t: '' },       // ㅃ
+                'W': { type: 'C', l: '\u110D', t: '' },       // ㅉ
+                'E': { type: 'C', l: '\u1104', t: '' },       // ㄸ
+                'R': { type: 'C', l: '\u1101', t: '\u11A9' }, // ㄲ
+                'T': { type: 'C', l: '\u110A', t: '\u11BB' }, // ㅆ
+                'Y': { type: 'V', v: '\uD7B4' },              // ힴ
+                'U': { type: 'V', v: '\u1191' },
+                'I': { type: 'V', v: '\u1178' },
+                'O': { type: 'V', v: '\u1164' },             // ㅒ
+                'P': { type: 'V', v: '\u1168' },             // ㅖ
+
+                // Historical modifications
+                'A': { type: 'C', l: '\u1140', t: '\u11EB' }, // ㅿ (Ban-siot)
+                'S': { type: 'C', l: '\u115D', t: '\u11AD' },
+                'D': { type: 'C', l: '\u114C', t: '\u11F0' }, // ㆁ (Yets-ieung)
+                'F': { type: 'C', l: '\u111A', t: '\u11B6' },
+                'G': { type: 'C', l: '\u1159', t: '\u11F9' }, // ㆆ (Yeorinhieut)
+                'H': { type: 'V', v: '\u1183' },
+                // 'J': {},
+                'K': { type: 'V', v: '\u119E' },
+                'L': { type: 'V', v: '\u1194' },
+
+                'Z': { type: 'C', l: '\u113C', t: '' },
+                'X': { type: 'C', l: '\u113E', t: '' },
+                'C': { type: 'C', l: '\u114E', t: '' },
+                'V': { type: 'C', l: '\u1150', t: '' },
+                'B': { type: 'C', l: '\u1154', t: '' }, // ㅸ (Sungyeongeum-bieup)
+                'N': { type: 'C', l: '\u1155', t: '' },
+                'M': { type: 'V', l: '\u1195' }
+            },
+            charToKey: {
+                'ㅂ': 'q', 'ㅈ': 'w', 'ㄷ': 'e', 'ㄱ': 'r', 'ㅅ': 't', 'ㅛ': 'y', 'ㅕ': 'u', 'ㅑ': 'i', 'ㅐ': 'o', 'ㅔ': 'p',
+                'ㅁ': 'a', 'ㄴ': 's', 'ㅇ': 'd', 'ㄹ': 'f', 'ㅎ': 'g', 'ㅗ': 'h', 'ㅓ': 'j', 'ㅏ': 'k', 'ㅣ': 'l',
+                'ㅋ': 'z', 'ㆍ': 'x', 'ᆞ': 'x', 'ㅊ': 'c', 'ㅍ': 'v', 'ㅠ': 'b', 'ㅜ': 'n', 'ㅡ': 'm',
+                'ㅃ': 'Q', 'ㅉ': 'W', 'ㄸ': 'E', 'ㄲ': 'R', 'ㅆ': 'T', 'ㅒ': 'O', 'ㅖ': 'P',
+                'ㅿ': 'S', 'ㆁ': 'D', 'ㆆ': 'G', 'ㅸ': 'B'
+            },
+            choseongCombinations: {
+                '\u1107\u1109': '\u1121', // ᄇ + ᄉ = ᄡ
+                '\u1109\u1100': '\u112D', // ᄉ + ᄀ = ᄭ
+                '\u1109\u1103': '\u112F', // ᄉ + ᄃ = ᄯ
+                '\u1109\u1107': '\u1132', // ᄉ + ᄇ = ᄲ
+                '\u1109\u110C': '\u1136', // ᄉ + ᄌ = ᄶ
+
+                // Advanced combinations (Requested Initials)
+                '\u110C\u110C': '\u114E', // ㅈ + ㅈ = ᅎ (Ssang-yetsieung)
+                '\u110E\u1112': '\u1154', // ㅊ + ㅎ = ᅔ (Chieubhieut)
+                '\u1109\u110B': '\u113C', // ㅅ + ㅇ = ᄼ (Chitueumsios)
+
+                // Additional clusters
+                '\u1105\u1112': '\u111A', // ㄹ + ㅎ = ᄚ
+                '\u1107\u110B': '\u112B', // ㅂ + ㅇ = ㅸ (Sungyeongeum-bieup)
+                '\u110B\u1107': '\u1144', // ㅇ + ㅂ = ᅄ
+                '\u110B\u1111': '\u114B', // ㅇ + ㅍ = ᅋ
+                '\u1111\u110B': '\u1157', // ㅍ + ㅇ = ᅗ (ㆄ)
+            },
+            vowelCombinations: {
+                '\u1169\u1161': '\u116A', // ㅗ + ㅏ = ㅘ
+                '\u1169\u1162': '\u116B', // ㅗ + ㅐ = ㅙ
+                '\u1169\u1175': '\u116C', // ㅗ + ㅣ = ㅚ
+                '\u116E\u1165': '\u116F', // ㅜ + ㅓ = ㅝ
+                '\u116E\u1166': '\u1170', // ㅜ + ㅔ = ㅞ
+                '\u116E\u1175': '\u1171', // ㅜ + ㅣ = ㅟ
+                '\u1173\u1175': '\u1174', // ㅡ + ㅣ = ㅢ
+                '\u119E\u1175': '\u11A1', // ㆍ + ㅣ = ᆢ
+
+                // Keyman specific Old Vowels
+                '\u116D\u1175': '\u1188', // ㅛ + ㅣ = ᆈ (Yo-I)
+                '\u1169\u1166': '\u1180', // ㅗ + ㅔ = ᆀ (O-E)
+                '\u1169\u1169': '\u1182', // ㅗ + ㅗ = 2
+                '\u1169\u116E': '\u1183', // ㅗ + ㅜ = ᆃ (O-U)
+                '\u1169\u1165': '\u117F', // ㅗ + ㅓ = ᅿ (O-Eo)
+
+                '\u116D\u1163': '\u1184', // ㅛ + ㅑ = ᆄ (Yo-Ya)
+                '\u116E\u116E': '\u118D', // ㅜ + ㅜ = ᆍ (U-U)
+                '\u1172\u1167': '\u1191', // ㅠ + ㅕ = ᆑ (Yu-Yeo)
+                '\u1173\u1173': '\u1196', // ㅡ + ㅡ = ᆖ (Eu-Eu)
+                '\u119E\u119E': '\u11A2'  // ㆍ + ㆍ = ᆢ (AraeA-AraeA)
+            },
+            jongseongCombinations: {
+                '\u11A8\u11BA': '\u11AA', // ᆨ + ᆺ = ᆪ
+                '\u11AB\u11BD': '\u11AC', // ᆫ + ᆽ = ᆬ
+                '\u11AB\u11C2': '\u11AD', // ᆫ + ᇂ = ᆭ
+                '\u11AF\u11A8': '\u11B0', // ᆯ + ᆨ = ᆰ
+                '\u11AF\u11B7': '\u11B1', // ᆯ + ᆷ = ᆱ
+                '\u11AF\u11B8': '\u11B2', // ᆯ + ᆸ = ᆲ
+                '\u11AF\u11BA': '\u11B3', // ᆯ + ᆺ = ᆳ
+                '\u11AF\u11C0': '\u11B4', // ᆯ + ᇀ = ᆴ
+                '\u11AF\u11C1': '\u11B5', // ᆯ + 騨 = ᆵ
+                '\u11AF\u11C2': '\u11B6', // ᆯ + ᇂ = ᆶ
+                '\u11B8\u11BA': '\u11B9'  // ᆸ + ᆺ = ᆹ
+            },
+            virtualLayout: {
+                default: [
+                    "1 2 3 4 5 6 7 8 9 0",
+                    "ㅂ ㅈ ㄷ ㄱ ㅅ ㅛ ㅕ ㅑ ㅐ ㅔ",
+                    "ㅁ ㄴ ㅇ ㄹ ㅎ ㅗ ㅓ ㅏ ㅣ",
+                    "{shift} ㅋ ㅌ ㅊ ㅍ ㅠ ㅜ ㅡ {backspace}",
+                    "{123} , {openbrace} {space} {closebrace} . {enter}"
+                ],
+                shift: [
+                    "! @ # $ % ^ & * ( )",
+                    "ㅃ ㅉ ㄸ ㄲ ㅆ ힴ ᆑ ᅸ ㅒ ㅖ",
+                    "ㅿ ᅝ ᅌ ᄚ ᅙ ᆃ ᆞ ᆔ",
+                    "{shift} ᄼ ᄾ ᅎ ᅐ ᅔ ᅕ {backspace}",
+                    "{123} , {openbrace} {space} {closebrace} . {enter}"
+                ],
+                special: [
+                    "1 2 3 4 5 6 7 8 9 0",
+                    "@ # $ _ & - + ( ) /",
+                    "{=<>} * \" ' : ; ! ? {backspace}",
+                    "{ABC} , {space} . {enter}"
+                ],
+                special2: [
+                    "~ ` | • √ π ÷ × § ∆",
+                    "£ ¢ € ¥ ^ ° = { } \\",
+                    "{123} % © ® ™ ✓ [ ] {backspace}",
+                    "{ABC} , {space} . {enter}"
+                ]
+            }
+        };
+
+        // Register Cantonese-Optimised Korean Keyboard Layout
+        KEYBOARD_LAYOUTS["cantonese-korean"] = {
+            name: "Cantonese Korean",
+            jamoMap: {
+                'q': { type: 'C', l: '\u1107', t: '\u11B8' }, // ㅂ
+                'w': { type: 'C', l: '\u110C', t: '\u11BD' }, // ㅈ
+                'e': { type: 'C', l: '\u1103', t: '\u11AE' }, // ㄷ
+                'r': { type: 'C', l: '\u1100', t: '\u11A8' }, // ㄱ
+                't': { type: 'C', l: '\u1109', t: '\u11BA' }, // ㅅ
+                'y': { type: 'V', v: '\u116D' },             // ㅛ
+                'u': { type: 'V', v: '\u1167' },             // ㅕ
+                'i': { type: 'V', v: '\u1163' },             // ㅑ
+                'o': { type: 'V', v: '\u1162' },             // ㅐ
+                'p': { type: 'V', v: '\u1166' },             // ㅔ
+                'a': { type: 'C', l: '\u1106', t: '\u11B7' }, // ㅁ
+                's': { type: 'C', l: '\u1102', t: '\u11AB' }, // ㄴ
+                'd': { type: 'C', l: '\u110B', t: '\u11BC' }, // ㅇ
+                'f': { type: 'C', l: '\u1105', t: '\u11AF' }, // ㄹ
+                'g': { type: 'C', l: '\u1112', t: '\u11C2' }, // ㅎ
+                'h': { type: 'V', v: '\u1169' },             // ㅗ
+                'j': { type: 'V', v: '\u1165' },             // ㅓ
+                'k': { type: 'V', v: '\u1161' },             // ㅏ
+                'l': { type: 'V', v: '\u1175' },             // ㅣ
+                'z': { type: 'C', l: '\u110F', t: '\u11BF' }, // ㅋ
+                'x': { type: 'C', l: '\u1110', t: '\u11C0' }, // ᄐ
+                'c': { type: 'C', l: '\u110E', t: '\u11BE' }, // ㅊ
+                'v': { type: 'C', l: '\u1111', t: '\u11C1' }, // ㅍ
+                'b': { type: 'V', v: '\u1172' },             // ㅠ
+                'n': { type: 'V', v: '\u116E' },             // ㅜ
+                'm': { type: 'V', v: '\u1173' },             // ㅡ
+
+                // Shift Mapping layers
+                'Q': { type: 'C', l: '\u1108', t: '' },       // ㅃ
+                'W': { type: 'C', l: '\u110D', t: '' },       // ㅉ
+                'E': { type: 'C', l: '\u1104', t: '' },       // ㄸ
+                'R': { type: 'C', l: '\u1101', t: '\u11A9' }, // ㄲ
+                'T': { type: 'C', l: '\u110A', t: '\u11BB' }, // ㅆ
+                'Y': { type: 'V', v: '\uD7B4' },              // ힴ
+                'U': { type: 'V', v: '\u1191' },
+                'I': { type: 'V', v: '\u1178' },
+                'O': { type: 'V', v: '\u1164' },             // ㅒ
+                'P': { type: 'V', v: '\u1168' },             // ㅖ
+
+                // Historical modifications
+                'A': { type: 'C', l: '\u1140', t: '\u11EB' }, // ㅿ (Ban-siot)
+                'S': { type: 'C', l: '\u115D', t: '\u11AD' },
+                'D': { type: 'C', l: '\u114C', t: '\u11F0' }, // ㆁ (Yets-ieung)
+                'F': { type: 'C', l: '\u111A', t: '\u11B6' },
+                'G': { type: 'C', l: '\u1159', t: '\u11F9' }, // ㆆ (Yeorinhieut)
+                'H': { type: 'V', v: '\u1183' },
+                // 'J': {},
+                'K': { type: 'V', v: '\u119E' },
+                'L': { type: 'V', v: '\u1194' },
+
+                'Z': { type: 'C', l: '\u113C', t: '' },
+                'X': { type: 'C', l: '\u113E', t: '' },
+                'C': { type: 'C', l: '\u114E', t: '' },
+                'V': { type: 'C', l: '\u1150', t: '' },
+                'B': { type: 'C', l: '\u1154', t: '' }, // ㅸ (Sungyeongeum-bieup)
+                'N': { type: 'C', l: '\u1155', t: '' },
+                'M': { type: 'V', l: '\u1195' }
+            },
+            charToKey: {
+                'ㅂ': 'q', 'ㅈ': 'w', 'ㄷ': 'e', 'ㄱ': 'r', 'ㅅ': 't', 'ㅛ': 'y', 'ㅕ': 'u', 'ㅑ': 'i', 'ㅐ': 'o', 'ㅔ': 'p',
+                'ㅁ': 'a', 'ㄴ': 's', 'ㅇ': 'd', 'ㄹ': 'f', 'ㅎ': 'g', 'ㅗ': 'h', 'ㅓ': 'j', 'ㅏ': 'k', 'ㅣ': 'l',
+                'ㅋ': 'z', 'ㆍ': 'x', 'ᆞ': 'x', 'ㅊ': 'c', 'ㅍ': 'v', 'ㅠ': 'b', 'ㅜ': 'n', 'ㅡ': 'm',
+                'ㅃ': 'Q', 'ㅉ': 'W', 'ㄸ': 'E', 'ㄲ': 'R', 'ㅆ': 'T', 'ㅒ': 'O', 'ㅖ': 'P',
+                'ㅿ': 'S', 'ㆁ': 'D', 'ㆆ': 'G', 'ㅸ': 'B'
+            },
+            choseongCombinations: {
+                '\u1107\u1109': '\u1121', // ᄇ + ᄉ = ᄡ
+                '\u1109\u1100': '\u112D', // ᄉ + ᄀ = ᄭ
+                '\u1109\u1103': '\u112F', // ᄉ + ᄃ = ᄯ
+                '\u1109\u1107': '\u1132', // ᄉ + ᄇ = ᄲ
+                '\u1109\u110C': '\u1136', // ᄉ + ᄌ = ᄶ
+
+                // Advanced combinations (Requested Initials)
+                '\u110C\u110C': '\u114E', // ㅈ + ㅈ = ᅎ (Ssang-yetsieung)
+                '\u110E\u1112': '\u1154', // ㅊ + ㅎ = ᅔ (Chieubhieut)
+                '\u1109\u110B': '\u113C', // ㅅ + ㅇ = ᄼ (Chitueumsios)
+
+                // Additional clusters
+                '\u1105\u1112': '\u111A', // ㄹ + ㅎ = ᄚ
+                '\u1107\u110B': '\u112B', // ㅂ + ㅇ = ㅸ (Sungyeongeum-bieup)
+                '\u110B\u1107': '\u1144', // ㅇ + ㅂ = ᅄ
+                '\u110B\u1111': '\u114B', // ㅇ + ㅍ = ᅋ
+                '\u1111\u110B': '\u1157', // ㅍ + ㅇ = ᅗ (ㆄ)
+            },
+            vowelCombinations: {
+                '\u1169\u1161': '\u116A', // ㅗ + ㅏ = ㅘ
+                '\u1169\u1162': '\u116B', // ㅗ + ㅐ = ㅙ
+                '\u1169\u1175': '\u116C', // ㅗ + ㅣ = ㅚ
+                '\u116E\u1165': '\u116F', // ㅜ + ㅓ = ㅝ
+                '\u116E\u1166': '\u1170', // ㅜ + ㅔ = ㅞ
+                '\u116E\u1175': '\u1171', // ㅜ + ㅣ = ㅟ
+                '\u1173\u1175': '\u1174', // ㅡ + ㅣ = ㅢ
+                '\u119E\u1175': '\u11A1', // ㆍ + ㅣ = ᆢ
+
+                // Keyman specific Old Vowels
+                '\u116D\u1175': '\u1188', // ㅛ + ㅣ = ᆈ (Yo-I)
+                '\u1169\u1166': '\u1180', // ㅗ + ㅔ = ᆀ (O-E)
+                '\u1169\u1169': '\u1182', // ㅗ + ㅗ = 2
+                '\u1169\u116E': '\u1183', // ㅗ + ㅜ = ᆃ (O-U)
+                '\u1169\u1165': '\u117F', // ㅗ + ㅓ = ᅿ (O-Eo)
+
+                '\u116D\u1163': '\u1184', // ㅛ + ㅑ = ᆄ (Yo-Ya)
+                '\u116E\u116E': '\u118D', // ㅜ + ㅜ = ᆍ (U-U)
+                '\u1172\u1167': '\u1191', // ㅠ + ㅕ = ᆑ (Yu-Yeo)
+                '\u1173\u1173': '\u1196', // ㅡ + ㅡ = ᆖ (Eu-Eu)
+                '\u119E\u119E': '\u11A2'  // ㆍ + ㆍ = ᆢ (AraeA-AraeA)
+            },
+            jongseongCombinations: {
+                '\u11A8\u11BA': '\u11AA', // ᆨ + ᆺ = ᆪ
+                '\u11AB\u11BD': '\u11AC', // ᆫ + ᆽ = ᆬ
+                '\u11AB\u11C2': '\u11AD', // ᆫ + ᇂ = ᆭ
+                '\u11AF\u11A8': '\u11B0', // ᆯ + ᆨ = ᆰ
+                '\u11AF\u11B7': '\u11B1', // ᆯ + ᆷ = ᆱ
+                '\u11AF\u11B8': '\u11B2', // ᆯ + ᆸ = ᆲ
+                '\u11AF\u11BA': '\u11B3', // ᆯ + ᆺ = ᆳ
+                '\u11AF\u11C0': '\u11B4', // ᆯ + ᇀ = ᆴ
+                '\u11AF\u11C1': '\u11B5', // ᆯ + 騨 = ᆵ
+                '\u11AF\u11C2': '\u11B6', // ᆯ + ᇂ = ᆶ
+                '\u11B8\u11BA': '\u11B9'  // ᆸ + ᆺ = ᆹ
+            },
+            virtualLayout: {
+                default: [
+                    "1 2 3 4 5 6 7 8 9 0",
+                    "ㅂ ㅈ ㄷ ㄱ ㅅ ㅛ ㅕ ㅑ ㅐ ㅔ",
+                    "ㅁ ㄴ ㅇ ㄹ ㅎ ㅗ ㅓ ㅏ ㅣ",
+                    "{shift} ㅋ ㅌ ㅊ ㅍ ㅠ ㅜ ㅡ {backspace}",
+                    "{123} , {openbrace} {space} {closebrace} . {enter}"
+                ],
+                shift: [
+                    "! @ # $ % ^ & * ( )",
+                    "ㅃ ㅉ ㄸ ㄲ ㅆ ힴ ᆑ ᅸ ㅒ ㅖ",
+                    "ㅿ ᅝ ᅌ ᄚ ᅙ ᆃ ᆞ ᆔ",
+                    "{shift} ᄼ ᄾ ᅎ ᅐ ᅔ ᅕ {backspace}",
+                    "{123} , {openbrace} {space} {closebrace} . {enter}"
+                ],
+                special: [
+                    "1 2 3 4 5 6 7 8 9 0",
+                    "@ # $ _ & - + ( ) /",
+                    "{=<>} * \" ' : ; ! ? {backspace}",
+                    "{ABC} , {space} . {enter}"
+                ],
+                special2: [
+                    "~ ` | • √ π ÷ × § ∆",
+                    "£ ¢ € ¥ ^ ° = { } \\",
+                    "{123} % © ® ™ ✓ [ ] {backspace}",
+                    "{ABC} , {space} . {enter}"
+                ]
+            }
+        };
+
+        // 2. Register: Annotation Keyboard
+        KEYBOARD_LAYOUTS["radical-tone"] = {
+            name: "Ruby (Radical/Tone)",
+            jamoMap: {
+                'q': '衣',
+                'w': '目',
+                'e': '車',
+                'r': '耳',
+                't': '曰',
+                'y': '日',
+                'u': '冰',
+                'i': '石',
+                'o': '木',
+                'p': '山',
+                'a': '口',
+                's': '心',
+                'd': '手',
+                'f': '人',
+                'g': '言',
+                'h': '水',
+                'j': '火',
+                'k': '土',
+                'l': '雨',
+                'z': '肉',
+                'x': '示',
+                'c': '足',
+                'v': '糸',
+                'b': '食',
+                'n': '金',
+                'm': '艸',
+                '1': '˥˧',
+                '2': '˧˥',
+                '3': '˧',
+                '4': '˨˩',
+                '5': '˩˧',
+                '6': '˨',
+                '7': '˥',
+                '8': '˦',
+                '9': '˨',
+                '0': '病',
+            },
+            charToKey: {
+                // 'ㅂ': 'q', 'ㅈ': 'w', 'ㄷ': 'e', 'ㄱ': 'r', 'ㅅ': 't', 'ㅛ': 'y', 'ㅕ': 'u', 'ㅑ': 'i', 'ㅐ': 'o', 'ㅔ': 'p',
+                // 'ㅁ': 'a', 'ㄴ': 's', 'ㅇ': 'd', 'ㄹ': 'f', 'ㅎ': 'g', 'ㅗ': 'h', 'ㅓ': 'j', 'ㅏ': 'k', 'ㅣ': 'l',
+                // 'ㅋ': 'z', 'ㅌ': 'x', 'ㅊ': 'c', 'ㅍ': 'v', 'ㅠ': 'b', 'ㅜ': 'n', 'ㅡ': 'm',
+                // 'ㅃ': 'Q', 'ㅉ': 'W', 'ㄸ': 'E', 'ㄲ': 'R', 'ㅆ': 'T', 'ㅒ': 'O', 'ㅖ': 'P'
+            },
+            choseongCombinations: {},
+            vowelCombinations: {},
+            jongseongCombinations: {},
+            virtualLayout: {
+                default: [
+                    "˥˧ ˧˥ ˧ ˨˩ ˩˧ ˨ ˥ ˦ ˨ 病",
+                    "衣 目 車 耳 曰 日 冰 石 木 山",
+                    "口 心 手 人 言 水 火 土 雨",
+                    "{shift} 肉 示 足 糸 食 金 艸 {backspace}",
+                    "{openbrace} {space} {closebrace} {enter}"
+                ],
+                shift: [
+                    "1 2 3 4 5 6 7 8 9 0",
+                    "q w e r t y u i o p",
+                    "a s d f g h j k l",
+                    "{shift} z x c v b n m {backspace}",
+                    "{openbrace} {space} {closebrace} {enter}"
+                ],
+                // special: [
+                //     "1 2 3 4 5 6 7 8 9 0",
+                //     "@ # $ _ & - + ( ) /",
+                //     "{=<>} * \" ' : ; ! ? {backspace}",
+                //     "{ABC} , {space} . {enter}"
+                // ],
+                // special2: [
+                //     "~ ` | • √ π ÷ × § ∆",
+                //     "£ ¢ € ¥ ^ ° = { } \\",
+                //     "{123} % © ® ™ ✓ [ ] {backspace}",
+                //     "{ABC} , {space} . {enter}"
+                // ]
+            }
+        };
+
+        // Current active layout state pointer
+        let activeLayoutId = "standard-old-korean";
+        let activeLayout = KEYBOARD_LAYOUTS[activeLayoutId];
+
+        // System Constants
+        const JONGSEONG_TO_CHOSEONG = {
+            '\u11A8': '\u1100', '\u11A9': '\u1101', '\u11AB': '\u1102', '\u11AE': '\u1103',
+            '\u11AF': '\u1105', '\u11B7': '\u1106', '\u11B8': '\u1107', '\u11BA': '\u1109',
+            '\u11BB': '\u110A', '\u11BC': '\u110B', '\u11BD': '\u110C', '\u11BE': '\u110E',
+            '\u11BF': '\u110F', '\u11C0': '\u1110', '\u11C1': '\u1111', '\u11C2': '\u1112',
+            '\u11EB': '\u1140', '\u11F0': '\u114C', '\u11F9': '\u1159', '\u11E6': '\u112B'
+        };
+
+        const JONGSEONG_SPLIT = {
+            '\u11AA': { t: '\u11A8', l: '\u1109' },
+            '\u11AC': { t: '\u11AB', l: '\u110C' },
+            '\u11AD': { t: '\u11AB', l: '\u1112' },
+            '\u11B0': { t: '\u11AF', l: '\u1100' },
+            '\u11B1': { t: '\u11AF', l: '\u1106' },
+            '\u11B2': { t: '\u11AF', l: '\u1107' },
+            '\u11B3': { t: '\u11AF', l: '\u1109' },
+            '\u11B4': { t: '\u11AF', l: '\u1110' },
+            '\u11B5': { t: '\u11AF', l: '\u1111' },
+            '\u11B6': { t: '\u11AF', l: '\u1112' },
+            '\u11B9': { t: '\u11B8', l: '\u1109' }
+        };
+
+        // =======================================================
+        // STREAM SHAPING STATE MACHINE (NON-BLOCKING MULTI-JAMO)
+        // =======================================================
+        let state = "EMPTY"; // "EMPTY", "L", "LV", "LVT"
+        let currentSyllable = { l: "", v: "", t: "" };
+
+        function resetAutomaton() {
+            state = "EMPTY";
+            currentSyllable = { l: "", v: "", t: "" };
+            updateDiagnostics();
+        }
+
+        function toHexRepr(str) {
+            if (!str) return "-";
+            return Array.from(str).map(c => "U+" + c.charCodeAt(0).toString(16).toUpperCase()).join(" ");
+        }
+
+        function updateDiagnostics() {
+            diagState.textContent = state;
+            diagL.textContent = currentSyllable.l ? currentSyllable.l + ` (${toHexRepr(currentSyllable.l)})` : "-";
+            diagV.textContent = currentSyllable.v ? currentSyllable.v + ` (${toHexRepr(currentSyllable.v)})` : "-";
+            diagT.textContent = currentSyllable.t ? currentSyllable.t + ` (${toHexRepr(currentSyllable.t)})` : "-";
+
+            const combined = (currentSyllable.l || "") + (currentSyllable.v || "") + (currentSyllable.t || "");
+            diagHex.textContent = toHexRepr(combined);
+        }
+
+        // Safe dynamic layout resolver
+        function getKeyData(key) {
+            const layout = activeLayout;
+            if (layout.jamoMap[key]) return layout.jamoMap[key];
+            const englishKey = layout.charToKey[key];
+            if (englishKey && layout.jamoMap[englishKey]) return layout.jamoMap[englishKey];
+            return null;
+        }
+
+        function replaceLastChars(deleteCount, newString) {
+            editor.focus();
+            const selection = window.getSelection();
+            if (!selection.rangeCount) return;
+
+            const range = selection.getRangeAt(0);
+
+            if (deleteCount > 0) {
+                const container = range.startContainer;
+                if (container.nodeType === Node.TEXT_NODE) {
+                    const offset = range.startOffset;
+                    const newOffset = Math.max(0, offset - deleteCount);
+                    range.setStart(container, newOffset);
+                    range.deleteContents();
+                } else {
+                    for (let i = 0; i < deleteCount; i++) {
+                        document.execCommand('delete', false, null);
+                    }
+                }
+            }
+
+            if (newString) {
+                const textNode = document.createTextNode(newString);
+                range.insertNode(textNode);
+                range.setStartAfter(textNode);
+                range.setEndAfter(textNode);
+            }
+
+            selection.removeAllRanges();
+            selection.addRange(range);
+        }
+
+        function processKey(keyChar) {
+            // In radical-tone mode, always insert characters directly without Korean processing
+            if (activeLayoutId === "radical-tone") {
+                resetAutomaton();
+                insertAtCaret(getKeyData(keyChar));
+                return;
+            }
+
+            const keyData = getKeyData(keyChar);
+            if (!keyData) {
+                resetAutomaton();
+                insertAtCaret(keyChar);
+                return;
+            }
+
+            const layout = activeLayout;
+            const currentCombinedSyllable = (currentSyllable.l || "") + (currentSyllable.v || "") + (currentSyllable.t || "");
+            const currentLen = currentCombinedSyllable.length;
+
+            if (state === "EMPTY") {
+                if (keyData.type === 'C') {
+                    currentSyllable.l = keyData.l;
+                    replaceLastChars(0, currentSyllable.l);
+                    state = "L";
+                } else {
+                    replaceLastChars(0, keyData.v);
+                    resetAutomaton();
+                }
+            } else if (state === "L") {
+                if (keyData.type === 'C') {
+                    const combinedChoseong = layout.choseongCombinations[currentSyllable.l + keyData.l];
+                    if (combinedChoseong) {
+                        currentSyllable.l = combinedChoseong;
+                        replaceLastChars(currentLen, currentSyllable.l);
+                    } else {
+                        currentSyllable.l += keyData.l;
+                        replaceLastChars(currentLen, currentSyllable.l);
+                    }
+                } else {
+                    currentSyllable.v = keyData.v;
+                    replaceLastChars(currentLen, currentSyllable.l + currentSyllable.v);
+                    state = "LV";
+                }
+            } else if (state === "LV") {
+                if (keyData.type === 'V') {
+                    const combinedVowel = layout.vowelCombinations[currentSyllable.v + keyData.v];
+                    if (combinedVowel) {
+                        currentSyllable.v = combinedVowel;
+                        replaceLastChars(currentLen, currentSyllable.l + currentSyllable.v);
+                    } else {
+                        currentSyllable.v += keyData.v;
+                        replaceLastChars(currentLen, currentSyllable.l + currentSyllable.v);
+                    }
+                } else {
+                    if (keyData.t) {
+                        currentSyllable.t = keyData.t;
+                        replaceLastChars(currentLen, currentSyllable.l + currentSyllable.v + currentSyllable.t);
+                        state = "LVT";
+                    } else {
+                        resetAutomaton();
+                        currentSyllable.l = keyData.l;
+                        replaceLastChars(0, currentSyllable.l);
+                        state = "L";
+                    }
+                }
+            } else if (state === "LVT") {
+                if (keyData.type === 'C') {
+                    const combinedJong = layout.jongseongCombinations[currentSyllable.t + keyData.t];
+                    if (combinedJong) {
+                        currentSyllable.t = combinedJong;
+                        replaceLastChars(currentLen, currentSyllable.l + currentSyllable.v + currentSyllable.t);
+                    } else {
+                        currentSyllable.t += keyData.t;
+                        replaceLastChars(currentLen, currentSyllable.l + currentSyllable.v + currentSyllable.t);
+                    }
+                } else {
+                    const T_seq = currentSyllable.t;
+                    const T_last = T_seq.charAt(T_seq.length - 1);
+                    const T_remains = T_seq.slice(0, -1);
+
+                    if (JONGSEONG_SPLIT[T_last]) {
+                        const split = JONGSEONG_SPLIT[T_last];
+                        const baseFinals = T_remains + split.t;
+                        replaceLastChars(currentLen, currentSyllable.l + currentSyllable.v + baseFinals);
+
+                        const nextL = split.l;
+                        const nextV = keyData.v;
+                        replaceLastChars(0, nextL + nextV);
+
+                        currentSyllable.l = nextL;
+                        currentSyllable.v = nextV;
+                        currentSyllable.t = "";
+                        state = "LV";
+                    } else if (JONGSEONG_TO_CHOSEONG[T_last]) {
+                        const nextL = JONGSEONG_TO_CHOSEONG[T_last];
+                        const nextV = keyData.v;
+
+                        if (T_remains.length > 0) {
+                            replaceLastChars(currentLen, currentSyllable.l + currentSyllable.v + T_remains);
+                        } else {
+                            replaceLastChars(currentLen, currentSyllable.l + currentSyllable.v);
+                        }
+
+                        replaceLastChars(0, nextL + nextV);
+
+                        currentSyllable.l = nextL;
+                        currentSyllable.v = nextV;
+                        currentSyllable.t = "";
+                        state = "LV";
+                    } else {
+                        resetAutomaton();
+                        replaceLastChars(0, keyData.v);
+                    }
+                }
+            }
+
+            updateDiagnostics();
+            triggerPlaceholderCheck();
+        }
+
+        function handleBackspace(e) {
+            const selection = window.getSelection();
+            if (!selection.rangeCount) return;
+            const range = selection.getRangeAt(0);
+            if (!range.collapsed) return;
+
+            if (state === "EMPTY") return;
+
+            e.preventDefault();
+            const currentCombinedSyllable = (currentSyllable.l || "") + (currentSyllable.v || "") + (currentSyllable.t || "");
+            const currentLen = currentCombinedSyllable.length;
+
+            if (state === "L") {
+                if (currentSyllable.l.length > 1) {
+                    currentSyllable.l = currentSyllable.l.slice(0, -1);
+                    replaceLastChars(currentLen, currentSyllable.l);
+                } else {
+                    replaceLastChars(currentLen, "");
+                    resetAutomaton();
+                }
+            } else if (state === "LV") {
+                if (currentSyllable.v.length > 1) {
+                    currentSyllable.v = currentSyllable.v.slice(0, -1);
+                    replaceLastChars(currentLen, currentSyllable.l + currentSyllable.v);
+                } else {
+                    replaceLastChars(currentLen, currentSyllable.l);
+                    currentSyllable.v = "";
+                    state = "L";
+                }
+            } else if (state === "LVT") {
+                if (currentSyllable.t.length > 1) {
+                    currentSyllable.t = currentSyllable.t.slice(0, -1);
+                    replaceLastChars(currentLen, currentSyllable.l + currentSyllable.v + currentSyllable.t);
+                } else {
+                    replaceLastChars(currentLen, currentSyllable.l + currentSyllable.v);
+                    currentSyllable.t = "";
+                    state = "LV";
+                }
+            }
+
+            updateDiagnostics();
+            triggerPlaceholderCheck();
+        }
+
+        // =======================================================
+        // SYSTEM CONTROLLERS AND RICH-TEXT LAYOUT HANDLERS
+        // =======================================================
+
+        const Keyboard = window.SimpleKeyboard.default;
+        let virtualKeyboard;
+
+        // Helper to get caret offset relative to editor container
+        function getCaretCharacterOffsetWithin(element) {
+            let caretOffset = 0;
+            const doc = element.ownerDocument || element.document;
+            const win = doc.defaultView || doc.parentWindow;
+            const sel = win.getSelection();
+            if (sel.rangeCount > 0) {
+                const range = sel.getRangeAt(0);
+                const preCaretRange = range.cloneRange();
+                preCaretRange.selectNodeContents(element);
+                preCaretRange.setEnd(range.endContainer, range.endOffset);
+                caretOffset = preCaretRange.toString().length;
+            }
+            return caretOffset;
+        }
+
+        // Helper to restore caret offset relative to editor container
+        function setCaretCharacterOffsetWithin(element, offset) {
+            const range = document.createRange();
+            const sel = window.getSelection();
+            let charCount = 0;
+            let nodeStack = [element];
+            let node;
+            let found = false;
+
+            while (nodeStack.length > 0) {
+                node = nodeStack.pop();
+                if (node.nodeType === Node.TEXT_NODE) {
+                    const nextCharCount = charCount + node.length;
+                    if (offset >= charCount && offset <= nextCharCount) {
+                        range.setStart(node, offset - charCount);
+                        range.collapse(true);
+                        found = true;
+                        break;
+                    }
+                    charCount = nextCharCount;
+                } else {
+                    let i = node.childNodes.length;
+                    while (i--) {
+                        nodeStack.push(node.childNodes[i]);
+                    }
+                }
+            }
+
+            if (found) {
+                sel.removeAllRanges();
+                sel.addRange(range);
+            }
+        }
+
+        // Dynamic Layout Initialization Routine
+        function initLayout(layoutId) {
+            activeLayoutId = layoutId;
+            activeLayout = KEYBOARD_LAYOUTS[activeLayoutId];
+
+            // Reset mapping state
+            resetAutomaton();
+
+            // Update UI status labels
+            if (activeLayoutId === "radical-tone") {
+                statusPulse.className = "w-2 h-2 rounded-full bg-amber-500 animate-pulse";
+                statusText.textContent = "Annotation Mode";
+                virtualPulse.className = "w-2 h-2 rounded-full bg-amber-500 animate-pulse";
+            } else {
+                statusPulse.className = "w-2 h-2 rounded-full bg-emerald-500 animate-pulse";
+                statusText.textContent = "Old Korean Mode";
+                virtualPulse.className = "w-2 h-2 rounded-full bg-emerald-500 animate-pulse";
+            }
+
+            // Reconfigure or rebuild the simple-keyboard instance
+            if (!virtualKeyboard) {
+                virtualKeyboard = new Keyboard({
+                    onKeyPress: button => onVirtualKeyPress(button),
+                    theme: "simple-keyboard hg-theme-default",
+                    layout: activeLayout.virtualLayout,
+                    display: {
+                        "{backspace}": "⌫ Del",
+                        "{enter}": "Enter ↵",
+                        "{shift}": "⇧ Shift",
+                        "{space}": "Spacebar",
+                        "{openbrace}": "{",
+                        "{closebrace}": "}",
+                        "{123}": "?123",
+                        "{ABC}": "ABC",
+                        "{=<>}": "=\\<"
+                    },
+                    buttonTheme: [
+                        {
+                            class: "special-key",
+                            buttons: "{openbrace} {closebrace}"
+                        },
+                        {
+                            class: "functional-key",
+                            buttons: "{backspace} {enter} {shift} {space} {123} {ABC} {=<>}"
+                        }
+                    ]
+                });
+            } else {
+                virtualKeyboard.setOptions({
+                    layout: activeLayout.virtualLayout
+                });
+            }
+
+            lblActiveKeyboardType.textContent = activeLayout.name;
+        }
+
+        // Build dynamic dropdown selector items
+        function populateLayoutDropdown() {
+            layoutSelector.innerHTML = "";
+            for (const [id, config] of Object.entries(KEYBOARD_LAYOUTS)) {
+                const opt = document.createElement('option');
+                opt.value = id;
+                opt.textContent = config.name;
+                layoutSelector.appendChild(opt);
+            }
+
+            layoutSelector.value = activeLayoutId;
+            layoutSelector.addEventListener('change', (e) => {
+                initLayout(e.target.value);
+            });
+        }
+
+        btnToggleKeyboard.addEventListener('click', () => {
+            isKeyboardVisible = !isKeyboardVisible;
+            if (isKeyboardVisible) {
+                keyboardWrapper.style.maxHeight = '450px';
+                keyboardWrapper.style.opacity = '1';
+                btnToggleKeyboard.classList.remove('opacity-50');
+            } else {
+                keyboardWrapper.style.maxHeight = '0px';
+                keyboardWrapper.style.opacity = '0';
+                btnToggleKeyboard.classList.add('opacity-50');
+            }
+        });
+
+        // Mobile header toggle
+        let isHeaderVisible = true;
+
+        btnHideHeader.addEventListener('click', () => {
+            isHeaderVisible = false;
+            mainHeader.style.maxHeight = '0px';
+            mainHeader.style.opacity = '0';
+            mainHeader.style.padding = '0px';
+            btnToggleHeaderFloating.classList.remove('hidden');
+            lucide.createIcons();
+        });
+
+        btnToggleHeaderFloating.addEventListener('click', () => {
+            isHeaderVisible = true;
+            mainHeader.style.maxHeight = '200px';
+            mainHeader.style.opacity = '1';
+            mainHeader.style.padding = '1rem';
+            btnToggleHeaderFloating.classList.add('hidden');
+            lucide.createIcons();
+        });
+
+        function insertAtCaret(char) {
+            editor.focus();
+            if (lastActiveRange) {
+                const sel = window.getSelection();
+                sel.removeAllRanges();
+                sel.addRange(lastActiveRange);
+            }
+            const selection = window.getSelection();
+            if (!selection.rangeCount) return;
+            const range = selection.getRangeAt(0);
+            range.deleteContents();
+            const textNode = document.createTextNode(char);
+            range.insertNode(textNode);
+            range.setStartAfter(textNode);
+            range.setEndAfter(textNode);
+            selection.removeAllRanges();
+            selection.addRange(range);
+
+            // Sync selection state
+            lastActiveRange = range.cloneRange();
+            triggerPlaceholderCheck();
+        }
+
+        // ==========================================
+        // INLINE SYNTAX PARSER FOR RUBY
+        // ==========================================
+        function parseAndConvertInlineRuby() {
+            editor.focus();
+            if (lastActiveRange) {
+                const sel = window.getSelection();
+                sel.removeAllRanges();
+                sel.addRange(lastActiveRange);
+            }
+
+            // Get exact cursor character offset before merging adjacent nodes
+            const offset = getCaretCharacterOffsetWithin(editor);
+
+            // Merge segmented adjacent text nodes safely
+            editor.normalize();
+
+            // Re-establish selection at the correct character index after normalization
+            setCaretCharacterOffsetWithin(editor, offset);
+
+            const selection = window.getSelection();
+            if (!selection.rangeCount) return;
+
+            const range = selection.getRangeAt(0);
+            const node = range.startContainer;
+
+            // Inline parsing works on the unified parent text node
+            if (node.nodeType === Node.TEXT_NODE) {
+                const text = node.textContent;
+                const caretOffset = range.startOffset;
+
+                // Match layout: ([any non-whitespace characters]) + { + ([any characters]) + }
+                const substring = text.slice(0, caretOffset);
+                const match = substring.match(/([^\s{}]+)\{([^}]+)\}$/);
+
+                if (match) {
+                    const matchStr = match[0];
+                    const baseText = match[1];
+                    const rubyText = match[2];
+
+                    // Set range to highlight and remove raw bracket notation
+                    range.setStart(node, caretOffset - matchStr.length);
+                    range.setEnd(node, caretOffset);
+                    range.deleteContents();
+
+                    // Generate live rendered ruby nodes
+                    const tempDiv = document.createElement('div');
+                    tempDiv.innerHTML = `<ruby>${baseText}<rp>(</rp><rt>${rubyText}</rt><rp>)</rp></ruby>&nbsp;`;
+
+                    const frag = document.createDocumentFragment();
+                    let child;
+                    while ((child = tempDiv.firstChild)) {
+                        frag.appendChild(child);
+                    }
+
+                    const lastNode = frag.lastChild;
+                    range.insertNode(frag);
+
+                    // Reposition cursor right after the added space
+                    selection.removeAllRanges();
+                    const newRange = document.createRange();
+                    newRange.setStartAfter(lastNode);
+                    newRange.collapse(true);
+                    selection.addRange(newRange);
+
+                    // Sync the active range cache
+                    lastActiveRange = newRange.cloneRange();
+
+                    showToast("Inline ruby created successfully!");
+                }
+            }
+            resetAutomaton();
+            triggerPlaceholderCheck();
+        }
+
+        function triggerOpenBraceSwap() {
+            savedLayoutBeforeAnnotation = activeLayoutId;
+            if (activeLayoutId !== "radical-tone") {
+                initLayout("radical-tone");
+                layoutSelector.value = "radical-tone";
+                showToast("Auto-swapped to Annotation Keyboard!");
+            }
+        }
+
+        function triggerCloseBraceSwap() {
+            parseAndConvertInlineRuby();
+            if (activeLayoutId !== savedLayoutBeforeAnnotation) {
+                initLayout(savedLayoutBeforeAnnotation);
+                layoutSelector.value = savedLayoutBeforeAnnotation;
+                showToast("Returned to Old Korean Keyboard!");
+            }
+        }
+
+        // Virtual keystroke router
+        function onVirtualKeyPress(button) {
+            if (button === "{shift}") {
+                let currentLayout = virtualKeyboard.options.layoutName;
+                virtualKeyboard.setOptions({
+                    layoutName: currentLayout === "default" ? "shift" : "default"
+                });
+            } else if (button === "{123}") {
+                let currentLayout = virtualKeyboard.options.layoutName;
+                virtualKeyboard.setOptions({
+                    layoutName: "special"
+                });
+            } else if (button === "{ABC}") {
+                let currentLayout = virtualKeyboard.options.layoutName;
+                virtualKeyboard.setOptions({
+                    layoutName: "default"
+                });
+            } else if (button === "{backspace}") {
+                const backspaceEvent = new KeyboardEvent('keydown', { key: 'Backspace', bubbles: true });
+                editor.dispatchEvent(backspaceEvent);
+                if (!backspaceEvent.defaultPrevented) {
+                    document.execCommand('delete', false, null);
+                }
+            } else if (button === "{enter}") {
+                resetAutomaton();
+                insertAtCaret('\n');
+            } else if (button === "{space}") {
+                resetAutomaton();
+                insertAtCaret(' ');
+            } else if (button === "{openbrace}") {
+                resetAutomaton();
+                insertAtCaret('{');
+                triggerOpenBraceSwap();
+            } else if (button === "{closebrace}") {
+                insertAtCaret('}');
+                triggerCloseBraceSwap();
+            } else {
+                processKey(button);
+            }
+        }
+
+        // Intercept physical keyboard events
+        editor.addEventListener('keydown', (e) => {
+            if (e.key === ' ' || e.key === 'Enter') {
+                resetAutomaton();
+                return;
+            }
+            if (e.key === 'ArrowLeft' || e.key === 'ArrowRight' || e.key === 'ArrowUp' || e.key === 'ArrowDown' || e.key === 'Home' || e.key === 'End') {
+                resetAutomaton();
+                return;
+            }
+
+            if (e.key === 'Backspace') {
+                handleBackspace(e);
+                return;
+            }
+
+            // Detect opening and closing bracket triggers physically
+            if (e.key === '{') {
+                e.preventDefault();
+                resetAutomaton();
+                insertAtCaret('{');
+                triggerOpenBraceSwap();
+                return;
+            }
+            if (e.key === '}') {
+                e.preventDefault();
+                insertAtCaret('}');
+                triggerCloseBraceSwap();
+                return;
+            }
+
+            if (e.ctrlKey || e.metaKey || e.altKey || e.key.length > 1) {
+                return;
+            }
+
+            const mappedChar = getKeyData(e.key);
+            if (mappedChar) {
+                e.preventDefault();
+                processKey(e.key);
+            } else {
+                resetAutomaton();
+            }
+        });
+
+        editor.addEventListener('click', () => {
+            resetAutomaton();
+        });
+
+        // Keep selection synced on document selection events
+        document.addEventListener('selectionchange', () => {
+            const selection = window.getSelection();
+            if (selection.rangeCount > 0) {
+                const range = selection.getRangeAt(0);
+                if (editor.contains(range.commonAncestorContainer)) {
+                    lastActiveRange = range.cloneRange();
+                }
+            }
+        });
+
+        // Font scaling buttons
+        btnFontDec.addEventListener('click', () => {
+            if (currentFontSize > 14) {
+                currentFontSize -= 2;
+                editor.style.fontSize = `${currentFontSize}px`;
+                lblFontSize.textContent = `${currentFontSize}px`;
+            }
+        });
+
+        btnFontInc.addEventListener('click', () => {
+            if (currentFontSize < 64) {
+                currentFontSize += 2;
+                editor.style.fontSize = `${currentFontSize}px`;
+                lblFontSize.textContent = `${currentFontSize}px`;
+            }
+        });
+
+        function triggerPlaceholderCheck() {
+            const hasText = editor.innerText.trim().length > 0;
+            if (hasText) {
+                editorPlaceholder.classList.add('hidden');
+            } else {
+                editorPlaceholder.classList.remove('hidden');
+            }
+        }
+
+        editor.addEventListener('input', triggerPlaceholderCheck);
+        editor.addEventListener('focus', triggerPlaceholderCheck);
+        editor.addEventListener('blur', triggerPlaceholderCheck);
+
+        // Selection range helpers
+        function saveSelection() {
+            const selection = window.getSelection();
+            if (selection.rangeCount > 0) {
+                savedRange = selection.getRangeAt(0);
+            }
+        }
+
+        function restoreSelection() {
+            if (savedRange) {
+                const selection = window.getSelection();
+                selection.removeAllRanges();
+                selection.addRange(savedRange);
+            }
+        }
+
+        // ==========================================
+        // INTERACTIVE RUBY ANNOTATOR SYSTEM (MODAL)
+        // ==========================================
+        btnInsertRuby.addEventListener('click', () => {
+            const selection = window.getSelection();
+            let selectedText = selection.toString().trim();
+
+            saveSelection();
+
+            modalBaseInput.value = selectedText;
+            modalRubyInput.value = '';
+
+            rubyModal.classList.remove('hidden');
+            setTimeout(() => {
+                rubyModal.classList.remove('opacity-0');
+                rubyModalContent.classList.remove('scale-95');
+                modalRubyInput.focus();
+            }, 10);
+        });
+
+        function closeModal() {
+            rubyModal.classList.add('opacity-0');
+            rubyModalContent.classList.add('scale-95');
+            setTimeout(() => {
+                rubyModal.classList.add('hidden');
+            }, 200);
+        }
+
+        btnCancelRuby.addEventListener('click', closeModal);
+
+        btnConfirmRuby.addEventListener('click', () => {
+            const baseText = modalBaseInput.value.trim();
+            const rubyText = modalRubyInput.value.trim();
+
+            if (!baseText) {
+                showToast("Please highlight a base character.", true);
+                return;
+            }
+
+            closeModal();
+            restoreSelection();
+
+            if (baseText && rubyText) {
+                const rubyHTML = `<ruby>${baseText}<rp>(</rp><rt>${rubyText}</rt><rp>)</rp></ruby>&nbsp;`;
+
+                editor.focus();
+                const selection = window.getSelection();
+                if (selection.rangeCount > 0) {
+                    const range = selection.getRangeAt(0);
+                    range.deleteContents();
+
+                    const tempDiv = document.createElement('div');
+                    tempDiv.innerHTML = rubyHTML;
+
+                    const fragment = document.createDocumentFragment();
+                    let node;
+                    while ((node = tempDiv.firstChild)) {
+                        fragment.appendChild(node);
+                    }
+
+                    range.insertNode(fragment);
+                    selection.removeAllRanges();
+                }
+            }
+            resetAutomaton();
+            triggerPlaceholderCheck();
+        });
+
+        editor.addEventListener('click', (e) => {
+            const rubyEl = e.target.closest('ruby');
+            if (rubyEl) {
+                const rtEl = rubyEl.querySelector('rt');
+                const prevText = rtEl ? rtEl.innerText : '';
+                const baseText = rubyEl.childNodes[0].textContent;
+
+                const action = confirm(`Ruby tag selected:\nBase: "${baseText}"\nGloss: "${prevText}"\n\nClick [OK] to delete this entire annotated ruby block.`);
+                if (action) {
+                    rubyEl.remove();
+                    triggerPlaceholderCheck();
+                }
+                resetAutomaton();
+            }
+        });
+
+        // Copy utilities
+        function showToast(message, isError = false) {
+            const toastText = document.getElementById('toastText');
+            const toastIcon = document.getElementById('toastIcon');
+
+            toastText.textContent = message;
+            if (isError) {
+                toastIcon.className = "p-1.5 rounded-lg bg-red-600/20 text-red-400";
+                toastIcon.innerHTML = `<i data-lucide="alert-triangle" class="w-4 h-4"></i>`;
+            } else {
+                toastIcon.className = "p-1.5 rounded-lg bg-emerald-600/20 text-emerald-400";
+                toastIcon.innerHTML = `<i data-lucide="check" class="w-4 h-4"></i>`;
+            }
+            lucide.createIcons();
+
+            toast.classList.remove('translate-y-12', 'opacity-0', 'pointer-events-none');
+            setTimeout(() => {
+                toast.classList.add('translate-y-12', 'opacity-0', 'pointer-events-none');
+            }, 3000);
+        }
+
+        btnCopyText.addEventListener('click', () => {
+            const clone = editor.cloneNode(true);
+            const rts = clone.querySelectorAll('rt');
+            rts.forEach(rt => rt.remove());
+            const rps = clone.querySelectorAll('rp');
+            rps.forEach(rp => rp.remove());
+
+            const cleanText = clone.innerText || clone.textContent;
+
+            const dummy = document.createElement("textarea");
+            document.body.appendChild(dummy);
+            dummy.value = cleanText;
+            dummy.select();
+            document.execCommand("copy");
+            document.body.removeChild(dummy);
+
+            showToast("Copied clean Unicode text!");
+        });
+
+        btnCopyHTML.addEventListener('click', () => {
+            const htmlContent = editor.innerHTML.trim();
+
+            const dummy = document.createElement("textarea");
+            document.body.appendChild(dummy);
+            dummy.value = htmlContent;
+            dummy.select();
+            document.execCommand("copy");
+            document.body.removeChild(dummy);
+
+            showToast("Copied HTML Markup!");
+        });
+
+        btnClear.addEventListener('click', () => {
+            if (confirm("Clear editor canvas?")) {
+                editor.innerHTML = '';
+                resetAutomaton();
+                triggerPlaceholderCheck();
+                showToast("Editor cleared");
+            }
+        });
+
+        // ==========================================
+        // INITIALIZATION
+        // ==========================================
+        populateLayoutDropdown();
+        initLayout(activeLayoutId);
+        triggerPlaceholderCheck();
+    </script>
+</body>
+
+</html>

@@ -667,12 +667,21 @@
                 '\u1169\u1175': '\u116C', // ᅩ + ㅣ = ᅬ (oi)
                 '\u116E\u1175': '\u1171', // ㅜ + ㅣ = ㅟ (ui)
 
+                '\u1161\u1175': '\u1161\u11BD', // ㅏ + ㅣ (aai*)
+                '\u1166\u1175': '\u1166\u11BD', // ㅔ + ㅣ (ai*)
+                '\u1162\u1175': '\u1162\u11BD', // ㅐ + ㅣ (ei*)
+                '\u1165\u1175': '\u1165\u11BD', // ㅓ + ㅣ (oei*)
+                '\u116C\u1175': '\u116C\u11BD', // ᅬ + ㅣ (eoi*)
+
                 // --u
                 // ou already covered, au, yuu, eou not possible
                 '\u1161\u116E': '\u1177', // ᅷ aau
                 '\u1162\u116E': '\u118a', // ᆊ eu* (looks like ue)
                 '\u1175\u116E': '\u119b', // ᆛ iu
                 '\u1165\u116E': '\u117b', // ᅻ oeu* not real
+
+                '\u1166\u116E': '\u1166\u11BA', // ㅔ + ㅜ (au*)
+                // '\u1169\u116E': '\u1169\u11BA', // ㅗ + ㅜ (explicit ou*)
 
             },
             jongseongCombinations: {},
@@ -953,6 +962,8 @@
                     if (combinedVowel) {
                         currentSyllable.v = combinedVowel;
                         replaceLastChars(currentLen, currentSyllable.l + currentSyllable.v);
+                        if (combinedVowel.length == 2)
+                            resetAutomaton();
                     } else {
                         currentSyllable.v += keyData.v;
                         replaceLastChars(currentLen, currentSyllable.l + currentSyllable.v);

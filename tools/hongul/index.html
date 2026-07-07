@@ -12,8 +12,11 @@
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link
+    <!-- <link
         href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&family=Noto+Serif+KR:wght@300;400;500;700;900&display=swap"
+        rel="stylesheet"> -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Noto+Sans+HK:wght@300;400;500;700&family=Noto+Serif+HK:wght@300;400;500;700;900&display=swap"
         rel="stylesheet">
 
     <!-- simple-keyboard CDN CSS -->
@@ -24,14 +27,15 @@
 
     <style>
         body {
-            font-family: 'Noto Sans KR', sans-serif;
+            font-family: 'Noto Sans HK', sans-serif;
             background-color: #0d1117;
             color: #c9d1d9;
         }
 
         /* Prioritize Malgun Gothic / Apple SD Gothic Neo with fallbacks */
         .old-korean-editor {
-            font-family: 'Malgun Gothic', 'Apple SD Gothic Neo', 'Noto Serif KR', 'Noto Sans KR', sans-serif;
+            /* font-family: 'Malgun Gothic', 'Apple SD Gothic Neo', 'Noto Serif KR', 'Noto Sans KR', sans-serif; */
+            font-family: 'Noto Sans HK', 'Malgun Gothic', 'Apple SD Gothic Neo', 'Noto Serif HK', sans-serif;
             font-variant-ligatures: normal;
             font-feature-settings: "ccmp" 1, "jamo" 1, "clig" 1;
             line-height: 2.2;
@@ -56,7 +60,7 @@
         }
 
         rt {
-            font-family: 'Noto Sans KR', sans-serif;
+            font-family: 'Noto Sans HK', sans-serif;
             font-size: 0.55em;
             color: #818cf8;
             font-weight: 500;
@@ -76,7 +80,7 @@
             background: #21262d;
             color: #c9d1d9;
             border-bottom: 2px solid #0d1117;
-            font-family: 'Noto Sans KR', sans-serif;
+            font-family: 'Noto Sans HK', sans-serif;
             border-radius: 6px;
             font-size: 1.1rem;
             height: 48px;
@@ -309,11 +313,12 @@
         class="fixed bottom-0 left-0 right-0 bg-slate-900/95 backdrop-blur-md border-t border-slate-800 px-4 py-5 shadow-2xl transition-all duration-300 max-h-[450px] overflow-hidden z-50">
         <div class="max-w-5xl mx-auto flex flex-col gap-4">
             <div class="flex items-center justify-between px-2">
-                <span class="text-xs text-slate-400 flex items-center gap-1">
+                <!-- <span class="text-xs text-slate-400 flex items-center gap-1">
                     <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" id="virtualPulse"></span>
                     <span id="lblActiveKeyboardType">Universal Old Jamo Layout</span>
-                </span>
-                <span class="text-xs font-mono text-slate-500">Universal Old Jamo Layout</span>
+                </span> -->
+                <div id="candidateList" class="text-xs font-mono text-slate-500 flex gap-2"
+                    style="font-family: 'Noto Sans HK';font-size: 20px;"></div>
             </div>
 
             <div class="simple-keyboard"></div>
@@ -400,11 +405,12 @@
         const lblFontSize = document.getElementById('lblFontSize');
         const toast = document.getElementById('toast');
         const layoutSelector = document.getElementById('layoutSelector');
-        const lblActiveKeyboardType = document.getElementById('lblActiveKeyboardType');
+        // const lblActiveKeyboardType = document.getElementById('lblActiveKeyboardType');
+        const candidateList = document.getElementById('candidateList');
         const keyboardStatusIndicator = document.getElementById('keyboardStatusIndicator');
         const statusPulse = document.getElementById('statusPulse');
         const statusText = document.getElementById('statusText');
-        const virtualPulse = document.getElementById('virtualPulse');
+        // const virtualPulse = document.getElementById('virtualPulse');
 
         const btnToggleHeaderFloating = document.getElementById('btnToggleHeaderFloating');
         const btnHideHeader = document.getElementById('btnHideHeader');
@@ -426,6 +432,15 @@
 
         // Track the cursor position state inside the editor across focus loss events
         let lastActiveRange = null;
+
+        let ckBuffer = "";      // Stores typed letters (e.g., "am")
+        let ckDictionary = {};  // Holds your parsed JSON mapping
+
+        // Fetch your compiled JSON dictionary
+        fetch('congkit3.json')
+            .then(res => res.json())
+            .then(data => { ckDictionary = data; })
+            .catch(err => console.error("Error loading Congkit dictionary:", err));
 
         // =======================================================
         // REGISTERABLE EXTENSIBLE KEYBOARD SCHEMAS
@@ -715,6 +730,79 @@
             }
         };
 
+        KEYBOARD_LAYOUTS["congkit"] = {
+            name: "Congkit 倉頡",
+            jamoMap: {
+                'q': '手',
+                'w': '田',
+                'e': '水',
+                'r': '口',
+                't': '廿',
+                'y': '卜',
+                'u': '山',
+                'i': '戈',
+                'o': '人',
+                'p': '心',
+                'a': '日',
+                's': '尸',
+                'd': '木',
+                'f': '火',
+                'g': '土',
+                'h': '竹',
+                'j': '十',
+                'k': '大',
+                'l': '中',
+                'z': '重',
+                'x': '難',
+                'c': '金',
+                'v': '女',
+                'b': '月',
+                'n': '弓',
+                'm': '一',
+                '.': '。',
+                ',': '，',
+                '\'': '、',
+                '/': '……'
+            },
+
+            charToKey: {
+                '手': 'q', '田': 'w', '水': 'e', '口': 'r', '廿': 't', '卜': 'y', '山': 'u', '戈': 'i', '人': 'o', '心': 'p',
+                '日': 'a', '尸': 's', '木': 'd', '火': 'f', '土': 'g', '竹': 'h', '十': 'j', '大': 'k', '中': 'l',
+                '重': 'z', '難': 'x', '金': 'c', '女': 'v', '月': 'b', '弓': 'n', '一': 'm',
+            },
+            choseongCombinations: {},
+            vowelCombinations: {},
+            jongseongCombinations: {},
+            virtualLayout: {
+                default: [
+                    "1 2 3 4 5 6 7 8 9 0",
+                    "手 田 水 口 廿 卜 山 戈 人 心",
+                    "日 尸 木 火 土 竹 十 大 中",
+                    "{shift} 重 難 金 女 月 弓 一 {backspace}",
+                    "{123} ， {openbrace} {space} {closebrace} 。 {enter}"
+                ],
+                shift: [
+                    "1 2 3 4 5 6 7 8 9 0",
+                    "麥 米 田 竹 去 宇 聿 鬥 刀 巾",
+                    "虫 鳥 魚 犬 阜 小 爿 邑 户",
+                    "{shift} Z X 歹 辵 广 N M {backspace}",
+                    "{openbrace} {space} {closebrace} {enter}"
+                ],
+                special: [
+                    "1 2 3 4 5 6 7 8 9 0",
+                    "@ # $ _ & - + ( ) /",
+                    "{=<>} * \" ' : ; ! ? {backspace}",
+                    "{ABC} , {space} . {enter}"
+                ],
+                special2: [
+                    "~ ` | • √ π ÷ × § ∆",
+                    "£ ¢ € ¥ ^ ° = { } \\",
+                    "{123} % © ® ™ ✓ [ ] {backspace}",
+                    "{ABC} , {space} . {enter}"
+                ]
+            }
+        };
+
         // 2. Register: Annotation Keyboard
         KEYBOARD_LAYOUTS["radical-tone"] = {
             name: "Ruby (Radical/Tone)",
@@ -916,7 +1004,63 @@
             selection.addRange(range);
         }
 
+        function isChinese() {
+            return activeLayoutId === "congkit" || activeLayoutId === "daaijik";
+        }
+
+        function updateCandidateList() {
+            if (!isChinese() || ckBuffer.length === 0) {
+                candidateList.innerHTML = "";
+                return;
+            }
+            const candidates = ckDictionary[ckBuffer] || [];
+            candidateList.innerHTML = "";
+            candidates.slice(0, 9).forEach((char, index) => {
+                const span = document.createElement('span');
+                span.className = 'cursor-pointer hover:text-indigo-400 transition-colors';
+                span.textContent = `${index + 1}. ${char}`;
+                span.onclick = () => {
+                    restoreSelection();
+                    replaceLastChars(ckBuffer.length, char);
+                    ckBuffer = "";
+                    updateCandidateList();
+                };
+                candidateList.appendChild(span);
+            });
+        }
+
         function processKey(keyChar) {
+            if (isChinese()) {
+                resetAutomaton();
+                const currentLen = ckBuffer.length;
+                if (/^[1-9]$/.test(keyChar) && currentLen > 0) {
+                    const candidates = ckDictionary[ckBuffer] || [];
+                    const index = parseInt(keyChar) - 1;
+                    if (candidates[index]) {
+                        replaceLastChars(currentLen, candidates[index]);
+                        ckBuffer = "";
+                        updateCandidateList();
+                    } else {
+
+                    }
+                } else {
+                    const layout = activeLayout;
+                    const englishKey = layout.charToKey[keyChar] || keyChar;
+                    if (/^[a-z]$/.test(englishKey) && currentLen < 5) {
+                        ckBuffer += englishKey;
+                        updateCandidateList();
+                        insertAtCaret(layout.jamoMap[englishKey]);
+                        saveSelection();
+                    } else {
+                        replaceLastChars(currentLen, englishKey);
+                        ckBuffer = "";
+                        updateCandidateList();
+                    }
+                }
+                triggerPlaceholderCheck();
+                return;
+            }
+
             const keyData = getKeyData(keyChar);
             if (!keyData) {
                 resetAutomaton();
@@ -1036,6 +1180,12 @@
         }
 
         function handleBackspace(e) {
+            if (isChinese()) {
+                if (ckBuffer.length > 0) {
+                    ckBuffer = ckBuffer.slice(0, -1);
+                    updateCandidateList();
+                }
+            }
             const selection = window.getSelection();
             if (!selection.rangeCount) return;
             const range = selection.getRangeAt(0);
@@ -1076,6 +1226,30 @@
             }
 
             updateDiagnostics();
+            triggerPlaceholderCheck();
+        }
+
+        function handleSpace(e) {
+            resetAutomaton();
+            if (!isChinese()) {
+                insertAtCaret(' ');
+                return;
+            }
+            if (e)
+                e.preventDefault();
+            const currentLen = ckBuffer.length;
+            if (currentLen > 0) {
+                const candidates = ckDictionary[ckBuffer] || [];
+                if (candidates.length > 0) {
+                    replaceLastChars(currentLen, candidates[0]);
+                } else {
+                    replaceLastChars(currentLen, "");
+                }
+                ckBuffer = "";
+                updateCandidateList();
+            } else {
+                insertAtCaret(' ');
+            }
             triggerPlaceholderCheck();
         }
 
@@ -1148,11 +1322,11 @@
             if (activeLayoutId === "radical-tone") {
                 statusPulse.className = "w-2 h-2 rounded-full bg-amber-500 animate-pulse";
                 statusText.textContent = "Annotation Mode";
-                virtualPulse.className = "w-2 h-2 rounded-full bg-amber-500 animate-pulse";
+                // virtualPulse.className = "w-2 h-2 rounded-full bg-amber-500 animate-pulse";
             } else {
                 statusPulse.className = "w-2 h-2 rounded-full bg-emerald-500 animate-pulse";
                 statusText.textContent = "Old Korean Mode";
-                virtualPulse.className = "w-2 h-2 rounded-full bg-emerald-500 animate-pulse";
+                // virtualPulse.className = "w-2 h-2 rounded-full bg-emerald-500 animate-pulse";
             }
 
             // Reconfigure or rebuild the simple-keyboard instance
@@ -1189,7 +1363,13 @@
                 });
             }
 
-            lblActiveKeyboardType.textContent = activeLayout.name;
+            // lblActiveKeyboardType.textContent = activeLayout.name;
+            // if (isChinese()) {
+            //     lblActiveKeyboardType.style.display = "none";
+            // } else {
+            //     lblActiveKeyboardType.style.display = "inline";
+            // }
+            candidateList.innerHTML = "";
         }
 
         // Build dynamic dropdown selector items
@@ -1385,8 +1565,7 @@
                 resetAutomaton();
                 insertAtCaret('\n');
             } else if (button === "{space}") {
-                resetAutomaton();
-                insertAtCaret(' ');
+                handleSpace()
             } else if (button === "{openbrace}") {
                 resetAutomaton();
                 insertAtCaret('{');
@@ -1401,7 +1580,7 @@
 
         // Intercept physical keyboard events
         editor.addEventListener('keydown', (e) => {
-            if (e.key === ' ' || e.key === 'Enter') {
+            if (e.key === 'Enter') {
                 resetAutomaton();
                 return;
             }
@@ -1412,6 +1591,11 @@
 
             if (e.key === 'Backspace') {
                 handleBackspace(e);
+                return;
+            }
+
+            if (e.key === ' ') {
+                handleSpace(e);
                 return;
             }
 
@@ -1435,7 +1619,7 @@
             }
 
             const mappedChar = getKeyData(e.key);
-            if (mappedChar) {
+            if (mappedChar || isChinese()) {
                 e.preventDefault();
                 processKey(e.key);
             } else {

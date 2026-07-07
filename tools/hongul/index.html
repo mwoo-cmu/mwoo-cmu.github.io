@@ -24,6 +24,7 @@
 
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
+    <script type="text/javascript" src="purify.min.js"></script>
 
     <style>
         body {
@@ -435,12 +436,18 @@
 
         let ckBuffer = "";      // Stores typed letters (e.g., "am")
         let ckDictionary = {};  // Holds your parsed JSON mapping
+        let djDictionary = {};
 
         // Fetch your compiled JSON dictionary
         fetch('congkit3.json')
             .then(res => res.json())
             .then(data => { ckDictionary = data; })
             .catch(err => console.error("Error loading Congkit dictionary:", err));
+
+        fetch('daaijik4.json')
+            .then(res => res.json())
+            .then(data => { djDictionary = data; })
+            .catch(err => console.error("Error loading Daaijik dictionary:", err));
 
         // =======================================================
         // REGISTERABLE EXTENSIBLE KEYBOARD SCHEMAS
@@ -803,6 +810,87 @@
             }
         };
 
+        KEYBOARD_LAYOUTS["daaijik"] = {
+            name: "Daaijik 大易",
+            jamoMap: {
+                '1': '言',
+                '2': '牛',
+                '3': '目',
+                '4': '四',
+                '5': '王',
+                '6': '車',
+                '7': '田',
+                '8': '八',
+                '9': '足',
+                '0': '金',
+                'q': '石',
+                'w': '山',
+                'e': '一',
+                'r': '工',
+                't': '糸',
+                'y': '火',
+                'u': '艸',
+                'i': '木',
+                'o': '口',
+                'p': '耳',
+                'a': '人',
+                's': '革',
+                'd': '日',
+                'f': '土',
+                'g': '手',
+                'h': '鳥',
+                'j': '月',
+                'k': '立',
+                'l': '女',
+                ';': '虫',
+                'z': '心',
+                'x': '水',
+                'c': '鹿',
+                'v': '禾',
+                'b': '馬',
+                'n': '魚',
+                'm': '雨',
+                ',': '力',
+                '.': '舟',
+                '/': '竹'
+            },
+
+            charToKey: {
+                '言': '1', '牛': '2', '目': '3', '四': '4', '王': '5', '車': '6', '田': '7', '八': '8', '足': '9', '金': '0', '石': 'q', '山': 'w', '一': 'e', '工': 'r', '糸': 't', '火': 'y', '艸': 'u', '木': 'i', '口': 'o', '耳': 'p', '人': 'a', '革': 's', '日': 'd', '土': 'f', '手': 'g', '鳥': 'h', '月': 'j', '立': 'k', '女': 'l', '虫': ';', '心': 'z', '水': 'x', '鹿': 'c', '禾': 'v', '馬': 'b', '魚': 'n', '雨': 'm', '力': ',', '舟': '.', '竹': '/'
+            },
+            choseongCombinations: {},
+            vowelCombinations: {},
+            jongseongCombinations: {},
+            virtualLayout: {
+                default: [
+                    "言 牛 目 四 王 車 田 八 足 金",
+                    "石 山 一 工 糸 火 艸 木 口 耳",
+                    "人 革 日 土 手 鳥 月 立 女 虫",
+                    "{shift} 心 水 鹿 禾 馬 魚 雨 力 舟 竹 {backspace}",
+                    "{123} ， {openbrace} {space} {closebrace} 。 {enter}"
+                ],
+                shift: [
+                    "1 2 3 4 5 6 7 8 9 0",
+                    "麥 米 田 竹 去 宇 聿 鬥 刀 巾",
+                    "虫 鳥 魚 犬 阜 小 爿 邑 户",
+                    "{shift} Z X 歹 辵 广 N M {backspace}",
+                    "{openbrace} {space} {closebrace} {enter}"
+                ],
+                special: [
+                    "1 2 3 4 5 6 7 8 9 0",
+                    "@ # $ _ & - + ( ) /",
+                    "{=<>} * \" ' : ; ! ? {backspace}",
+                    "{ABC} , {space} . {enter}"
+                ],
+                special2: [
+                    "~ ` | • √ π ÷ × § ∆",
+                    "£ ¢ € ¥ ^ ° = { } \\",
+                    "{123} % © ® ™ ✓ [ ] {backspace}",
+                    "{ABC} , {space} . {enter}"
+                ]
+            }
+        };
+
         // 2. Register: Annotation Keyboard
         KEYBOARD_LAYOUTS["radical-tone"] = {
             name: "Ruby (Radical/Tone)",
@@ -910,7 +998,7 @@
         };
 
         // Current active layout state pointer
-        let activeLayoutId = "cantonese-korean";
+        let activeLayoutId = localStorage.getItem('activeLayoutId') ?? "cantonese-korean";
         let activeLayout = KEYBOARD_LAYOUTS[activeLayoutId];
 
         // System Constants
@@ -972,6 +1060,35 @@
             return null;
         }
 
+        function saveText() {
+            const rawHTML = editor.innerHTML || '';
+            // Configure the native sanitizer blocklist/allowlist
+
+            // Safely parse and inject
+            localStorage.setItem('inputText', DOMPurify.sanitize(rawHTML, {
+                ALLOWED_TAGS: ['ruby', 'rt', 'rp'],
+                ALLOWED_ATTR: [] // Do not allow any attributes (like id, style, or onerror)
+            }));
+        }
+
+        function loadText() {
+            const rawHTML = localStorage.getItem('inputText') || '';
+
+            const cleanHTML = DOMPurify.sanitize(rawHTML, {
+                ALLOWED_TAGS: ['ruby', 'rt', 'rp'],
+                ALLOWED_ATTR: [] // Do not allow any attributes (like id, style, or onerror)
+            });
+
+            // Configure the native sanitizer blocklist/allowlist
+            const sanitizer = new Sanitizer({
+                allowElements: ['ruby', 'rt', 'rp'],
+                allowAttributes: {} // Block all attributes entirely
+            });
+
+            // Safely parse and inject
+            editor.setHTML(cleanHTML, { sanitizer });
+        }
+
         function replaceLastChars(deleteCount, newString) {
             editor.focus();
             const selection = window.getSelection();
@@ -1002,10 +1119,19 @@
 
             selection.removeAllRanges();
             selection.addRange(range);
+            saveText();
         }
 
         function isChinese() {
             return activeLayoutId === "congkit" || activeLayoutId === "daaijik";
+        }
+
+        function chineseDict() {
+            if (activeLayoutId === "congkit")
+                return ckDictionary;
+            else if (activeLayoutId === "daaijik")
+                return djDictionary;
+            return null;
         }
 
         function updateCandidateList() {
@@ -1013,7 +1139,7 @@
                 candidateList.innerHTML = "";
                 return;
             }
-            const candidates = ckDictionary[ckBuffer] || [];
+            const candidates = chineseDict()[ckBuffer] || [];
             candidateList.innerHTML = "";
             candidates.slice(0, 9).forEach((char, index) => {
                 const span = document.createElement('span');
@@ -1029,24 +1155,35 @@
             });
         }
 
+        const DAAIJIK_NUMS = ['!', '@', '#', '$', '%', '^', '&', '*', '(', ')'];
+
         function processKey(keyChar) {
             if (isChinese()) {
                 resetAutomaton();
                 const currentLen = ckBuffer.length;
-                if (/^[1-9]$/.test(keyChar) && currentLen > 0) {
+                if (activeLayoutId === 'congkit' && /^[1-9]$/.test(keyChar) && currentLen > 0) {
                     const candidates = ckDictionary[ckBuffer] || [];
                     const index = parseInt(keyChar) - 1;
                     if (candidates[index]) {
                         replaceLastChars(currentLen, candidates[index]);
                         ckBuffer = "";
                         updateCandidateList();
-                    } else {
-
+                    }
+                } else if (activeLayoutId === 'daaijik' && DAAIJIK_NUMS.includes(keyChar)) {
+                    const candidates = djDictionary[ckBuffer] || [];
+                    const index = DAAIJIK_NUMS.indexOf(keyChar);
+                    if (candidates[index]) {
+                        replaceLastChars(currentLen, candidates[index]);
+                        ckBuffer = "";
+                        updateCandidateList();
                     }
                 } else {
                     const layout = activeLayout;
                     const englishKey = layout.charToKey[keyChar] || keyChar;
-                    if (/^[a-z]$/.test(englishKey) && currentLen < 5) {
+                    var pattern = /^[a-z]$/;
+                    if (activeLayoutId === 'daaijik')
+                        pattern = /^[a-z0-9\/,.;]$/;
+                    if (pattern.test(englishKey) && currentLen < 5) {
                         ckBuffer += englishKey;
                         updateCandidateList();
                         insertAtCaret(layout.jamoMap[englishKey]);
@@ -1239,7 +1376,7 @@
                 e.preventDefault();
             const currentLen = ckBuffer.length;
             if (currentLen > 0) {
-                const candidates = ckDictionary[ckBuffer] || [];
+                const candidates = chineseDict()[ckBuffer] || [];
                 if (candidates.length > 0) {
                     replaceLastChars(currentLen, candidates[0]);
                 } else {
@@ -1313,6 +1450,7 @@
         // Dynamic Layout Initialization Routine
         function initLayout(layoutId) {
             activeLayoutId = layoutId;
+            localStorage.setItem('activeLayoutId', layoutId);
             activeLayout = KEYBOARD_LAYOUTS[activeLayoutId];
 
             // Reset mapping state
@@ -1443,6 +1581,7 @@
             // Sync selection state
             lastActiveRange = range.cloneRange();
             triggerPlaceholderCheck();
+            saveText();
         }
 
         // ==========================================
@@ -1629,6 +1768,19 @@
 
         editor.addEventListener('click', () => {
             resetAutomaton();
+        });
+
+        editor.addEventListener('paste', () => {
+            e.preventDefault();
+
+            // Grab pasted text as plain text only (strips all external HTML/scripts)
+            const text = e.clipboardData.getData('text/plain');
+
+            // Insert it safely at the cursor position
+            const selection = window.getSelection();
+            if (!selection.rangeCount) return;
+            selection.deleteFromDocument();
+            selection.getRangeAt(0).insertNode(document.createTextNode(text));
         });
 
         // Keep selection synced on document selection events
@@ -1839,6 +1991,7 @@
         // ==========================================
         populateLayoutDropdown();
         initLayout(activeLayoutId);
+        loadText();
         triggerPlaceholderCheck();
     </script>
 </body>

@@ -444,10 +444,10 @@
             .then(data => { ckDictionary = data; })
             .catch(err => console.error("Error loading Congkit dictionary:", err));
 
-        fetch('daaijik4.json')
+        fetch('daaiji4.json')
             .then(res => res.json())
             .then(data => { djDictionary = data; })
-            .catch(err => console.error("Error loading Daaijik dictionary:", err));
+            .catch(err => console.error("Error loading Daaiji dictionary:", err));
 
         // =======================================================
         // REGISTERABLE EXTENSIBLE KEYBOARD SCHEMAS
@@ -769,13 +769,28 @@
                 '.': '。',
                 ',': '，',
                 '\'': '、',
-                '/': '……'
+                '/': '……',
+                'Q': '⿰',
+                'W': '⿱',
+                'E': '⿲',
+                'R': '⿳',
+                'T': '⿴',
+                'Y': '⿵',
+                'U': '⿶',
+                'I': '⿷',
+                'O': '⿼',
+                'P': '⿸',
+                'A': '⿹',
+                'S': '⿺',
+                'D': '⿽',
             },
 
             charToKey: {
                 '手': 'q', '田': 'w', '水': 'e', '口': 'r', '廿': 't', '卜': 'y', '山': 'u', '戈': 'i', '人': 'o', '心': 'p',
                 '日': 'a', '尸': 's', '木': 'd', '火': 'f', '土': 'g', '竹': 'h', '十': 'j', '大': 'k', '中': 'l',
                 '重': 'z', '難': 'x', '金': 'c', '女': 'v', '月': 'b', '弓': 'n', '一': 'm',
+                '⿰': 'Q', '⿱': 'W', '⿲': 'E', '⿳': 'R', '⿴': 'T', '⿵': 'Y', '⿶': 'U', '⿷': 'I', '⿼': 'O', '⿸': 'P',
+                '⿹': 'A', '⿺': 'S', '⿽': 'D'
             },
             choseongCombinations: {},
             vowelCombinations: {},
@@ -789,10 +804,10 @@
                     "{123} ， {openbrace} {space} {closebrace} 。 {enter}"
                 ],
                 shift: [
-                    "1 2 3 4 5 6 7 8 9 0",
-                    "麥 米 田 竹 去 宇 聿 鬥 刀 巾",
-                    "虫 鳥 魚 犬 阜 小 爿 邑 户",
-                    "{shift} Z X 歹 辵 广 N M {backspace}",
+                    "! @ # $ % ^ & * ( )",
+                    "⿰ ⿱ ⿲ ⿳ ⿴ ⿵ ⿶ ⿷ ⿼ ⿸",
+                    "⿹ ⿺ ⿽ f g h j k l",
+                    "{shift} z x c v b n m {backspace}",
                     "{openbrace} {space} {closebrace} {enter}"
                 ],
                 special: [
@@ -810,8 +825,8 @@
             }
         };
 
-        KEYBOARD_LAYOUTS["daaijik"] = {
-            name: "Daaijik 大易",
+        KEYBOARD_LAYOUTS["daaiji"] = {
+            name: "Daaiji 大易",
             jamoMap: {
                 '1': '言',
                 '2': '牛',
@@ -866,8 +881,8 @@
                     "言 牛 目 四 王 車 田 八 足 金",
                     "石 山 一 工 糸 火 艸 木 口 耳",
                     "人 革 日 土 手 鳥 月 立 女 虫",
-                    "{shift} 心 水 鹿 禾 馬 魚 雨 力 舟 竹 {backspace}",
-                    "{123} ， {openbrace} {space} {closebrace} 。 {enter}"
+                    "心 水 鹿 禾 馬 魚 雨 力 舟 竹",
+                    "， {openbrace} {space} {closebrace} 。 {backspace} {enter}"
                 ],
                 shift: [
                     "1 2 3 4 5 6 7 8 9 0",
@@ -1024,6 +1039,8 @@
             '\u11B9': { t: '\u11B8', l: '\u1109' }
         };
 
+        const IDS_LEN = { '⿰': 2, '⿱': 2, '⿲': 3, '⿳': 3, '⿴': 2, '⿵': 2, '⿶': 2, '⿷': 2, '⿼': 2, '⿸': 2, '⿹': 2, '⿺': 2, '⿽': 2 };
+
         // =======================================================
         // STREAM SHAPING STATE MACHINE (NON-BLOCKING MULTI-JAMO)
         // =======================================================
@@ -1123,13 +1140,13 @@
         }
 
         function isChinese() {
-            return activeLayoutId === "congkit" || activeLayoutId === "daaijik";
+            return activeLayoutId === "congkit" || activeLayoutId === "daaiji";
         }
 
         function chineseDict() {
             if (activeLayoutId === "congkit")
                 return ckDictionary;
-            else if (activeLayoutId === "daaijik")
+            else if (activeLayoutId === "daaiji")
                 return djDictionary;
             return null;
         }
@@ -1155,7 +1172,7 @@
             });
         }
 
-        const DAAIJIK_NUMS = ['!', '@', '#', '$', '%', '^', '&', '*', '(', ')'];
+        const DAAIJI_NUMS = ['!', '@', '#', '$', '%', '^', '&', '*', '(', ')'];
 
         function processKey(keyChar) {
             if (isChinese()) {
@@ -1169,9 +1186,9 @@
                         ckBuffer = "";
                         updateCandidateList();
                     }
-                } else if (activeLayoutId === 'daaijik' && DAAIJIK_NUMS.includes(keyChar)) {
+                } else if (activeLayoutId === 'daaiji' && DAAIJI_NUMS.includes(keyChar)) {
                     const candidates = djDictionary[ckBuffer] || [];
-                    const index = DAAIJIK_NUMS.indexOf(keyChar);
+                    const index = DAAIJI_NUMS.indexOf(keyChar);
                     if (candidates[index]) {
                         replaceLastChars(currentLen, candidates[index]);
                         ckBuffer = "";
@@ -1181,7 +1198,7 @@
                     const layout = activeLayout;
                     const englishKey = layout.charToKey[keyChar] || keyChar;
                     var pattern = /^[a-z]$/;
-                    if (activeLayoutId === 'daaijik')
+                    if (activeLayoutId === 'daaiji')
                         pattern = /^[a-z0-9\/,.;]$/;
                     if (pattern.test(englishKey) && currentLen < 5) {
                         ckBuffer += englishKey;
@@ -1189,7 +1206,8 @@
                         insertAtCaret(layout.jamoMap[englishKey]);
                         saveSelection();
                     } else {
-                        replaceLastChars(currentLen, englishKey);
+                        const outKey = layout.jamoMap[englishKey] || englishKey;
+                        replaceLastChars(currentLen, outKey);
                         ckBuffer = "";
                         updateCandidateList();
                     }

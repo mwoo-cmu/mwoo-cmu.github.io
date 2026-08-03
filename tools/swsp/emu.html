@@ -639,16 +639,83 @@
             uvAttr.needsUpdate = true;
         }
 
-        // Spawn Attack Die (d8 - Octahedron)
+        // Active transition state tracker
+        let transitionActive = false;
+
+        // Smoothly align target quaternions over time
+        function initiateSmoothLanding(delayMs = 1000) {
+            setTimeout(() => {
+                transitionActive = true;
+
+                diceBodies.forEach((body, idx) => {
+                    const mesh = diceMeshes[idx];
+                    const isD8 = mesh.geometry.type === 'OctahedronGeometry';
+
+                    const targetQ = new THREE.Quaternion();
+                    if (!isD8) {
+                        // d6 resting flat on bottom face
+                        targetQ.setFromAxisAngle(new THREE.Vector3(1, 0, 0), 0);
+                    } else {
+                        // Compound Euler rotation to tilt an octahedron face completely horizontal:
+                        // Pitch (X) by ~35.26 deg, Roll (Z) by ~45 deg
+                        const euler = new THREE.Euler(
+                            Math.atan(1 / Math.SQRT2), // ~0.6155 rad (35.26 deg)
+                            0,
+                            Math.PI / 4,               // ~0.7854 rad (45 deg)
+                            'XYZ'
+                        );
+                        targetQ.setFromEuler(euler);
+                    }
+
+                    // Attach target rotation property to mesh for slerp loop
+                    mesh.userData.targetQuaternion = targetQ;
+                });
+            }, delayMs);
+        }
+
+        // Updated spawnD6: Guarantees top face (+Y) has target icon
+        function spawnD6(targetIcon) {
+            const size = 1.1;
+            const geometry = new THREE.BoxGeometry(size, size, size);
+
+            // Three.js Box Face Order: [+X, -X, +Y (TOP), -Y (BOTTOM), +Z, -Z]
+            const materials = [
+                new THREE.MeshStandardMaterial({ map: createIconTexture('a', '#1e1b4b', '#e0e7ff'), roughness: 0.3 }),
+                new THREE.MeshStandardMaterial({ map: createIconTexture('b', '#1e1b4b', '#e0e7ff'), roughness: 0.3 }),
+                new THREE.MeshStandardMaterial({ map: createIconTexture(targetIcon, '#1e1b4b', '#e0e7ff'), roughness: 0.3 }), // TOP FACE = TARGET
+                new THREE.MeshStandardMaterial({ map: createIconTexture('c', '#1e1b4b', '#e0e7ff'), roughness: 0.3 }),
+                new THREE.MeshStandardMaterial({ map: createIconTexture('d', '#1e1b4b', '#e0e7ff'), roughness: 0.3 }),
+                new THREE.MeshStandardMaterial({ map: createIconTexture('e', '#1e1b4b', '#e0e7ff'), roughness: 0.3 })
+            ];
+
+            const mesh = new THREE.Mesh(geometry, materials);
+            mesh.castShadow = true;
+            scene.add(mesh);
+
+            const shape = new CANNON.Box(new CANNON.Vec3(size / 2, size / 2, size / 2));
+            const body = new CANNON.Body({ mass: 1.0, shape: shape });
+
+            body.linearDamping = 0.5;
+            body.angularDamping = 0.7;
+
+            // Spread out spawn positions to prevent initial overlapping explosions
+            const spawnX = (Math.random() - 0.5) * 3;
+            const spawnZ = (Math.random() - 0.5) * 2;
+            body.position.set(spawnX, 4 + Math.random() * 2, spawnZ);
+
+            body.velocity.set((Math.random() - 0.5) * 3, -4, (Math.random() - 0.5) * 3);
+            body.angularVelocity.set(Math.random() * 12, Math.random() * 12, Math.random() * 12);
+
+            world.addBody(body);
+            diceBodies.push(body);
+            diceMeshes.push(mesh);
+        }
+
+        // Updated spawnD8: Guarantees top face (+Y) has target icon
         function spawnD8(targetIcon) {
             const radius = 0.85;
             const geometry = new THREE.OctahedronGeometry(radius);
-
-            // 1. Re-map UVs so shatterpoint_icons sit squarely in the center of each triangular face
             applyD8FaceUVs(geometry);
-
-            // 2. Orient geometry so a flat face points upward by default when resting
-            geometry.rotateX(Math.atan(Math.SQRT2));
 
             const texture = createIconTexture(targetIcon, '#881337', '#fecdd3');
             const material = new THREE.MeshStandardMaterial({
@@ -661,8 +728,7 @@
             mesh.castShadow = true;
             scene.add(mesh);
 
-            // 3. Build a true 8-sided ConvexPolyhedron physics body
-            // Exact vertex positions of a unit octahedron rotated by Math.atan(Math.SQRT2)
+            // Physics Shape
             const vertices = [
                 new CANNON.Vec3(0, radius, 0),
                 new CANNON.Vec3(-radius, 0, 0),
@@ -671,27 +737,21 @@
                 new CANNON.Vec3(0, 0, radius),
                 new CANNON.Vec3(0, -radius, 0)
             ];
-
-            // Define the 8 triangular faces (vertex indices)
             const faces = [
-                [0, 1, 2], [0, 2, 3], [0, 3, 4], [0, 4, 1], // Top 4 faces
-                [5, 2, 1], [5, 3, 2], [5, 4, 3], [5, 1, 4]  // Bottom 4 faces
+                [0, 1, 2], [0, 2, 3], [0, 3, 4], [0, 4, 1],
+                [5, 2, 1], [5, 3, 2], [5, 4, 3], [5, 1, 4]
             ];
 
             const shape = new CANNON.ConvexPolyhedron(vertices, faces);
-
-            // Apply the same rotation to the physics shape as the mesh
-            const q = new CANNON.Quaternion();
-            q.setFromAxisAngle(new CANNON.Vec3(1, 0, 0), Math.atan(Math.SQRT2));
-            shape.transformAllPoints(new CANNON.Vec3(0, 0, 0), q);
-
             const body = new CANNON.Body({ mass: 1.2, shape: shape });
-            body.linearDamping = 0.4;
-            body.angularDamping = 0.6; // High angular damping forces it to quickly rest flat on a face
+            body.linearDamping = 0.5;
+            body.angularDamping = 0.7;
 
-            // Initial toss parameters
-            body.position.set((Math.random() - 0.5) * 2, 4 + Math.random() * 2, (Math.random() - 0.5) * 2);
-            body.velocity.set((Math.random() - 0.5) * 4, -4, (Math.random() - 0.5) * 4);
+            const spawnX = (Math.random() - 0.5) * 3;
+            const spawnZ = (Math.random() - 0.5) * 2;
+            body.position.set(spawnX, 4 + Math.random() * 2, spawnZ);
+
+            body.velocity.set((Math.random() - 0.5) * 3, -4, (Math.random() - 0.5) * 3);
             body.angularVelocity.set(Math.random() * 12, Math.random() * 12, Math.random() * 12);
 
             world.addBody(body);
@@ -699,41 +759,73 @@
             diceMeshes.push(mesh);
         }
 
-        // Spawn Defence Die (d6 - Cube)
-        function spawnD6(targetIcon) {
-            const size = 1.1;
-            const geometry = new THREE.BoxGeometry(size, size, size);
+        // Separate dice if they get too close to prevent overlapping/clipping
+        function enforceDiceSeparation() {
+            const minDistance = 1.35; // Collision radius sum threshold
 
-            // 6 Cube Face Materials
-            const texture = createIconTexture(targetIcon, '#1e1b4b', '#e0e7ff');
-            const materials = Array(6).fill(new THREE.MeshStandardMaterial({ map: texture, roughness: 0.3 }));
+            for (let i = 0; i < diceBodies.length; i++) {
+                for (let j = i + 1; j < diceBodies.length; j++) {
+                    const b1 = diceBodies[i];
+                    const b2 = diceBodies[j];
 
-            const mesh = new THREE.Mesh(geometry, materials);
-            mesh.castShadow = true;
-            scene.add(mesh);
+                    const dx = b2.position.x - b1.position.x;
+                    const dz = b2.position.z - b1.position.z;
+                    const dist = Math.sqrt(dx * dx + dz * dz);
 
-            const shape = new CANNON.Box(new CANNON.Vec3(size / 2, size / 2, size / 2));
-            const body = new CANNON.Body({ mass: 1.0, shape: shape });
+                    if (dist < minDistance && dist > 0.001) {
+                        const overlap = (minDistance - dist) * 0.5;
+                        const nx = dx / dist;
+                        const nz = dz / dist;
 
-            body.linearDamping = 0.3;
-            body.angularDamping = 0.4;
-
-            body.position.set((Math.random() - 0.5) * 2, 4 + Math.random() * 2, (Math.random() - 0.5) * 2);
-            body.velocity.set((Math.random() - 0.5) * 4, -4, (Math.random() - 0.5) * 4);
-            body.angularVelocity.set(Math.random() * 12, Math.random() * 12, Math.random() * 12);
-
-            world.addBody(body);
-            diceBodies.push(body);
-            diceMeshes.push(mesh);
+                        // Push physics bodies apart
+                        b1.position.x -= nx * overlap;
+                        b1.position.z -= nz * overlap;
+                        b2.position.x += nx * overlap;
+                        b2.position.z += nz * overlap;
+                    }
+                }
+            }
         }
 
+        // Updated Animation Loop with Smooth Slerp & Overlap Prevention
+        function animate3D() {
+            requestAnimationFrame(animate3D);
+            world.step(1 / 60);
+
+            // 1. Prevent Overlaps
+            enforceDiceSeparation();
+
+            // 2. Sync Three.js Meshes & Smoothly Transition Rotations
+            for (let i = 0; i < diceBodies.length; i++) {
+                const body = diceBodies[i];
+                const mesh = diceMeshes[i];
+
+                mesh.position.copy(body.position);
+
+                if (transitionActive && mesh.userData.targetQuaternion) {
+                    // Gradually slow down linear and angular momentum
+                    body.velocity.scale(0.85, body.velocity);
+                    body.angularVelocity.scale(0.85, body.angularVelocity);
+
+                    // Smoothly interpolate (slerp) orientation towards top-facing target
+                    mesh.quaternion.slerp(mesh.userData.targetQuaternion, 0.12);
+                    body.quaternion.copy(mesh.quaternion);
+                } else {
+                    mesh.quaternion.copy(body.quaternion);
+                }
+            }
+
+            renderer.render(scene, camera);
+        }
+
+        // Trigger roll and schedule smooth landing
         function rollDice3D(attackIcons = [], defenceIcons = []) {
             document.getElementById('diceTrayContainer').classList.remove('hidden');
             document.getElementById('diceTrayContainer').classList.add('flex');
 
             if (!isInitialized) init3DDiceTray();
 
-            // Clear previous roll items
+            transitionActive = false;
             diceBodies.forEach(b => world.remove(b));
             diceMeshes.forEach(m => scene.remove(m));
             diceBodies = [];
@@ -744,18 +836,9 @@
 
             // Spawn Defence Dice (Blue d6)
             defenceIcons.forEach(icon => spawnD6(icon));
-        }
 
-        function animate3D() {
-            requestAnimationFrame(animate3D);
-            world.step(1 / 60);
-
-            for (let i = 0; i < diceBodies.length; i++) {
-                diceMeshes[i].position.copy(diceBodies[i].position);
-                diceMeshes[i].quaternion.copy(diceBodies[i].quaternion);
-            }
-
-            renderer.render(scene, camera);
+            // Initiate smooth face alignment after 1 second of natural tumbling
+            initiateSmoothLanding(600);
         }
 
         function closeDiceTray() {

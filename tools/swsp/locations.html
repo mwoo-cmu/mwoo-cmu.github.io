@@ -1,18 +1,239 @@
+<!DOCTYPE html>
 <html lang="en-US">
-    <head>
-        <link rel="preconnect" href="https://fonts.googleapis.com">
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
-        <meta content="utf-8" http-equiv="encoding">
-        <link href="./style.css" rel="stylesheet">
-        <title>Location List - Solo Shatterpoint</title>
-    </head>
-    <body>
-        <script type="text/javascript" src="util.js"></script>
-        <table>
-            
-        </table>
-        <script>
-        </script>
-    </body>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Location List - Solo Shatterpoint</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="./style.css" rel="stylesheet">
+</head>
+
+<body class="bg-slate-950 text-slate-100 min-h-screen font-sans antialiased p-4 md:p-8">
+    <script type="text/javascript" src="util.js"></script>
+
+    <main class="max-w-4xl mx-auto space-y-6">
+        <!-- Header Navigation -->
+        <header
+            class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 pb-4 border-b border-slate-800">
+            <div>
+                <h1 class="text-2xl font-bold tracking-tight text-white">Locations & Scenarios</h1>
+                <p class="text-xs text-slate-400 mt-1">Explore sectors, room mechanics, faction missions, and random
+                    location events.</p>
+            </div>
+            <div class="flex items-center gap-3 text-xs">
+                <a href="./index.html"
+                    class="px-3 py-1.5 bg-slate-900 hover:bg-slate-800 text-slate-300 rounded-md border border-slate-800 transition">←
+                    Setup</a>
+                <a href="./chars.html"
+                    class="px-3 py-1.5 bg-slate-900 hover:bg-slate-800 text-slate-300 rounded-md border border-slate-800 transition">Characters
+                    ↗</a>
+                <a href="./enemies.html"
+                    class="px-3 py-1.5 bg-slate-900 hover:bg-slate-800 text-slate-300 rounded-md border border-slate-800 transition">Enemies
+                    ↗</a>
+            </div>
+        </header>
+
+        <!-- Search & Global Expand Controls -->
+        <section
+            class="bg-slate-900/60 border border-slate-800 rounded-xl p-4 flex flex-col sm:flex-row items-center justify-between gap-4">
+            <input type="text" id="locationFilter" placeholder="Filter locations by name..."
+                class="w-full sm:max-w-md bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-xs focus:outline-none focus:border-amber-500 transition">
+            <div class="flex items-center gap-3">
+                <span id="locationCount" class="text-xs font-mono text-amber-400 whitespace-nowrap">0 Locations</span>
+            </div>
+        </section>
+
+        <!-- Location Cards List -->
+        <section id="locations" class="space-y-4">
+            <div class="text-center py-8 text-xs text-slate-500">Loading sector intelligence...</div>
+        </section>
+    </main>
+
+    <script>
+        function toggleLocationCollapse(locHash) {
+            const content = document.getElementById(`locContent_${locHash}`);
+            const icon = document.getElementById(`locIcon_${locHash}`);
+
+            if (content.classList.contains('hidden')) {
+                content.classList.remove('hidden');
+                icon.style.transform = 'rotate(180deg)';
+            } else {
+                content.classList.add('hidden');
+                icon.style.transform = 'rotate(0deg)';
+            }
+        }
+
+        function renderFactionTab(locHash, factionName, factionData, isDefault, locData) {
+            var factHash = cyrb53(locHash + factionName);
+            var missions = factionData["missions"]?.map(m => renderMission(m)).join("") || "";
+            var enemyMissions = factionData["enemyMissions"]?.map(m => renderMission(m)).join("") || "";
+
+            var events = factionData["events"]?.["pool"]?.map(e => renderEventCard(e, locData)).join("") || "";
+            var enemyEvents = factionData["enemyEvents"]?.["pool"]?.map(e => renderEventCard(e, locData)).join("") || "";
+
+            return `
+                <div id="factionTab_${factHash}" class="faction-content ${isDefault ? '' : 'hidden'} space-y-4 pt-3">
+                    ${missions ? `
+                        <div>
+                            <h4 class="text-xs font-bold text-slate-300 mb-2 flex items-center gap-1.5">
+                                <span class="w-2 h-2 rounded-full bg-indigo-500"></span> Player Missions
+                            </h4>
+                            <div class="space-y-1">${missions}</div>
+                        </div>
+                    ` : ''}
+
+                    ${enemyMissions ? `
+                        <div>
+                            <h4 class="text-xs font-bold text-slate-300 mb-2 flex items-center gap-1.5">
+                                <span class="w-2 h-2 rounded-full bg-rose-500"></span> Enemy Missions
+                            </h4>
+                            <div class="space-y-1">${enemyMissions}</div>
+                        </div>
+                    ` : ''}
+
+                    ${events ? `
+                        <div>
+                            <h4 class="text-xs font-bold text-slate-300 mb-2">Faction Events</h4>
+                            <div class="space-y-1">${events}</div>
+                        </div>
+                    ` : ''}
+
+                    ${enemyEvents ? `
+                        <div>
+                            <h4 class="text-xs font-bold text-slate-300 mb-2">Enemy Events</h4>
+                            <div class="space-y-1">${enemyEvents}</div>
+                        </div>
+                    ` : ''}
+
+                    ${!missions && !enemyMissions && !events && !enemyEvents ? `
+                        <div class="text-xs text-slate-500 italic py-2 text-center">No specific scenarios registered for this faction.</div>
+                    ` : ''}
+                </div>`;
+        }
+
+        function switchFactionTab(locHash, factHash) {
+            var container = document.getElementById(`locContainer_${locHash}`);
+            container.querySelectorAll('.faction-content').forEach(el => el.classList.add('hidden'));
+            container.querySelectorAll('.faction-btn').forEach(btn => {
+                btn.classList.remove('bg-amber-500/20', 'text-amber-300', 'border-amber-500/40');
+                btn.classList.add('bg-slate-950', 'text-slate-400', 'border-slate-800');
+            });
+
+            document.getElementById(`factionTab_${factHash}`).classList.remove('hidden');
+            var activeBtn = document.getElementById(`factBtn_${factHash}`);
+            activeBtn.classList.remove('bg-slate-950', 'text-slate-400', 'border-slate-800');
+            activeBtn.classList.add('bg-amber-500/20', 'text-amber-300', 'border-amber-500/40');
+        }
+
+        function renderLocationCard(name, locData) {
+            var locHash = cyrb53(name);
+            var roomKeys = locData.rooms ? Object.keys(locData.rooms) : [];
+            var roomsList = roomKeys.map(r => `<span class="bg-slate-950 px-2 py-1 rounded border border-slate-800 text-slate-300 text-xs">${r}</span>`).join(" ");
+
+            // Location Abilities / Special Rules
+            var roomAbilities = locData.rooms ? renderLocationAbilities(locData.rooms) : "";
+
+            // Global Events (Active for Any Faction)
+            var globalEventsPool = locData["events"]?.["pool"] || [];
+            var globalEventsHtml = globalEventsPool.map(e => renderEventCard(e, locData)).join("");
+
+            // Faction Content Tabs
+            var factions = locData.factions ? Object.entries(locData.factions) : [];
+            var factionButtons = [];
+            var factionContents = [];
+
+            factions.forEach(([factName, factData], idx) => {
+                var factHash = cyrb53(locHash + factName);
+                var isDefault = idx === 0;
+
+                factionButtons.push(`
+                        <button id="factBtn_${factHash}" onclick="switchFactionTab('${locHash}', '${factHash}')" 
+                                class="faction-btn px-3 py-1.5 text-xs font-semibold rounded-lg border transition ${isDefault ? 'bg-amber-500/20 text-amber-300 border-amber-500/40' : 'bg-slate-950 text-slate-400 border-slate-800 hover:border-slate-700'}">
+                            ${factName}
+                        </button>
+                    `);
+
+                factionContents.push(renderFactionTab(locHash, factName, factData, isDefault, locData));
+            });
+
+            return `
+                <div id="locContainer_${locHash}" class="bg-slate-900/40 border border-slate-800 rounded-xl overflow-hidden transition">
+                    <!-- Collapsible Trigger Header -->
+                    <button onclick="toggleLocationCollapse('${locHash}')" class="w-full text-left p-4 bg-slate-900/80 hover:bg-slate-900 flex justify-between items-center transition cursor-pointer select-none border-b border-slate-800/60">
+                        <div class="flex items-center gap-3">
+                            <h2 class="text-base font-bold text-amber-400 tracking-wide">${name}</h2>
+                            <div class="flex gap-1.5 text-[11px]">
+                                <span class="bg-slate-950 px-2 py-0.5 rounded border border-slate-800 text-slate-400">${roomKeys.length} Rooms</span>
+                                <span class="bg-slate-950 px-2 py-0.5 rounded border border-slate-800 text-slate-400">${factions.length} Factions</span>
+                            </div>
+                        </div>
+                        <svg id="locIcon_${locHash}" class="w-4 h-4 text-slate-400 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                        </svg>
+                    </button>
+
+                    <!-- Collapsible Body Content -->
+                    <div id="locContent_${locHash}" class="p-5 space-y-5">
+                        <!-- Rooms & Terrain -->
+                        ${roomsList ? `
+                            <div>
+                                <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Sector Rooms</h3>
+                                <div class="flex flex-wrap gap-1.5">${roomsList}</div>
+                            </div>
+                        ` : ''}
+
+                        <!-- Room Specific Interactive Abilities -->
+                        ${roomAbilities ? `
+                            <div>
+                                <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Sector Room Actions</h3>
+                                ${roomAbilities}
+                            </div>
+                        ` : ''}
+
+                        <!-- Global Sector Events -->
+                        ${globalEventsHtml ? `
+                            <div>
+                                <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Global Sector Events (Any Faction)</h3>
+                                <div class="space-y-1">${globalEventsHtml}</div>
+                            </div>
+                        ` : ''}
+
+                        <!-- Faction-Specific Section Tabs -->
+                        ${factions.length > 0 ? `
+                            <div class="pt-2 border-t border-slate-800/80">
+                                <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3">Faction Scenarios & Events</h3>
+                                <div class="flex flex-wrap gap-2">${factionButtons.join("")}</div>
+                                <div>${factionContents.join("")}</div>
+                            </div>
+                        ` : ''}
+                    </div>
+                </div>`;
+        }
+
+        function loadLocations() {
+            withLocations((LOCATIONS) => {
+                var filter = document.getElementById("locationFilter").value.toLowerCase();
+                var entries = Object.entries(LOCATIONS);
+
+                if (filter) {
+                    entries = entries.filter(([name]) => name.toLowerCase().includes(filter));
+                }
+
+                document.getElementById("locationCount").innerText = `${entries.length} Location(s)`;
+
+                if (entries.length === 0) {
+                    document.getElementById("locations").innerHTML = `<div class="text-center py-8 text-xs text-slate-500">No matching locations found.</div>`;
+                    return;
+                }
+
+                document.getElementById("locations").innerHTML = entries.map(([name, data]) => renderLocationCard(name, data)).join("");
+            });
+        }
+
+        document.getElementById("locationFilter").addEventListener("input", loadLocations);
+        loadLocations();
+    </script>
+</body>
+
 </html>

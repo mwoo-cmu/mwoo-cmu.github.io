@@ -10,7 +10,8 @@
   border-collapse: collapse;
 }
 
-.lineTable th, .lineTable td {
+.lineTable th,
+.lineTable td {
   border: 1px solid black;
 }
 
@@ -18,7 +19,7 @@
   display: inline-flex;
 }
 
-.tableGroup > * {
+.tableGroup>* {
   margin: 0 0 8 8;
 }
 
@@ -36,7 +37,8 @@
 }
 
 /* Add a background color to the button if it is clicked on (add the .active class with JS), and when you move the mouse over it (hover) */
-.active, .collapsible:hover {
+.active,
+.collapsible:hover {
   background-color: #ccc;
 }
 
@@ -53,7 +55,8 @@
 } */
 
 .collapsible:after {
-  content: '\02795'; /* Unicode character for "plus" sign (+) */
+  content: '\02795';
+  /* Unicode character for "plus" sign (+) */
   font-size: 13px;
   color: white;
   float: right;
@@ -61,5 +64,11 @@
 }
 
 .active:after {
-  content: "\2796"; /* Unicode character for "minus" sign (-) */
+  content: "\2796";
+  /* Unicode character for "minus" sign (-) */
+}
+
+.shatterpoint-icon {
+  font-family: shatterpoint_icons;
+  font-weight: 400;
 }

@@ -1,28 +1,164 @@
+<!DOCTYPE html>
 <html lang="en-US">
-    <head>
-        <link rel="preconnect" href="https://fonts.googleapis.com">
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
-        <meta content="utf-8" http-equiv="encoding">
-        <link href="./style.css" rel="stylesheet">
-        <title>Character List - Solo Shatterpoint</title>
-    </head>
-    <body>
-        <script type="text/javascript" src="util.js"></script>
-        <!-- TODO: filters -->
-        <!-- <table>
-            
-        </table> -->
-        <div id="chars" style="font-size: 24;"></div>
-        <script>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Character List - Solo Shatterpoint</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="./style.css" rel="stylesheet">
+</head>
+
+<body class="bg-slate-950 text-slate-100 min-h-screen font-sans antialiased p-4 md:p-8">
+    <script type="text/javascript" src="util.js"></script>
+    <datalist id="tagDatalist"></datalist>
+
+    <main class="max-w-4xl mx-auto space-y-6">
+        <!-- Header & Navigation -->
+        <header
+            class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 pb-4 border-b border-slate-800">
+            <div>
+                <h1 class="text-2xl font-bold tracking-tight text-white">Character Codex</h1>
+                <p class="text-xs text-slate-400 mt-1">Browse, filter, and inspect unit stats, abilities, and stances.
+                </p>
+            </div>
+            <div class="flex items-center gap-3 text-xs">
+                <a href="./index.html"
+                    class="px-3 py-1.5 bg-slate-900 hover:bg-slate-800 text-slate-300 rounded-md border border-slate-800 transition">←
+                    Setup</a>
+                <a href="./enemies.html"
+                    class="px-3 py-1.5 bg-slate-900 hover:bg-slate-800 text-slate-300 rounded-md border border-slate-800 transition">Enemies
+                    ↗</a>
+                <a href="./locations.html"
+                    class="px-3 py-1.5 bg-slate-900 hover:bg-slate-800 text-slate-300 rounded-md border border-slate-800 transition">Locations
+                    ↗</a>
+            </div>
+        </header>
+
+        <!-- Search & Filter Card -->
+        <section class="bg-slate-900/60 border border-slate-800 rounded-xl p-4 space-y-4">
+            <div class="flex items-center justify-between border-b border-slate-800 pb-2">
+                <h2 class="text-xs font-bold text-slate-300 uppercase tracking-wider">Search & Filter</h2>
+                <span id="resultCount" class="text-xs font-mono text-indigo-400">Loading units...</span>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <!-- Search Input -->
+                <div>
+                    <label class="block text-xs font-medium text-slate-400 mb-1">Search Name</label>
+                    <input type="text" id="nameFilter" placeholder="e.g. Ahsoka, Fett..."
+                        class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-xs focus:outline-none focus:border-indigo-500 transition">
+                </div>
+
+                <!-- Tag Input & Match Mode -->
+                <div>
+                    <div class="flex justify-between items-center mb-1">
+                        <label class="text-xs font-medium text-slate-400">Add Tag Filter</label>
+                        <div class="flex items-center gap-3 text-xs">
+                            <label for="allTags" class="cursor-pointer flex items-center gap-1 text-slate-400">
+                                <input type="radio" id="allTags" name="tagOper" checked class="accent-indigo-500">
+                                <span>All</span>
+                            </label>
+                            <label for="anyTag" class="cursor-pointer flex items-center gap-1 text-slate-400">
+                                <input type="radio" id="anyTag" name="tagOper" class="accent-indigo-500">
+                                <span>Any</span>
+                            </label>
+                        </div>
+                    </div>
+                    <input type="text" id="tagFilter" list="tagDatalist" placeholder="e.g. Mandalorian, Jedi..."
+                        class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-xs focus:outline-none focus:border-indigo-500 transition">
+                </div>
+            </div>
+
+            <!-- Active Tag Chips -->
+            <div id="tagList" class="flex flex-wrap gap-2 pt-1"></div>
+        </section>
+
+        <!-- Unit List Area -->
+        <section id="chars" class="space-y-3">
+            <div class="text-center py-8 text-xs text-slate-500">Loading units database...</div>
+        </section>
+    </main>
+
+    <script>
+        var tags = [];
+        var filterTags = [];
+
+        withUnits((UNITS) => {
+            const urlParams = new URLSearchParams(window.location.search);
+            var name = urlParams.get("name");
+            if (name) {
+                document.getElementById("chars").innerHTML = renderUnit(name, true);
+                document.getElementById("resultCount").innerText = "1 unit";
+            } else {
+                var tagDatalist = document.getElementById("tagDatalist");
+                var unitList = Object.values(UNITS).filter(u => !u.hidden && u.abilities);
+
+                unitList.forEach((unit) => {
+                    unit["tags"].forEach((tag) => {
+                        if (!tags.includes(tag)) {
+                            tagDatalist.innerHTML += `<option value="${tag}"></option>`;
+                            tags.push(tag);
+                        }
+                    });
+                });
+
+                document.getElementById("chars").innerHTML = unitList.map((unit) => renderUnit(unit, true)).join("");
+                document.getElementById("resultCount").innerText = `${unitList.length} units`;
+            }
+        });
+
+        function sortAndFilter() {
             withUnits((UNITS) => {
-                const urlParams = new URLSearchParams(window.location.search);
-                var name = urlParams.get("name");
-                if (name)
-                    document.getElementById("chars").innerHTML = renderUnit(name, true);
-                else
-                    document.getElementById("chars").innerHTML = Object.values(UNITS).map((unit) => renderUnit(unit, true)).join("<hr>");
+                var units = Object.values(UNITS).filter(u => !u.hidden && u.abilities);
+                var name = document.getElementById("nameFilter").value.toLowerCase();
+
+                if (name) {
+                    units = units.filter((unit) => unit["name"].toLowerCase().includes(name));
+                }
+                if (filterTags.length > 0) {
+                    if (document.getElementById("allTags").checked) {
+                        units = units.filter((unit) => filterTags.every((tag) => unit["tags"].includes(tag)));
+                    } else {
+                        units = units.filter((unit) => filterTags.some((tag) => unit["tags"].includes(tag)));
+                    }
+                }
+
+                document.getElementById("chars").innerHTML = units.map((unit) => renderUnit(unit, true)).join("");
+                document.getElementById("resultCount").innerText = `${units.length} units`;
             });
-        </script>
-    </body>
+        }
+
+        function genTag(tag) {
+            var hash = cyrb53(tag);
+            return `<span id="tagChip_${hash}" class="inline-flex items-center gap-1.5 px-2.5 py-1 bg-indigo-950/60 border border-indigo-800/60 text-indigo-300 rounded-full text-xs font-medium">
+                    ${tag}
+                    <button onclick="delTag('${tag}')" class="hover:text-rose-400 font-bold ml-1">×</button>
+                </span>`;
+        }
+
+        function delTag(tag) {
+            var hash = cyrb53(tag);
+            var el = document.getElementById(`tagChip_${hash}`);
+            if (el) el.remove();
+            filterTags = filterTags.filter(t => t !== tag);
+            sortAndFilter();
+        }
+
+        document.getElementById("nameFilter").addEventListener("input", sortAndFilter);
+        document.getElementById("allTags").addEventListener("change", sortAndFilter);
+        document.getElementById("anyTag").addEventListener("change", sortAndFilter);
+
+        document.getElementById("tagFilter").addEventListener("change", (event) => {
+            var value = event.target.value;
+            if (tags.includes(value) && !filterTags.includes(value)) {
+                document.getElementById("tagList").insertAdjacentHTML("beforeend", genTag(value));
+                filterTags.push(value);
+                sortAndFilter();
+                event.target.value = "";
+            }
+        });
+    </script>
+</body>
+
 </html>

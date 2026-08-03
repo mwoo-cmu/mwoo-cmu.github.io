@@ -1,27 +1,160 @@
+<!DOCTYPE html>
 <html lang="en-US">
-    <head>
-        <link rel="preconnect" href="https://fonts.googleapis.com">
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
-        <meta content="utf-8" http-equiv="encoding">
-        <link href="./style.css" rel="stylesheet">
-        <title>Enemy List - Solo Shatterpoint</title>
-    </head>
-    <body>
-        <script type="text/javascript" src="util.js"></script>
-        <table>
-            
-        </table>
-        <div id="enemies" style="font-size: 24;"></div>
-        <script>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enemy List - Solo Shatterpoint</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="./style.css" rel="stylesheet">
+</head>
+
+<body class="bg-slate-950 text-slate-100 min-h-screen font-sans antialiased p-4 md:p-8">
+    <script type="text/javascript" src="util.js"></script>
+    <datalist id="tagDatalist"></datalist>
+
+    <main class="max-w-4xl mx-auto space-y-6">
+        <!-- Header Navigation -->
+        <header
+            class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 pb-4 border-b border-slate-800">
+            <div>
+                <h1 class="text-2xl font-bold tracking-tight text-white">Enemy Bestiary</h1>
+                <p class="text-xs text-slate-400 mt-1">Inspect adversary stats, combat trees, and behavior decks.</p>
+            </div>
+            <div class="flex items-center gap-3 text-xs">
+                <a href="./index.html"
+                    class="px-3 py-1.5 bg-slate-900 hover:bg-slate-800 text-slate-300 rounded-md border border-slate-800 transition">←
+                    Setup</a>
+                <a href="./chars.html"
+                    class="px-3 py-1.5 bg-slate-900 hover:bg-slate-800 text-slate-300 rounded-md border border-slate-800 transition">Characters
+                    ↗</a>
+                <a href="./locations.html"
+                    class="px-3 py-1.5 bg-slate-900 hover:bg-slate-800 text-slate-300 rounded-md border border-slate-800 transition">Locations
+                    ↗</a>
+            </div>
+        </header>
+
+        <!-- Filter Controls -->
+        <section class="bg-slate-900/60 border border-slate-800 rounded-xl p-4 space-y-4">
+            <div class="flex items-center justify-between border-b border-slate-800 pb-2">
+                <h2 class="text-xs font-bold text-slate-300 uppercase tracking-wider">Search & Filter Enemies</h2>
+                <span id="resultCount" class="text-xs font-mono text-rose-400">Loading enemies...</span>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-xs font-medium text-slate-400 mb-1">Search Enemy Name</label>
+                    <input type="text" id="nameFilter" placeholder="e.g. Trooper, B1..."
+                        class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-xs focus:outline-none focus:border-rose-500 transition">
+                </div>
+
+                <div>
+                    <div class="flex justify-between items-center mb-1">
+                        <label class="text-xs font-medium text-slate-400">Filter by Tag</label>
+                        <div class="flex items-center gap-3 text-xs">
+                            <label for="allTags" class="cursor-pointer flex items-center gap-1 text-slate-400">
+                                <input type="radio" id="allTags" name="tagOper" checked class="accent-rose-500">
+                                <span>All</span>
+                            </label>
+                            <label for="anyTag" class="cursor-pointer flex items-center gap-1 text-slate-400">
+                                <input type="radio" id="anyTag" name="tagOper" class="accent-rose-500">
+                                <span>Any</span>
+                            </label>
+                        </div>
+                    </div>
+                    <input type="text" id="tagFilter" list="tagDatalist" placeholder="e.g. Droid, Galactic Empire..."
+                        class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-xs focus:outline-none focus:border-rose-500 transition">
+                </div>
+            </div>
+
+            <div id="tagList" class="flex flex-wrap gap-2 pt-1"></div>
+        </section>
+
+        <!-- Enemy Roster Display -->
+        <section id="enemies" class="space-y-3">
+            <div class="text-center py-8 text-xs text-slate-500">Loading enemy data...</div>
+        </section>
+    </main>
+
+    <script>
+        var tags = [];
+        var filterTags = [];
+
+        withEnemies((ENEMIES) => {
+            const urlParams = new URLSearchParams(window.location.search);
+            var name = urlParams.get("name");
+            if (name) {
+                document.getElementById("enemies").innerHTML = renderEnemy(name, true);
+                document.getElementById("resultCount").innerText = "1 enemy unit";
+            } else {
+                var tagDatalist = document.getElementById("tagDatalist");
+                var enemyList = Object.values(ENEMIES);
+
+                enemyList.forEach((unit) => {
+                    unit["tags"]?.forEach((tag) => {
+                        if (!tags.includes(tag)) {
+                            tagDatalist.innerHTML += `<option value="${tag}"></option>`;
+                            tags.push(tag);
+                        }
+                    });
+                });
+
+                document.getElementById("enemies").innerHTML = enemyList.map((unit) => renderEnemy(unit, true)).join("");
+                document.getElementById("resultCount").innerText = `${enemyList.length} enemies`;
+            }
+        });
+
+        function sortAndFilter() {
             withEnemies((ENEMIES) => {
-                const urlParams = new URLSearchParams(window.location.search);
-                var name = urlParams.get("name");
-                if (name)
-                    document.getElementById("enemies").innerHTML = renderEnemy(name, true);
-                else
-                    document.getElementById("enemies").innerHTML = Object.values(ENEMIES).map((unit) => renderEnemy(unit, true)).join("<hr>");
+                var enemies = Object.values(ENEMIES);
+                var name = document.getElementById("nameFilter").value.toLowerCase();
+
+                if (name) {
+                    enemies = enemies.filter((unit) => unit["name"].toLowerCase().includes(name));
+                }
+                if (filterTags.length > 0) {
+                    if (document.getElementById("allTags").checked) {
+                        enemies = enemies.filter((unit) => filterTags.every((tag) => unit["tags"]?.includes(tag)));
+                    } else {
+                        enemies = enemies.filter((unit) => filterTags.some((tag) => unit["tags"]?.includes(tag)));
+                    }
+                }
+
+                document.getElementById("enemies").innerHTML = enemies.map((unit) => renderEnemy(unit, true)).join("");
+                document.getElementById("resultCount").innerText = `${enemies.length} enemies`;
             });
-        </script>
-    </body>
+        }
+
+        function genTag(tag) {
+            var hash = cyrb53(tag);
+            return `<span id="tagChip_${hash}" class="inline-flex items-center gap-1.5 px-2.5 py-1 bg-rose-950/60 border border-rose-800/60 text-rose-300 rounded-full text-xs font-medium">
+                    ${tag}
+                    <button onclick="delTag('${tag}')" class="hover:text-white font-bold ml-1">×</button>
+                </span>`;
+        }
+
+        function delTag(tag) {
+            var hash = cyrb53(tag);
+            var el = document.getElementById(`tagChip_${hash}`);
+            if (el) el.remove();
+            filterTags = filterTags.filter(t => t !== tag);
+            sortAndFilter();
+        }
+
+        document.getElementById("nameFilter").addEventListener("input", sortAndFilter);
+        document.getElementById("allTags").addEventListener("change", sortAndFilter);
+        document.getElementById("anyTag").addEventListener("change", sortAndFilter);
+
+        document.getElementById("tagFilter").addEventListener("change", (event) => {
+            var value = event.target.value;
+            if (tags.includes(value) && !filterTags.includes(value)) {
+                document.getElementById("tagList").insertAdjacentHTML("beforeend", genTag(value));
+                filterTags.push(value);
+                sortAndFilter();
+                event.target.value = "";
+            }
+        });
+    </script>
+</body>
+
 </html>

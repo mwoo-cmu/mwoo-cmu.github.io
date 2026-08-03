@@ -1,47 +1,190 @@
+<!DOCTYPE html>
 <html lang="en-US">
-    <head>
-        <link rel="preconnect" href="https://fonts.googleapis.com">
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
-        <meta content="utf-8" http-equiv="encoding">
-        <link href="./style.css" rel="stylesheet">
-        <title>Rules Changes - Solo Shatterpoint</title>
-    </head>
-    <body>
-        <script type="text/javascript" src="util.js"></script>
-        <h2>Enemies</h2>
-        Enemy <b>Primary</b> and <b>Secondary Units</b> have an <span style="font-family: shatterpoint_icons;">j</span> deck. On the enemy turn, draw an Order card from their Order deck. Play cards from the selected enemy's <span style="font-family: shatterpoint_icons;">j</span> deck equal to their <span style="font-family: shatterpoint_icons;">j</span> number. 
-        <br>
-        The Enemy <b>Primary Unit</b> also has a <span style="font-family: shatterpoint_icons;">i</span> deck. Whenever it is Wounded, play a card from their <span style="font-family: shatterpoint_icons;">i</span> deck.
-        <br><br>
-        Whenever an enemy Unit makes an attack, remove one die from the attack roll for each Wound or Injury it has.
-        <h2>Grid System</h2>
-        <span style="font-family: shatterpoint_icons;">g</span>: count the number of orthogonal spaces in the shortest path from one object to another.
-        <br>
-        <span style="font-family: shatterpoint_icons;">p</span>: The affected character can be moved 1 <span style="font-family: shatterpoint_icons;">g</span> away from (backwards or diagonally backwards, but not horizontal) the shoving character, then the shoving character may immediately move toward the affected character 1 <span style="font-family: shatterpoint_icons;">g</span>.
-        <br>
-        Pull: The affected character can be moved towards (forwards or diagonally forwards, but not horizontal) the pulling character. Alternatively, move the affected character along the shortest path to the pulling character, even if this would increase the Euclidean distance between the two.
-        <br>
-        <span style="font-family: shatterpoint_icons;">x</span>: Move up to 5 spaces, can move through allies, but not enemies; must end on an empty space. If Engaged, <span style="font-family: shatterpoint_icons;">h</span> instead.
-        <br>
-        <span style="font-family: shatterpoint_icons;">h</span>: Move up to 2 spaces, can move through allies and enemies; must end on an empty space.
-        <br>
-        <span style="font-family: shatterpoint_icons;">t</span>: Move to any other empty space in LOS.
-        <br>
-        <span style="font-family: shatterpoint_icons;">u</span>: Convert to <span style="font-family: shatterpoint_icons;">h</span>.
-        <br>
-        LOS: two grid spaces have Line of Sight as long as an uninterupted line can be drawn from any point within one grid space to any point within the other.
-        <br>
-        Cover: The LOS requirement for Cover applies similarly. If an interupted line from any point in the attacker's grid space to any point in the defender's grid space, this condition is met.
-        <h2>Locations</h2>
-        Each time you reshuffle your Order deck, draw an Event card and resolve its effects.
-        <br>
-        Mission token: A marker used for tracking missions. The specific interactions of this token are dependent on the Mission.
-        <br>
-        Priority Objective token: A marker used primarily by the Enemy deck to determine movement.
-        <h2>Stacking Supporting Units</h2>
-        If things are getting too cluttered, or there aren't enough minifigures, you may choose to stack <b>Supporting Units</b> together. The <b>Unit Stack</b> has the combined <span style="font-family: shatterpoint_icons;">r</span> and <span style="font-family: shatterpoint_icons;">w</span> of all of the stacked <b>Supporting Units</b>. A <b>Unit Stack</b>'s dice pool for attack and defence increases by one for each extra character added to it. Each time the <b>Unit Stack</b> is Injured, remove one character from the stack.
-        <script>
-        </script>
-    </body>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rules Changes - Solo Shatterpoint</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="./style.css" rel="stylesheet">
+</head>
+
+<body class="bg-slate-950 text-slate-100 min-h-screen font-sans antialiased p-4 md:p-8">
+    <script type="text/javascript" src="util.js"></script>
+
+    <main class="max-w-4xl mx-auto space-y-6">
+        <!-- Header Navigation -->
+        <header
+            class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 pb-4 border-b border-slate-800">
+            <div>
+                <h1 class="text-2xl font-bold tracking-tight text-white">Rules Modifications</h1>
+                <p class="text-xs text-slate-400 mt-1">Solo play adaptations, grid navigation, and mechanics reference.
+                </p>
+            </div>
+            <div class="flex items-center gap-3 text-xs">
+                <a href="./index.html"
+                    class="px-3 py-1.5 bg-slate-900 hover:bg-slate-800 text-slate-300 rounded-md border border-slate-800 transition">←
+                    Setup</a>
+                <a href="./chars.html"
+                    class="px-3 py-1.5 bg-slate-900 hover:bg-slate-800 text-slate-300 rounded-md border border-slate-800 transition">Characters
+                    ↗</a>
+                <a href="./enemies.html"
+                    class="px-3 py-1.5 bg-slate-900 hover:bg-slate-800 text-slate-300 rounded-md border border-slate-800 transition">Enemies
+                    ↗</a>
+                <a href="./locations.html"
+                    class="px-3 py-1.5 bg-slate-900 hover:bg-slate-800 text-slate-300 rounded-md border border-slate-800 transition">Locations
+                    ↗</a>
+            </div>
+        </header>
+
+        <!-- Rules Content Grid -->
+        <div class="space-y-6">
+
+            <!-- Enemies Section -->
+            <section class="bg-slate-900/60 border border-slate-800 rounded-xl p-5 space-y-3">
+                <h2 class="text-base font-bold text-rose-400 border-b border-slate-800 pb-2 flex items-center gap-2">
+                    <span>Enemies & AI Behavior</span>
+                </h2>
+                <ul class="space-y-2 text-xs leading-relaxed text-slate-300">
+                    <li class="bg-slate-950/60 p-3 rounded-lg border border-slate-800/80">
+                        Enemy <b class="text-white">Primary</b> and <b class="text-white">Secondary Units</b> have an
+                        <span
+                            class="shatterpoint-icon text-sm bg-slate-900 border border-slate-700 px-1.5 py-0.5 rounded text-indigo-400">j</span>
+                        deck. On the enemy turn, draw an Order card from their Order deck. Play cards from the selected
+                        enemy's <span
+                            class="shatterpoint-icon text-sm bg-slate-900 border border-slate-700 px-1.5 py-0.5 rounded text-indigo-400">j</span>
+                        deck equal to their <span
+                            class="shatterpoint-icon text-sm bg-slate-900 border border-slate-700 px-1.5 py-0.5 rounded text-indigo-400">j</span>
+                        number.
+                    </li>
+                    <li class="bg-slate-950/60 p-3 rounded-lg border border-slate-800/80">
+                        The Enemy <b class="text-white">Primary Unit</b> also has a <span
+                            class="shatterpoint-icon text-sm bg-slate-900 border border-slate-700 px-1.5 py-0.5 rounded text-rose-400">i</span>
+                        deck. Whenever it is Wounded, play a card from their <span
+                            class="shatterpoint-icon text-sm bg-slate-900 border border-slate-700 px-1.5 py-0.5 rounded text-rose-400">i</span>
+                        deck.
+                    </li>
+                    <li class="bg-slate-950/60 p-3 rounded-lg border border-slate-800/80">
+                        Whenever an enemy Unit makes an attack, remove one die from the attack roll for each Wound or
+                        Injury it has.
+                    </li>
+                </ul>
+            </section>
+
+            <!-- Grid System Section -->
+            <section class="bg-slate-900/60 border border-slate-800 rounded-xl p-5 space-y-3">
+                <h2 class="text-base font-bold text-amber-400 border-b border-slate-800 pb-2">Grid & Movement Mechanics
+                </h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
+                    <div class="bg-slate-950/60 p-3 rounded-lg border border-slate-800/80 space-y-1">
+                        <span class="font-bold text-slate-200 flex items-center gap-1.5">
+                            <span
+                                class="shatterpoint-icon text-sm bg-slate-900 border border-slate-700 px-1.5 py-0.5 rounded text-amber-400">g</span>
+                            Distance
+                        </span>
+                        <p class="text-slate-400">Count the number of orthogonal spaces in the shortest path from one
+                            object to another.</p>
+                    </div>
+
+                    <div class="bg-slate-950/60 p-3 rounded-lg border border-slate-800/80 space-y-1">
+                        <span class="font-bold text-slate-200 flex items-center gap-1.5">
+                            <span
+                                class="shatterpoint-icon text-sm bg-slate-900 border border-slate-700 px-1.5 py-0.5 rounded text-amber-400">p</span>
+                            Shove
+                        </span>
+                        <p class="text-slate-400">Move affected character 1 <span class="shatterpoint-icon">g</span>
+                            away (backwards/diagonally backwards). The shoving character may then move 1 <span
+                                class="shatterpoint-icon">g</span> toward them.</p>
+                    </div>
+
+                    <div class="bg-slate-950/60 p-3 rounded-lg border border-slate-800/80 space-y-1">
+                        <span class="font-bold text-slate-200">Pull</span>
+                        <p class="text-slate-400">Move affected character towards pulling character (forwards/diagonally
+                            forwards) or along shortest path to them, even if Euclidean distance increases.</p>
+                    </div>
+
+                    <div class="bg-slate-950/60 p-3 rounded-lg border border-slate-800/80 space-y-1">
+                        <span class="font-bold text-slate-200 flex items-center gap-1.5">
+                            <span
+                                class="shatterpoint-icon text-sm bg-slate-900 border border-slate-700 px-1.5 py-0.5 rounded text-amber-400">x</span>
+                            Advance / Dash
+                        </span>
+                        <p class="text-slate-400">Move up to 5 spaces (through allies, not enemies); must end on empty
+                            space. If Engaged, convert to <span class="shatterpoint-icon">h</span> instead.</p>
+                    </div>
+
+                    <div class="bg-slate-950/60 p-3 rounded-lg border border-slate-800/80 space-y-1">
+                        <span class="font-bold text-slate-200 flex items-center gap-1.5">
+                            <span
+                                class="shatterpoint-icon text-sm bg-slate-900 border border-slate-700 px-1.5 py-0.5 rounded text-amber-400">h</span>
+                            Reposition
+                        </span>
+                        <p class="text-slate-400">Move up to 2 spaces through both allies and enemies; must end on an
+                            empty space.</p>
+                    </div>
+
+                    <div class="bg-slate-950/60 p-3 rounded-lg border border-slate-800/80 space-y-1">
+                        <span class="font-bold text-slate-200 flex items-center gap-1.5">
+                            <span
+                                class="shatterpoint-icon text-sm bg-slate-900 border border-slate-700 px-1.5 py-0.5 rounded text-amber-400">t</span>
+                            Jump / Fly
+                        </span>
+                        <p class="text-slate-400">Move to any other empty space within Line of Sight (LOS).</p>
+                    </div>
+
+                    <div class="bg-slate-950/60 p-3 rounded-lg border border-slate-800/80 space-y-1 md:col-span-2">
+                        <span class="font-bold text-slate-200">Line of Sight (LOS) & Cover</span>
+                        <p class="text-slate-400">Two grid spaces have LOS if an uninterrupted line can be drawn from
+                            any point within one grid space to any point within the other. Cover condition is met if an
+                            interrupted line exists between any point in attacker's space to defender's space.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Locations & Tokens Section -->
+            <section class="bg-slate-900/60 border border-slate-800 rounded-xl p-5 space-y-3">
+                <h2 class="text-base font-bold text-sky-400 border-b border-slate-800 pb-2">Locations & Tokens</h2>
+                <ul class="space-y-2 text-xs text-slate-300">
+                    <li class="bg-slate-950/60 p-3 rounded-lg border border-slate-800/80">
+                        <b class="text-white">Event Triggers:</b> Each time you reshuffle your Order deck, draw an Event
+                        card and resolve its effects immediately.
+                    </li>
+                    <li class="bg-slate-950/60 p-3 rounded-lg border border-slate-800/80">
+                        <b class="text-white">Mission Token:</b> A marker used for tracking scenario objectives.
+                        Specific interactions are defined by the current Mission.
+                    </li>
+                    <li class="bg-slate-950/60 p-3 rounded-lg border border-slate-800/80">
+                        <b class="text-white">Priority Objective Token:</b> A marker used primarily by the Enemy AI deck
+                        to determine targeting and movement vectors.
+                    </li>
+                </ul>
+            </section>
+
+            <!-- Stacking Units Section -->
+            <section class="bg-slate-900/60 border border-slate-800 rounded-xl p-5 space-y-3">
+                <h2 class="text-base font-bold text-emerald-400 border-b border-slate-800 pb-2">Stacking Supporting
+                    Units</h2>
+                <div
+                    class="bg-slate-950/60 p-4 rounded-lg border border-slate-800/80 text-xs leading-relaxed text-slate-300 space-y-2">
+                    <p>
+                        If the board is getting cluttered or miniature availability is limited, you may choose to stack
+                        <b class="text-white">Supporting Units</b> together.
+                    </p>
+                    <ul class="list-disc list-inside text-slate-400 space-y-1 pt-1">
+                        <li>The <b class="text-slate-200">Unit Stack</b> has the combined Stamina (<span
+                                class="shatterpoint-icon text-sm bg-slate-900 border border-slate-700 px-1.5 py-0.5 rounded text-green-500">r</span>)
+                            and Durability (<span
+                                class="shatterpoint-icon text-sm bg-slate-900 border border-slate-700 px-1.5 py-0.5 rounded text-emerald-400">w</span>)
+                            of all stacked Supporting Units.</li>
+                        <li>The stack's dice pool for attack and defense increases by <b class="text-slate-200">+1
+                                die</b> for each extra character added to it.</li>
+                        <li>Each time the Unit Stack is Injured, remove one character from the stack.</li>
+                    </ul>
+                </div>
+            </section>
+
+        </div>
+    </main>
+</body>
+
 </html>

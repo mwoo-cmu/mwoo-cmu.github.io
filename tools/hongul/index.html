@@ -12,12 +12,6 @@
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <!-- <link
-        href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&family=Noto+Serif+KR:wght@300;400;500;700;900&display=swap"
-        rel="stylesheet"> -->
-    <link
-        href="https://fonts.googleapis.com/css2?family=Noto+Sans+HK:wght@300;400;500;700&family=Noto+Serif+HK:wght@300;400;500;700;900&display=swap"
-        rel="stylesheet">
 
     <!-- simple-keyboard CDN CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/simple-keyboard@latest/build/css/index.css">
@@ -27,8 +21,18 @@
     <script type="text/javascript" src="purify.min.js"></script>
 
     <style>
+        @font-face {
+            font-family: 'Plangothic-Fallback';
+            src: url('https://cdn.jsdelivr.net/gh/Fitzgerald-Porthmouth-Koenigsegg/Plangothic_Project@build/fonts/otf/PlangothicP1-Regular.otf') format('woff2');
+        }
+        
+        @font-face {
+            font-family: 'Plangothic-Fallback';
+            src: url('https://cdn.jsdelivr.net/gh/Fitzgerald-Porthmouth-Koenigsegg/Plangothic_Project@build/fonts/otf/PlangothicP2-Regular.otf') format('woff2');
+        }
+        
         body {
-            font-family: 'Noto Sans HK', sans-serif;
+            font-family: 'Noto Sans HK', 'Plangothic-Fallback', sans-serif;
             background-color: #0d1117;
             color: #c9d1d9;
         }
@@ -36,7 +40,7 @@
         /* Prioritize Malgun Gothic / Apple SD Gothic Neo with fallbacks */
         .old-korean-editor {
             /* font-family: 'Malgun Gothic', 'Apple SD Gothic Neo', 'Noto Serif KR', 'Noto Sans KR', sans-serif; */
-            font-family: 'Noto Sans HK', 'Malgun Gothic', 'Apple SD Gothic Neo', 'Noto Serif HK', sans-serif;
+            font-family: 'Noto Sans HK', 'Plangothic-Fallback', 'Malgun Gothic', 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif;
             font-variant-ligatures: normal;
             font-feature-settings: "ccmp" 1, "jamo" 1, "clig" 1;
             line-height: 2.2;
@@ -61,7 +65,7 @@
         }
 
         rt {
-            font-family: 'Noto Sans HK', sans-serif;
+            font-family: 'Noto Sans HK', 'Plangothic-Fallback', sans-serif;
             font-size: 0.55em;
             color: #818cf8;
             font-weight: 500;
@@ -319,7 +323,7 @@
                     <span id="lblActiveKeyboardType">Universal Old Jamo Layout</span>
                 </span> -->
                 <div id="candidateList" class="text-xs font-mono text-slate-500 flex gap-2"
-                    style="font-family: 'Noto Sans HK';font-size: 20px;"></div>
+                    style="font-family: 'Noto Sans HK', 'Plangothic-Fallback';font-size: 20px;"></div>
             </div>
 
             <div class="simple-keyboard"></div>

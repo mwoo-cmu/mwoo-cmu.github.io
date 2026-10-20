@@ -25,7 +25,7 @@
             font-family: 'Plangothic-Fallback';
             src: url('https://cdn.jsdelivr.net/gh/Fitzgerald-Porthmouth-Koenigsegg/Plangothic_Project@build/fonts/otf/PlangothicP1-Regular.otf') format('woff2');
         }
-        
+
         @font-face {
             font-family: 'Plangothic-Fallback';
             src: url('https://cdn.jsdelivr.net/gh/Fitzgerald-Porthmouth-Koenigsegg/Plangothic_Project@build/fonts/otf/PlangothicP2-Regular.otf') format('woff2');
@@ -33,14 +33,14 @@
 
         @font-face {
             font-family: 'ChironHei';
-            src: url('https://cdn.jsdelivr.net/gh/chiron-fonts/chiron-hei-hk/STATIC_OTF/ChironHeiHK-R.otf');
+            src: url('./ChironHeiKBZ.ttf');
             font-weight: normal;
             font-style: normal;
             font-display: swap;
         }
-        
+
         body {
-            font-family: 'Noto Sans HK', 'ChironHei', 'Plangothic-Fallback', sans-serif;
+            font-family: 'ChironHei', 'Plangothic-Fallback', sans-serif;
             background-color: #0d1117;
             color: #c9d1d9;
         }
@@ -48,7 +48,7 @@
         /* Prioritize Malgun Gothic / Apple SD Gothic Neo with fallbacks */
         .old-korean-editor {
             /* font-family: 'Malgun Gothic', 'Apple SD Gothic Neo', 'Noto Serif KR', 'Noto Sans KR', sans-serif; */
-            font-family: 'Noto Sans HK', 'ChironHei', 'Plangothic-Fallback', 'Malgun Gothic', 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif;
+            font-family: 'ChironHei', 'Plangothic-Fallback', 'Malgun Gothic', 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif;
             font-variant-ligatures: normal;
             font-feature-settings: "ccmp" 1, "jamo" 1, "clig" 1;
             line-height: 2.2;
@@ -73,7 +73,7 @@
         }
 
         rt {
-            font-family: 'Noto Sans HK', 'ChironHei', 'Plangothic-Fallback', sans-serif;
+            font-family: 'ChironHei', 'Plangothic-Fallback', sans-serif;
             font-size: 0.55em;
             color: #818cf8;
             font-weight: 500;
@@ -93,7 +93,7 @@
             background: #21262d;
             color: #c9d1d9;
             border-bottom: 2px solid #0d1117;
-            font-family: 'Noto Sans HK', sans-serif;
+            font-family: 'ChironHei', sans-serif;
             border-radius: 6px;
             font-size: 1.1rem;
             height: 48px;
@@ -331,7 +331,7 @@
                     <span id="lblActiveKeyboardType">Universal Old Jamo Layout</span>
                 </span> -->
                 <div id="candidateList" class="text-xs font-mono text-slate-500 flex gap-2"
-                    style="font-family: 'Noto Sans HK', 'ChironHei', 'Plangothic-Fallback';font-size: 20px;"></div>
+                    style="font-family: 'ChironHei', 'Plangothic-Fallback';font-size: 20px;"></div>
             </div>
 
             <div class="simple-keyboard"></div>
@@ -918,6 +918,176 @@
             }
         };
 
+        KEYBOARD_LAYOUTS["bopo"] = {
+            name: "Stacking Bopomofo",
+            jamoMap: {
+                'q': 'ㄉ',
+                'w': 'ㄙ',
+                'e': 'ㄘ',
+                'r': 'ㄗ',
+                't': 'ㄇ',
+                'y': 'ㄋ',
+                'u': 'ㄝ',
+                'i': 'ㆿ',
+                'o': 'ㄨ',
+                'p': 'ㆾ',
+                'a': 'ㄏ',
+                's': 'ㄆ',
+                'd': 'ㄌ',
+                'f': 'ㄍ',
+                'g': 'ㄫ',
+                'h': 'ㄊ',
+                'j': 'ㆦ',
+                'k': 'ㄚ',
+                'l': 'ㄧ',
+                'z': 'ㄖ',
+                'x': 'ㄎ',
+                'c': 'ㄈ',
+                'v': 'ㄅ',
+                'b': 'ㄩ',
+                'n': 'ㆳ',
+                'm': 'ㆨ',
+                '.': '。',
+                ',': '，',
+                '\'': '、',
+                '/': '……',
+                'Q': 'ㄕ',
+                'W': 'ㄒ',
+                'E': 'ㄑ',
+                'R': 'ㄐ',
+                'T': 'ㆢ',
+                'Y': 'ㆡ',
+                'U': 'ㆤ',
+                'I': 'ㆥ',
+                'O': 'ㆫ',
+                'P': 'ㄮ',
+                'A': 'ㄔ',
+                'S': 'ㄓ',
+                'D': 'ㆹ',
+                'F': 'ㆼ',
+                'G': 'ㄬ',
+                'H': 'ㆣ',
+                'J': 'ㆧ',
+                'K': 'ㆩ',
+                'L': 'ㆪ',
+                'Z': 'ㄦ',
+                'X': 'ㆽ',
+                'C': 'ㄪ',
+                'V': 'ㆠ',
+                'B': 'ㄭ',
+                'N': 'ㄛ',
+                'M': 'ㄜ',
+            },
+            radMap: {
+                'q': '衤\u034f˪ㆵ',
+                'w': '目\u034f˪ㆵ',
+                'e': '車\u034f˪ㆵ',
+                'r': '耳\u034f˪ㆵ',
+                't': '⺜\u034f˪ㆶ',
+                'y': '日\u034f˪ㆵ',
+                'u': '冫\u034f˪ㆵ',
+                'i': '石\u034f˪ㆵ',
+                'o': '木\u034f˪ㆵ',
+                'p': '山\u034f˪ㆵ',
+                'a': '口\u034f˪ㆵ',
+                's': '⺖\u034f˪ㆵ',
+                'd': '扌\u034f˪ㆵ',
+                'f': '亻\u034f˪ㆵ',
+                'g': '訁\u034f˪ㆵ',
+                'h': '氵\u034f˪ㆵ',
+                'j': '灬\u034f˪ㆷ',
+                'k': '土\u034f˪ㆵ',
+                'l': '⻗\u034f˪ㆶ',
+                'z': '⺼\u034f˪ㆵ',
+                'x': '礻\u034f˪ㆵ',
+                'c': '⻊\u034f˪ㆵ',
+                'v': '糹\u034f˪ㆵ',
+                'b': '⻟\u034f˪ㆵ',
+                'n': '釒\u034f˪ㆵ',
+                'm': '⺾\u034f˪ㆶ',
+                '6': 'ˉ',
+                '7': 'ˊ',
+                '8': 'ˋ',
+                '9': 'ˇ',
+                '0': '疒\u034f˪ㆻ',
+                'Q': '麥\u034f˪ㆵ',
+                'W': '米\u034f˪ㆵ',
+                'E': '田',
+                'R': '⺮\u034f˪ㆶ',
+                'T': '廴\u034f˪ㆴㆴ',
+                'Y': '䒑\u034f˪ㆶ',
+                'I': '斗\u034f˪ㆴ',
+                'U': '聿\u034f˪ㆴ',
+                'O': '刂\u034f˪ㆴ',
+                'P': '巾\u034f˪ㆵ',
+                'A': '虫\u034f˪ㆵ',
+                'S': '鳥\u034f˪ㆴ',
+                'D': '魚\u034f˪ㆵ',
+                'F': '犭\u034f˪ㆵ',
+                'G': '阝\u034f˪ㆵ',
+                'H': '⺌\u034f˪ㆶ',
+                'J': '爿\u034f˪ㆵ',
+                'K': '⻏\u034f˪ㆴ',
+                'L': '戶\u034f˪ㆵ',
+                'X': '力\u034f˪ㆴ',
+                'C': '歹\u034f˪ㆵ',
+                'V': '⻌\u034f˪ㆴㆴ',
+                'B': '广\u034f˪ㆻ',
+                'N': '鬥\u034f˪ㆴㆵ',
+                'M': '門\u034f˪ㆴㆵ',
+            },
+
+            charToKey: {
+                'ㄉ': 'q', 'ㄙ': 'w', 'ㄘ': 'e', 'ㄗ': 'r', 'ㄇ': 't', 'ㄋ': 'y', 'ㄝ': 'u', 'ㆿ': 'i', 'ㄨ': 'o', 'ㆾ': 'p', 'ㄏ': 'a', 'ㄆ': 's', 'ㄌ': 'd', 'ㄍ': 'f', 'ㄫ': 'g', 'ㄊ': 'h', 'ㆦ': 'j', 'ㄚ': 'k', 'ㄧ': 'l', 'ㄖ': 'z', 'ㄎ': 'x', 'ㄈ': 'c', 'ㄅ': 'v', 'ㄩ': 'b', 'ㆳ': 'n', 'ㆨ': 'm', '。': '.', '，': ',', '、': "'", '……': '/', 'ㄕ': 'Q', 'ㄒ': 'W', 'ㄑ': 'E', 'ㄐ': 'R', 'ㆢ': 'T', 'ㆡ': 'Y', 'ㆤ': 'U', 'ㆥ': 'I', 'ㆫ': 'O', 'ㄮ': 'P', 'ㄔ': 'A', 'ㄓ': 'S', 'ㆹ': 'D', 'ㆼ': 'F', 'ㄬ': 'G', 'ㆣ': 'H', 'ㆧ': 'J', 'ㆩ': 'K', 'ㆪ': 'L', 'ㄦ': 'Z', 'ㆽ': 'X', 'ㄪ': 'C', 'ㆠ': 'V', 'ㄭ': 'B', 'ㄛ': 'N', 'ㄜ': 'M',
+                '衣': 'q', '目': 'w', '車': 'e', '耳': 'r', '曰': 't', '日': 'y', '冰': 'u', '石': 'i', '木': 'o', '山': 'p', '口': 'a', '心': 's', '手': 'd', '人': 'f', '言': 'g', '水': 'h', '火': 'j', '土': 'k', '雨': 'l', '肉': 'z', '示': 'x', '足': 'c', '糸': 'v', '食': 'b', '金': 'n', '艸': 'm', 'ˉ': '6', 'ˊ': '7', 'ˋ': '8', 'ˇ': '9', '病': '0', '麥': 'Q', '米': 'W', '田': 'E', '竹': 'R', '去': 'T', '宇': 'Y', '聿': 'U', '斗': 'I', '刀': 'O', '巾': 'P', '虫': 'A', '鳥': 'S', '魚': 'D', '犬': 'F', '阜': 'G', '小': 'H', '爿': 'J', '邑': 'K', '戶': 'L', '力': 'X', '歹': 'C', '辵': 'V', '广': 'B', '鬥': 'N', '門': 'M',
+            },
+            choseongCombinations: {},
+            vowelCombinations: {},
+            jongseongCombinations: {},
+            virtualLayout: {
+                default: [
+                    "1 2 3 4 5 6 7 8 9 0",
+                    "ㄉ ㄙ ㄘ ㄗ ㄇ ㄋ ㄝ ㆿ ㄨ ㆾ",
+                    "ㄏ ㄆ ㄌ ㄍ ㄫ ㄊ ㆦ ㄚ ㄧ",
+                    "{shift} ㄖ ㄎ ㄈ ㄅ ㄩ ㆳ ㆨ {backspace}",
+                    "{rad} ， {space} 。 {enter}"
+                ],
+                shift: [
+                    "! @ # $ % ^ & * ( )",
+                    "ㄕ ㄒ ㄑ ㄐ ㆢ ㆡ ㆤ ㆥ ㆫ ㄮ",
+                    "ㄔ ㄓ ㆹ ㆼ ㄬ ㆣ ㆧ ㆩ ㆪ",
+                    "{shift} ㄦ ㆽ ㄪ ㆠ ㄭ ㄛ ㄜ {backspace}",
+                    "{123} ， {space} 。 {enter}"
+                ],
+                special: [
+                    "1 2 3 4 5 6 7 8 9 0",
+                    "@ # $ _ & - + ( ) /",
+                    "{=<>} * \" ' : ; ! ? {backspace}",
+                    "{ABC} , {space} . {enter}"
+                ],
+                special2: [
+                    "~ ` | • √ π ÷ × § ∆",
+                    "£ ¢ € ¥ ^ ° = { } \\",
+                    "{123} % © ® ™ ✓ [ ] {backspace}",
+                    "{ABC} , {space} . {enter}"
+                ],
+                rad: [
+                    "1 2 3 4 5 ˉ ˊ ˋ ˇ 病",
+                    "衣 目 車 耳 曰 日 冰 石 木 山",
+                    "口 心 手 人 言 水 火 土 雨",
+                    "{shift} 肉 示 足 糸 食 金 艸 {backspace}",
+                    "{bopo} {space} {enter}"
+                ],
+                rad2: [
+                    "1 2 3 4 5 6 7 8 9 0",
+                    "麥 米 田 竹 去 宇 聿 斗 刀 巾",
+                    "虫 鳥 魚 犬 阜 小 爿 邑 戶",
+                    "{shift} Z 力 歹 辵 广 鬥 門 {backspace}",
+                    "{bopo} {space} {enter}"
+                ],
+            }
+        };
+
         // 2. Register: Annotation Keyboard
         KEYBOARD_LAYOUTS["radical-tone"] = {
             name: "Ruby (Radical/Tone)",
@@ -1025,8 +1195,10 @@
         };
 
         // Current active layout state pointer
-        let activeLayoutId = localStorage.getItem('activeLayoutId') ?? "cantonese-korean";
+        let activeLayoutId = localStorage.getItem('activeLayoutId') ?? "bopo";
         let activeLayout = KEYBOARD_LAYOUTS[activeLayoutId];
+
+        let boporad = false;
 
         // System Constants
         const JONGSEONG_TO_CHOSEONG = {
@@ -1083,8 +1255,10 @@
         // Safe dynamic layout resolver
         function getKeyData(key) {
             const layout = activeLayout;
+            if (boporad && layout.radMap[key]) return layout.radMap[key];
             if (layout.jamoMap[key]) return layout.jamoMap[key];
             const englishKey = layout.charToKey[key];
+            if (englishKey && boporad && layout.radMap[englishKey]) return layout.radMap[englishKey];
             if (englishKey && layout.jamoMap[englishKey]) return layout.jamoMap[englishKey];
             return null;
         }
@@ -1512,6 +1686,8 @@
                         "{closebrace}": "}",
                         "{123}": "?123",
                         "{ABC}": "ABC",
+                        "{rad}": "偏",
+                        "{bopo}": "音",
                         "{=<>}": "=\\<"
                     },
                     buttonTheme: [
@@ -1521,7 +1697,7 @@
                         },
                         {
                             class: "functional-key",
-                            buttons: "{backspace} {enter} {shift} {space} {123} {ABC} {=<>}"
+                            buttons: "{backspace} {enter} {shift} {space} {123} {ABC} {=<>} {rad} {bopo}"
                         }
                     ]
                 });
@@ -1711,15 +1887,39 @@
         function onVirtualKeyPress(button) {
             if (button === "{shift}") {
                 let currentLayout = virtualKeyboard.options.layoutName;
+                let nextLayout = "default";
+                if (currentLayout === "default")
+                    nextLayout = "shift";
+                else if (currentLayout === "rad")
+                    nextLayout = "rad2"
+                else if (currentLayout === "rad2")
+                    nextLayout = "rad"
                 virtualKeyboard.setOptions({
-                    layoutName: currentLayout === "default" ? "shift" : "default"
+                    layoutName: nextLayout
                 });
             } else if (button === "{123}") {
                 let currentLayout = virtualKeyboard.options.layoutName;
                 virtualKeyboard.setOptions({
                     layoutName: "special"
                 });
+            } else if (button === "{123}") {
+                let currentLayout = virtualKeyboard.options.layoutName;
+                virtualKeyboard.setOptions({
+                    layoutName: "special2"
+                });
             } else if (button === "{ABC}") {
+                let currentLayout = virtualKeyboard.options.layoutName;
+                virtualKeyboard.setOptions({
+                    layoutName: "default"
+                });
+            } else if (button === "{rad}") {
+                boporad = true;
+                let currentLayout = virtualKeyboard.options.layoutName;
+                virtualKeyboard.setOptions({
+                    layoutName: "rad"
+                });
+            } else if (button === "{bopo}") {
+                boporad = false;
                 let currentLayout = virtualKeyboard.options.layoutName;
                 virtualKeyboard.setOptions({
                     layoutName: "default"
@@ -1783,6 +1983,14 @@
                 return;
             }
 
+            if (e.key === 'Tab') {
+                e.preventDefault();
+                boporad = !boporad;
+                virtualKeyboard.setOptions({
+                    layoutName: boporad ? "rad" : "default"
+                });
+                return;
+            }
             if (e.ctrlKey || e.metaKey || e.altKey || e.key.length > 1) {
                 return;
             }

@@ -1012,7 +1012,7 @@
                 '0': '疒\u034f˪ㆻ',
                 'Q': '麥\u034f˪ㆵ',
                 'W': '米\u034f˪ㆵ',
-                'E': '田',
+                'E': '⼞\u034f˪ㆴㆶ',
                 'R': '⺮\u034f˪ㆶ',
                 'T': '廴\u034f˪ㆴㆴ',
                 'Y': '䒑\u034f˪ㆶ',
@@ -1223,7 +1223,7 @@
             '\u11B9': { t: '\u11B8', l: '\u1109' }
         };
 
-        const IDS_LEN = { '⿰': 2, '⿱': 2, '⿲': 3, '⿳': 3, '⿴': 2, '⿵': 2, '⿶': 2, '⿷': 2, '⿼': 2, '⿸': 2, '⿹': 2, '⿺': 2, '⿽': 2 };
+        // const IDS_LEN = { '⿰': 2, '⿱': 2, '⿲': 3, '⿳': 3, '⿴': 2, '⿵': 2, '⿶': 2, '⿷': 2, '⿼': 2, '⿸': 2, '⿹': 2, '⿺': 2, '⿽': 2 };
 
         // =======================================================
         // STREAM SHAPING STATE MACHINE (NON-BLOCKING MULTI-JAMO)
@@ -1902,7 +1902,7 @@
                 virtualKeyboard.setOptions({
                     layoutName: "special"
                 });
-            } else if (button === "{123}") {
+            } else if (button === "{=<>}") {
                 let currentLayout = virtualKeyboard.options.layoutName;
                 virtualKeyboard.setOptions({
                     layoutName: "special2"

@@ -155,6 +155,16 @@
                     class="bg-slate-800 border border-slate-700 text-slate-100 text-sm rounded-lg px-3 py-1.5 focus:outline-none focus:border-indigo-500 transition-colors cursor-pointer">
                     <!-- Layout options are dynamically generated on initialization -->
                 </select>
+
+                <!-- New JSON Import Button & Hidden File Input -->
+                <button id="btnImportLayout"
+                    class="p-2 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-lg border border-slate-700 transition-all flex items-center gap-1.5 text-xs font-semibold"
+                    title="Import Custom JSON Layout">
+                    <i data-lucide="folder-open" class="w-4.5 h-4.5"></i>
+                    <span class="hidden sm:inline">Import JSON</span>
+                </button>
+                <input type="file" id="layoutFilePicker" accept=".json" class="hidden">
+
                 <button id="btnToggleKeyboard"
                     class="p-2 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-lg border border-slate-700 transition-all flex items-center gap-2"
                     title="Toggle Keyboard">
@@ -423,6 +433,8 @@
         const keyboardStatusIndicator = document.getElementById('keyboardStatusIndicator');
         const statusPulse = document.getElementById('statusPulse');
         const statusText = document.getElementById('statusText');
+        const btnImportLayout = document.getElementById('btnImportLayout');
+        const layoutFilePicker = document.getElementById('layoutFilePicker');
         // const virtualPulse = document.getElementById('virtualPulse');
 
         const btnToggleHeaderFloating = document.getElementById('btnToggleHeaderFloating');
@@ -453,12 +465,18 @@
         // Fetch your compiled JSON dictionary
         fetch('congkit3.json')
             .then(res => res.json())
-            .then(data => { ckDictionary = data; })
+            .then(data => {
+                ckDictionary = data;
+                loadCachedCustoms("congkit");
+            })
             .catch(err => console.error("Error loading Congkit dictionary:", err));
 
         fetch('daaiji4.json')
             .then(res => res.json())
-            .then(data => { djDictionary = data; })
+            .then(data => {
+                djDictionary = data;
+                loadCachedCustoms("daaiji");
+            })
             .catch(err => console.error("Error loading Daaiji dictionary:", err));
 
         // =======================================================
@@ -1222,8 +1240,6 @@
             '\u11B6': { t: '\u11AF', l: '\u1112' },
             '\u11B9': { t: '\u11B8', l: '\u1109' }
         };
-
-        // const IDS_LEN = { '⿰': 2, '⿱': 2, '⿲': 3, '⿳': 3, '⿴': 2, '⿵': 2, '⿶': 2, '⿷': 2, '⿼': 2, '⿸': 2, '⿹': 2, '⿺': 2, '⿽': 2 };
 
         // =======================================================
         // STREAM SHAPING STATE MACHINE (NON-BLOCKING MULTI-JAMO)
@@ -2182,6 +2198,121 @@
                 toast.classList.add('translate-y-12', 'opacity-0', 'pointer-events-none');
             }, 3000);
         }
+
+        // const IDS_LEN = { '⿰': 2, '⿱': 2, '⿲': 3, '⿳': 3, '⿴': 2, '⿵': 2, '⿶': 2, '⿷': 2, '⿼': 2, '⿸': 2, '⿹': 2, '⿺': 2, '⿽': 2 };
+        // const DICT_BOTH = 3;
+        // const DICT_CK = 1;
+        // const DICT_DJ = 2;
+        // function loadCustoms(customs, dictionary) {
+        //     for (const custom of customs) {
+        //         const trimmed = custom.trim();
+        //         const ids = trimmed.charAt(0);
+        //         if (!IDS_LEN.includes(ids))
+        //             console.log(`Can't load ${trimmed} because it doesn't start with an IDS marker.`);
+        //         const count = IDS_LEN[ids];
+        //         var ck = "";
+        //         var dj = "";
+        //         for (var i = 1; i <= count; i++) {
+        //             ck_chars = ckInverse[trimmed[i]];
+        //             if (ck_chars) {
+        //                 ck += ;
+        //             } else {
+        //                 console.log(`Error generating `);
+        //             }
+        //             dj += djInverse[trimmed[i]];
+        //         }
+        //         if (dictionary & 1) {
+        //             if (!ckDictionary.hasOwn(ck))
+        //                 ckDictionary[ck] = [];
+        //             ckDictionary[ck].push(custom);
+        //         }
+        //         if (dictionary & 2) {
+        //             if (!djDictionary.hasOwn(dj))
+        //                 djDictionary[dj] = [];
+        //             djDictionary[dj].push(custom);
+        //         }
+        //     }
+        // }
+
+        function loadCustoms(customs, dictionary) {
+            for (const [key, items] of Object.entries(customs)) {
+                if (dictionary.hasOwnProperty(key)) {
+                    dictionary[key].push(...items);
+                } else {
+                    dictionary[key] = items;
+                }
+                dictionary[key] = [...new Set(dictionary[key])]
+            }
+        }
+
+        // Load any previously cached custom layouts from localStorage on startup
+        function loadCachedCustoms(dictionary) {
+            try {
+                const cachedCustom = localStorage.getItem('customChars');
+                if (cachedCustom) {
+                    // this should be a list
+                    const customs = JSON.parse(cachedCustom);
+                    if (customs.hasOwnProperty(dictionary)) {
+                        loadCustoms(customs[dictionary], dictionary === "daaiji" ? djDictionary : ckDictionary);
+                    }
+                }
+            } catch (e) {
+                console.error("Failed to load cached custom layouts:", e);
+            }
+        }
+
+        // Trigger hidden file picker
+        btnImportLayout.addEventListener('click', () => {
+            layoutFilePicker.click();
+        });
+
+        // Handle file selection and parsing
+        layoutFilePicker.addEventListener('change', (event) => {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                try {
+                    const jsonContent = JSON.parse(e.target.result);
+                    if (!jsonContent.congkit && !jsonContent.daaiji) {
+                        throw new Error("Invalid layout JSON structure. Missing 'congkit' or 'daaiji' definitions.");
+                    }
+
+                    // Cache custom layouts map into localStorage
+                    let customChars = {};
+                    try {
+                        const existing = localStorage.getItem('customChars');
+                        if (existing) customChars = JSON.parse(existing);
+                    } catch (err) { /* ignore */ }
+
+                    if (jsonContent.congkit) {
+                        if (!customChars.congkit) {
+                            customChars["congkit"] = {};
+                        }
+                        loadCustoms(jsonContent.congkit, customChars.congkit);
+                        loadCustoms(jsonContent.congkit, ckDictionary);
+                    }
+                    if (jsonContent.daaiji) {
+                        if (!customChars.daaiji) {
+                            customChars["daaiji"] = {};
+                        }
+                        loadCustoms(jsonContent.daaiji, customChars.daaiji);
+                        loadCustoms(jsonContent.daaiji, djDictionary);
+                    }
+
+                    localStorage.setItem('customChars', JSON.stringify(customChars));
+
+                    showToast(`Successfully imported!`);
+                } catch (err) {
+                    console.error(err);
+                    showToast("Error parsing custom chars JSON file.", true);
+                } finally {
+                    layoutFilePicker.value = ""; // Reset file picker input
+                }
+            };
+            reader.readAsText(file);
+        });
 
         btnCopyText.addEventListener('click', () => {
             const clone = editor.cloneNode(true);
